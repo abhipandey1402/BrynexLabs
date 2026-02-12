@@ -47,7 +47,7 @@ export default function SectionWrapper({
             id={id}
             aria-label={ariaLabel}
             className={`
-        py-20 md:py-28 lg:py-32
+        py-12 md:py-16 lg:py-24
         px-6 md:px-8
         ${animate ? 'section-animate' : ''}
         ${stagger ? 'stagger-children' : ''}

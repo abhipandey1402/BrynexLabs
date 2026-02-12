@@ -6,6 +6,7 @@ interface CTABlockProps {
     body?: string;
     buttonText: string;
     buttonHref?: string;
+    onButtonClick?: () => void;
     children?: ReactNode;
     centered?: boolean;
 }
@@ -15,6 +16,7 @@ export default function CTABlock({
     body,
     buttonText,
     buttonHref = '#contact',
+    onButtonClick,
     children,
     centered = true,
 }: CTABlockProps) {
@@ -30,7 +32,7 @@ export default function CTABlock({
             )}
             {children}
             <div className={`${centered ? 'flex justify-center' : ''} mt-8`}>
-                <Button href={buttonHref} variant="primary" size="lg">
+                <Button href={buttonHref} onClick={onButtonClick} variant="primary" size="lg">
                     {buttonText}
                     <svg
                         width="16"

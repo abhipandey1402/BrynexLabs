@@ -4,22 +4,22 @@ const steps = [
     {
         number: '01',
         title: 'Plan',
-        description: 'We scope the work, clarify goals and define deliverables.',
+        description: 'We dissect your goals to architect a roadmap for success.',
     },
     {
         number: '02',
         title: 'Design',
-        description: 'Architecture and UX decisions come before a line of code.',
+        description: 'We craft intuitive, user-centric interfaces that drive engagement.',
     },
     {
         number: '03',
         title: 'Build',
-        description: 'Clean, tested code delivered in short, focused sprints.',
+        description: 'We write clean, efficient code for robust and scalable solutions.',
     },
     {
         number: '04',
-        title: 'Improve',
-        description: 'Ongoing iteration, support and performance optimisation.',
+        title: 'Measure',
+        description: 'We continuously optimize and iterate to keep you ahead of the curve.',
     },
 ];
 
@@ -32,7 +32,7 @@ export default function HowWeWork() {
                     <span className="text-foreground-muted text-xs font-medium uppercase tracking-wider">Our process</span>
                 </div>
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
-                    How we work
+                    From concept to launch
                 </h2>
             </div>
 

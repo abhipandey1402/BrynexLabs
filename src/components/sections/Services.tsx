@@ -3,28 +3,28 @@ import ServiceCard from '../ServiceCard';
 
 const services = [
     {
-        title: 'Business websites & applications',
-        description: 'High-quality company websites, portals and business tools.',
+        title: 'Custom Software Development',
+        description: 'Architect and build bespoke applications that solve your specific business challenges.',
     },
     {
-        title: 'Custom software & system development',
-        description: 'Internal systems, integrations and operational platforms.',
+        title: 'High-Performance Web Platforms',
+        description: 'Engage users with lightning-fast, SEO-optimized websites and portals.',
     },
     {
-        title: 'SaaS & product engineering',
-        description: 'End-to-end product development for startups and growing companies.',
+        title: 'SaaS Product Engineering',
+        description: 'Launch your product with scalable, production-grade code and modern architecture.',
     },
     {
-        title: 'AI & automation solutions',
-        description: 'Intelligent features, AI agents and workflow automation.',
+        title: 'AI Agents & Automation',
+        description: 'Build autonomous AI agents to handle complex workflows, customer support, and data analysis 24/7.',
     },
     {
-        title: 'Cloud, DevOps & platform support',
-        description: 'Deployment, monitoring, scaling and infrastructure modernisation.',
+        title: 'Cloud & Infrastructure',
+        description: 'Deploy with confidence using secure, scalable, and automated cloud solutions.',
     },
     {
-        title: 'Enhancements, upgrades & maintenance',
-        description: 'New features, redesigns, performance and security improvements.',
+        title: 'Application Modernization',
+        description: 'Transform legacy systems into modern, efficient, and secure digital assets.',
     },
 ];
 
@@ -38,7 +38,7 @@ export default function Services() {
                     <span className="text-foreground-muted text-xs font-medium uppercase tracking-wider">Our services</span>
                 </div>
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
-                    What we help you build
+                    Engineering for the modern web
                 </h2>
             </div>
 

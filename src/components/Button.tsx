@@ -68,9 +68,19 @@ export default function Button({
     const combinedClassName = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`.trim();
 
     if ('href' in props && props.href) {
-        const { href, ...anchorProps } = props as ButtonAsLink;
+        const { href, onClick, ...anchorProps } = props as ButtonAsLink;
         return (
-            <a href={href} className={combinedClassName} {...anchorProps}>
+            <a
+                href={href}
+                className={combinedClassName}
+                onClick={(e) => {
+                    if (onClick) {
+                        e.preventDefault();
+                        onClick(e);
+                    }
+                }}
+                {...anchorProps}
+            >
                 {children}
             </a>
         );

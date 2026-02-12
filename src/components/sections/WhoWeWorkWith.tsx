@@ -2,38 +2,31 @@ import SectionWrapper from '../SectionWrapper';
 
 const audiences = [
     {
-        label: 'Small businesses improving their digital presence.',
+        title: 'Funded Startups',
+        description: 'Accelerate your roadmap. We help you ship MVP fast, iterate on user feedback, and secure your next funding round.',
         icon: (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" />
-                <path d="M9 22V12H15V22" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-5.82 3.25L7.38 14.14 2.38 9.27l6.91-1.01L12 2z" />
             </svg>
         ),
     },
     {
-        label: 'Companies upgrading systems and processes.',
+        title: 'Enterprise Innovators',
+        description: 'Modernize legacy tech. We bring startup agility to large-scale systems, ensuring security and compliance.',
         icon: (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
             </svg>
         ),
     },
     {
-        label: 'Startups building SaaS products.',
+        title: 'Scale-Ups',
+        description: 'Handle hyper-growth. We build robust architecture that scales to millions of users without crashing.',
         icon: (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-            </svg>
-        ),
-    },
-    {
-        label: 'Product teams scaling complex platforms.',
-        icon: (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" />
-                <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" />
-                <path d="M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13" />
-                <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89318 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88" />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
             </svg>
         ),
     },
@@ -48,35 +41,38 @@ export default function WhoWeWorkWith() {
                     <span className="text-foreground-muted text-xs font-medium uppercase tracking-wider">Our clients</span>
                 </div>
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
-                    Who we work with
+                    Built for Visionaries
                 </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-container mx-auto">
                 {audiences.map((item) => (
                     <div
-                        key={item.label}
+                        key={item.title}
                         className="
-              group flex items-start gap-4
-              p-5 md:p-6 rounded-card
+              group flex flex-col
+              p-8 rounded-card
               bg-background-card border border-border
               hover:border-border-hover hover:bg-background-card-hover
               transition-all duration-300
             "
                     >
-                        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent-light group-hover:bg-accent/15 transition-colors duration-300">
+                        <div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center text-accent mb-5 group-hover:bg-accent/15 transition-colors duration-300">
                             {item.icon}
                         </div>
-                        <p className="text-foreground-secondary text-sm md:text-base leading-relaxed pt-1.5">
-                            {item.label}
+                        <h3 className="text-lg font-bold text-foreground mb-3">
+                            {item.title}
+                        </h3>
+                        <p className="text-foreground-secondary text-sm md:text-base leading-relaxed">
+                            {item.description}
                         </p>
                     </div>
                 ))}
             </div>
 
             {/* Footer line */}
-            <p className="text-center text-foreground-muted text-sm mt-10 md:mt-12 italic">
-                One partner for small tasks and serious systems.
+            <p className="text-center text-foreground-muted text-sm mt-12 md:mt-16 italic opacity-80">
+                From pre-seed startups to Fortune 500 enterprises.
             </p>
         </SectionWrapper>
     );

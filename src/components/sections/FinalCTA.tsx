@@ -1,9 +1,17 @@
+'use client';
+
+import { useState } from 'react';
 import SectionWrapper from '../SectionWrapper';
 import CTABlock from '../CTABlock';
+import ContactModal from '../ContactModal';
 
 export default function FinalCTA() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     return (
         <SectionWrapper id="contact" ariaLabel="Contact us">
+            <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
             <div className="relative">
                 {/* Background glow */}
                 <div
@@ -13,10 +21,11 @@ export default function FinalCTA() {
 
                 <div className="relative z-10 py-8 md:py-12">
                     <CTABlock
-                        title="Let's improve your software — or build your next product."
-                        body="From business websites and system upgrades to SaaS platforms and AI solutions, Brynex Labs delivers dependable software at every stage."
+                        title="Ready to build something exceptional?"
+                        body="Whether you need a new product, a system overhaul, or AI integration—we have the engineering talent to make it happen."
                         buttonText="Start a project"
                         buttonHref="#contact"
+                        onButtonClick={() => setIsModalOpen(true)}
                     />
                 </div>
             </div>
