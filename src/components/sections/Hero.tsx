@@ -35,35 +35,48 @@ export default function Hero() {
             </div>
 
             <div className="relative z-10 mx-auto max-w-container text-center">
-                {/* Badge */}
-                <div className="inline-flex items-center gap-2 mb-8 px-4 py-2 rounded-full border border-border bg-background-secondary/50 backdrop-blur-sm animate-fade-in">
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent animate-glow-pulse" aria-hidden="true" />
-                    <span className="text-foreground-secondary text-xs md:text-sm font-medium tracking-wide">
-                        Premium Software Engineering & AI
-                    </span>
-                </div>
-
                 {/* H1 — only h1 on the page */}
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-tight leading-[1.1] mb-6 max-w-4xl mx-auto animate-fade-in-up">
-                    We engineer the software that powers your business.
+                    AI-Powered Engineering. <span className="text-accent">Real Business Results.</span>
                 </h1>
 
                 {/* Subtitle */}
                 <p className="text-foreground-secondary text-base md:text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed mb-10 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
-                    From complex enterprise systems to scalable SaaS products—we build the digital infrastructure you need to grow.
+                    Helping startups and enterprises ship production-grade SaaS, AI solutions, and cloud-native platforms — on time, every time.
                 </p>
 
                 {/* CTAs */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                     <Button onClick={() => setIsModalOpen(true)} variant="primary" size="lg">
                         Start a project
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                             <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </Button>
-                    <Button onClick={() => setIsModalOpen(true)} variant="secondary" size="lg">
-                        Talk to an expert
+                    <Button href="#services" variant="secondary" size="lg">
+                        View Services
                     </Button>
+                </div>
+
+                {/* Trust Indicators */}
+                <div className="relative max-w-3xl mx-auto pt-8 animate-fade-in" style={{ animationDelay: '0.45s' }}>
+                    {/* Enhanced divider line */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-border to-transparent opacity-60" />
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-12">
+                        <div className="flex flex-col items-center">
+                            <span className="text-xl md:text-2xl font-bold text-foreground">50+</span>
+                            <span className="text-[13px] text-foreground-secondary mt-1 tracking-tight">Projects Delivered</span>
+                        </div>
+                        <div className="flex flex-col items-center border-t sm:border-t-0 sm:border-x border-border/30 py-6 sm:py-0">
+                            <span className="text-xl md:text-2xl font-bold text-foreground">98%</span>
+                            <span className="text-[13px] text-foreground-secondary mt-1 tracking-tight">Client Retention</span>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <span className="text-xl md:text-2xl font-bold text-foreground">3x Faster</span>
+                            <span className="text-[13px] text-foreground-secondary mt-1 tracking-tight">Avg. Delivery Speed</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
