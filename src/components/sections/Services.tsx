@@ -3,26 +3,32 @@ import ServiceCard from '../ServiceCard';
 
 const services = [
     {
+        slug: 'custom-software-development',
         title: 'Custom Software Development',
         description: 'Architect and build bespoke applications that solve your specific business challenges.',
     },
     {
-        title: 'High-Performance Web Platforms',
-        description: 'Engage users with lightning-fast, SEO-optimized websites and portals.',
+        slug: 'web-mobile-development',
+        title: 'Web & Mobile Development',
+        description: 'Engage users with lightning-fast, SEO-optimized websites and high-performance mobile apps.',
     },
     {
+        slug: 'saas-product-engineering',
         title: 'SaaS Product Engineering',
         description: 'Launch your product with scalable, production-grade code and modern architecture.',
     },
     {
+        slug: 'ai-agents-automation',
         title: 'AI Agents & Automation',
         description: 'Build autonomous AI agents to handle complex workflows, customer support, and data analysis 24/7.',
     },
     {
+        slug: 'cloud-infrastructure',
         title: 'Cloud & Infrastructure',
         description: 'Deploy with confidence using secure, scalable, and automated cloud solutions.',
     },
     {
+        slug: 'application-modernization',
         title: 'Application Modernization',
         description: 'Transform legacy systems into modern, efficient, and secure digital assets.',
     },
@@ -48,6 +54,7 @@ export default function Services() {
                         key={service.title}
                         title={service.title}
                         description={service.description}
+                        href={service.slug ? `/services/${service.slug}` : undefined}
                         index={index}
                     />
                 ))}
