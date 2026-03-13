@@ -1,6 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { api } from '@/lib/api';
+
+
+
+import { PhoneInput } from 'react-international-phone';
+import 'react-international-phone/style.css';
 
 interface ContactModalProps {
     isOpen: boolean;
@@ -13,6 +19,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
+        phone: '',
         projectDetails: '',
         date: '',
         time: '',
@@ -23,7 +30,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         if (isOpen) {
             // Reset state when modal opens
             setStep('form');
-            setFormData({ name: '', email: '', projectDetails: '', date: '', time: '' });
+            setFormData({ name: '', email: '', phone: '', projectDetails: '', date: '', time: '' });
             setIsLoading(false);
             // Detect timezone
             const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -37,29 +44,39 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         e.preventDefault();
         setIsLoading(true);
 
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        try {
+            await api.post('/contact', {
+                ...formData,
+                timezone: userTimezone,
+            });
 
-        setIsLoading(false);
-        setStep('success');
+            setStep('success');
+        } catch (error) {
+            console.error('Handled error in component:', error);
+            // Error is logged by interceptor
+            alert('Failed to send request. Please try again later.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity"
-                onClick={onClose}
+                className="absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-300"
+                // onClick={onClose} // Disabled to prevent accidental closing
                 aria-hidden="true"
             />
 
             {/* Modal Content */}
             <div
                 className="
-                    relative z-10 w-full max-w-lg 
+                    relative z-10 w-full max-w-3xl 
                     bg-background-card border border-border rounded-xl shadow-2xl
                     flex flex-col max-h-[90vh] overflow-hidden
-                    animate-in fade-in zoom-in-95 duration-200
+                    animate-in fade-in zoom-in-95 duration-300 ease-out
                 "
                 role="dialog"
                 aria-modal="true"
@@ -113,6 +130,74 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 />
+                            </div>
+
+                            <div>
+                                <label htmlFor="phone" className="block text-sm font-medium text-foreground-secondary mb-1.5">
+                                    Phone Number
+                                </label>
+                                <div className="contact-phone-input">
+                                    <PhoneInput
+                                        defaultCountry="us"
+                                        value={formData.phone}
+                                        onChange={(phone) => setFormData({ ...formData, phone })}
+                                        inputStyle={{
+                                            width: '100%',
+                                            height: '42px',
+                                            fontSize: '16px',
+                                            backgroundColor: 'var(--background-secondary)',
+                                            color: 'var(--foreground)',
+                                            border: '1px solid var(--border)',
+                                            borderRadius: '8px',
+                                            paddingLeft: '12px',
+                                        }}
+                                        countrySelectorStyleProps={{
+                                            buttonStyle: {
+                                                backgroundColor: 'var(--background-secondary)',
+                                                border: '1px solid var(--border)',
+                                                borderRadius: '8px 0 0 8px',
+                                                borderRight: 'none',
+                                            },
+                                            dropdownStyleProps: {
+                                                style: {
+                                                    backgroundColor: '#1a1a1a',
+                                                    color: '#fff',
+                                                    border: '1px solid var(--border)',
+                                                }
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <style jsx global>{`
+                                    .contact-phone-input .react-international-phone-input-container {
+                                        width: 100%;
+                                    }
+                                    .contact-phone-input .react-international-phone-input {
+                                        width: 100%;
+                                        background-color: #0A0A0A !important; 
+                                        color: #F5F5F5 !important;
+                                        border-color: rgba(255, 255, 255, 0.06) !important;
+                                        border-radius: 0 8px 8px 0 !important;
+                                    }
+                                    .contact-phone-input .react-international-phone-country-selector-button {
+                                        background-color: #0A0A0A !important;
+                                        border-color: rgba(255, 255, 255, 0.06) !important;
+                                        border-radius: 8px 0 0 8px !important;
+                                        border-right: none !important;
+                                    }
+                                    .contact-phone-input .react-international-phone-country-selector-button:hover,
+                                    .contact-phone-input .react-international-phone-country-selector-button:focus {
+                                        background-color: #1a1a1a !important;
+                                    }
+                                    .contact-phone-input .react-international-phone-country-selector-dropdown {
+                                        background-color: #0A0A0A !important;
+                                        color: #F5F5F5 !important;
+                                        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+                                    }
+                                    .contact-phone-input .react-international-phone-country-selector-dropdown__item:hover {
+                                        background-color: #1a1a1a !important;
+                                    }
+                                `}</style>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
