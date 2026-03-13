@@ -4,11 +4,11 @@ import { useState, useEffect } from 'react';
 import ContactModal from './ContactModal';
 
 const navLinks = [
-    { label: 'Home', href: '#' },
+    { label: 'Home', href: '/' },
     { label: 'Services', href: '/services' },
     { label: 'Case Studies', href: '/case-studies' },
-    { label: 'How we work', href: '#how-we-work' },
-    { label: 'Why Brynex', href: '#why-brynex' },
+    { label: 'How we work', href: '/#how-we-work' },
+    { label: 'Contact', href: '/contact' },
 ];
 
 export default function Navbar() {

@@ -10,8 +10,8 @@ Comprehensive system for showcasing engineering services with SEO-optimized subp
 ### [Case Studies](file:///Users/abhipandey/Desktop/Folders/BrynexLabs/docs/features/case-studies.md)
 Detailed portfolio of past successes, technical challenges, and business outcomes.
 
-### [Contact Form & API](file:///Users/abhipandey/Desktop/Folders/BrynexLabs/docs/features/contact-form.md)
-Production-grade lead generation system with international phone support and automated email notifications.
+### [Contact & Lead Generation](file:///Users/abhipandey/Desktop/Folders/BrynexLabs/docs/features/contact-page.md)
+Dedicated /contact page and site-wide booking modal powered by a reusable LeadForm component.
 
 ---
 

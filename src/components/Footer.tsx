@@ -29,9 +29,8 @@ export default function Footer() {
                             {[
                                 { label: 'Services', href: '/services' },
                                 { label: 'Case Studies', href: '/case-studies' },
-                                { label: 'How we work', href: '#how-we-work' },
-                                { label: 'Why Brynex', href: '#why-brynex' },
-                                { label: 'Contact', href: '#contact' },
+                                { label: 'How we work', href: '/#how-we-work' },
+                                { label: 'Contact', href: '/contact' },
                             ].map(link => (
                                 <li key={link.label}>
                                     <a
