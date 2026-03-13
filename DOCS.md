@@ -7,6 +7,9 @@ Welcome to the internal documentation for Brynex Labs. This docs system tracks t
 ### [Service Pages](file:///Users/abhipandey/Desktop/Folders/BrynexLabs/docs/features/service-pages.md)
 Comprehensive system for showcasing engineering services with SEO-optimized subpages and dynamic routing.
 
+### [Case Studies](file:///Users/abhipandey/Desktop/Folders/BrynexLabs/docs/features/case-studies.md)
+Detailed portfolio of past successes, technical challenges, and business outcomes.
+
 ### [Contact Form & API](file:///Users/abhipandey/Desktop/Folders/BrynexLabs/docs/features/contact-form.md)
 Production-grade lead generation system with international phone support and automated email notifications.
 

@@ -5,11 +5,10 @@ import ContactModal from './ContactModal';
 
 const navLinks = [
     { label: 'Home', href: '#' },
-    { label: 'Services', href: '#services' },
+    { label: 'Services', href: '/services' },
+    { label: 'Case Studies', href: '/case-studies' },
     { label: 'How we work', href: '#how-we-work' },
     { label: 'Why Brynex', href: '#why-brynex' },
-    // { label: 'Contact', href: '#contact' }, // Removed specific contact link if we have the button, or keep it. Let's keep it but maybe it scrolls to footer.
-    { label: 'Contact', href: '#contact' },
 ];
 
 export default function Navbar() {

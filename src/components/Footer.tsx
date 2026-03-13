@@ -27,7 +27,8 @@ export default function Footer() {
                         <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-4">Navigation</h3>
                         <ul className="space-y-2.5" role="list">
                             {[
-                                { label: 'Services', href: '#services' },
+                                { label: 'Services', href: '/services' },
+                                { label: 'Case Studies', href: '/case-studies' },
                                 { label: 'How we work', href: '#how-we-work' },
                                 { label: 'Why Brynex', href: '#why-brynex' },
                                 { label: 'Contact', href: '#contact' },
