@@ -35,8 +35,14 @@ A comprehensive brand narrative that establishes Brynex Labs as a senior-led eng
 - **Delivery Methodology**: Overview of the 4-phase agile delivery process.
 - **Stats Row**: High-impact metrics (7+ years avg. exp, 100% success rate).
 
-### Homepage Refactor
-- **Compact Positioning**: The homepage "Who we are" section was streamlined to act as an entry point, with a direct CTA to the full brand story on the About page.
+### How We Work Page (`/how-we-work`)
+Detailed deep-dive into our 6-phase engineering lifecycle.
+- **Phases**: Discovery, Planning, Development, QA, Launch, Maintenance.
+- **Visuals**: Vertical timeline layout for desktop, sequential stack for mobile.
+- **Engagement Loop**: Direct integration with the Engagement Models section at the bottom to provide a full picture of partnership options.
+
+### Homepage Updates
+- **Process Entry Point**: Added a direct CTA to the homepage's simplified "How we work" section that bridges the viewer to the full 6-phase methodology.
 - **Legal Infrastructure**: Professional `/privacy` and `/terms` pages with comprehensive clauses and premium dark-mode styling.
 
 ## Technical Details

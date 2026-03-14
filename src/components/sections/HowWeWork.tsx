@@ -68,10 +68,31 @@ export default function HowWeWork() {
                 ))}
             </div>
 
-            {/* Caption */}
-            <p className="text-center text-foreground-muted text-sm mt-10 md:mt-12">
-                Simple delivery, fast feedback and long-term support.
-            </p>
+            {/* Link to Full Process */}
+            <div className="text-center mt-12 md:mt-16">
+                <a 
+                    href="/how-we-work" 
+                    className="group inline-flex items-center gap-2 text-foreground font-bold hover:text-accent transition-colors"
+                >
+                    See our full 6-phase process
+                    <svg 
+                        width="20" 
+                        height="20" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="2.5" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round"
+                        className="group-hover:translate-x-1 transition-transform"
+                    >
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+                <p className="text-foreground-muted text-sm mt-4">
+                    Simple delivery, fast feedback and long-term support.
+                </p>
+            </div>
         </SectionWrapper>
     );
 }
