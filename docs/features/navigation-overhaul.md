@@ -35,10 +35,15 @@ A high-impact page focused on brand storytelling, mission statements, and the "B
 To support the full navigation map, we've implemented placeholder pages for:
 - `/blog`: Insights and technical articles.
 - `/careers`: Culture and active job roles.
-- `/privacy` & `/terms`: Legal compliance.
+- **Legal Infrastructure**: Professional `/privacy` and `/terms` pages with comprehensive clauses and premium dark-mode styling.
 
 ## Technical Details
 
 - **Components**: `Navbar.tsx`, `Footer.tsx`
-- **Dependencies**: `@radix-ui/react-navigation-menu`, `lucide-react`
+- **Dependencies**: `@radix-ui/react-navigation-menu`, `lucide-react`, `@tailwindcss/typography`
 - **Data Source**: `data/services.ts`
+
+## Legal Page Implementation
+The Privacy and Terms pages utilize the `prose` (Tailwind Typography) plugin with custom `prose-invert` overrides to ensure long-form legal text remains highly readable while adhering to the dark-mode aesthetic.
+- **Layout**: Centered `max-w-4xl` container for optimal line length.
+- **Styling**: Structured sections with clear headings and subtle background cards for emphasis.
