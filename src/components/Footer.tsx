@@ -1,13 +1,15 @@
+import Link from 'next/link';
+
 export default function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
         <footer className="border-t border-border bg-background" role="contentinfo">
-            <div className="mx-auto max-w-container px-6 md:px-8 py-12 md:py-16">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
-                    {/* Brand */}
-                    <div className="md:col-span-1">
-                        <a href="#" className="inline-block group mb-6 select-none" aria-label="Brynex Labs — Home">
+            <div className="mx-auto max-w-container px-6 md:px-8 py-16 md:py-24">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 md:gap-8">
+                    {/* Brand & Info */}
+                    <div className="col-span-2 lg:col-span-2">
+                        <Link href="/" className="inline-block group mb-6 select-none" aria-label="Brynex Labs — Home">
                             <div className="flex flex-col items-start leading-none group-hover:opacity-80 transition-opacity duration-300">
                                 <span className="font-extrabold text-2xl tracking-tighter text-foreground">
                                     BRYNEX
@@ -16,64 +18,103 @@ export default function Footer() {
                                     LABS
                                 </span>
                             </div>
-                        </a>
-                        <p className="text-foreground-muted text-sm leading-relaxed max-w-xs">
-                            Premium software development for businesses, startups and product teams.
+                        </Link>
+                        <p className="text-foreground-secondary text-base leading-relaxed max-w-sm mb-8">
+                            Empowering startups and enterprises with production-grade AI agents, SaaS engineering, and scalable cloud infrastructure.
                         </p>
+                        
+                        <div className="space-y-4">
+                            <a href="mailto:hello@brynex.in" className="block text-foreground font-bold hover:text-accent transition-colors">
+                                hello@brynex.in
+                            </a>
+                            <div className="flex gap-4">
+                                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-foreground-muted hover:text-foreground transition-colors">
+                                    <span className="sr-only">LinkedIn</span>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                                </a>
+                                <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-foreground-muted hover:text-foreground transition-colors">
+                                    <span className="sr-only">GitHub</span>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
-                    {/* Navigation */}
+                    {/* Services Column */}
                     <div>
-                        <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-4">Navigation</h3>
-                        <ul className="space-y-2.5" role="list">
+                        <h3 className="text-foreground text-sm font-bold uppercase tracking-widest mb-6 border-l-2 border-accent pl-4">Services</h3>
+                        <ul className="space-y-4" role="list">
                             {[
-                                { label: 'Services', href: '/services' },
-                                { label: 'Case Studies', href: '/case-studies' },
-                                { label: 'How we work', href: '/#how-we-work' },
-                                { label: 'Contact', href: '/contact' },
+                                { label: 'Custom Software', href: '/services/custom-software-development' },
+                                { label: 'SaaS Engineering', href: '/services/saas-product-engineering' },
+                                { label: 'AI Agents', href: '/services/ai-agents-automation' },
+                                { label: 'Cloud & Infra', href: '/services/cloud-infrastructure' },
+                                { label: 'Web & Mobile', href: '/services/web-mobile-development' },
                             ].map(link => (
                                 <li key={link.label}>
-                                    <a
+                                    <Link
                                         href={link.href}
                                         className="text-foreground-secondary text-sm hover:text-foreground transition-colors duration-200"
                                     >
                                         {link.label}
-                                    </a>
+                                    </Link>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
-                    {/* Contact */}
+                    {/* Company Column */}
                     <div>
-                        <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider mb-4">Get in touch</h3>
-                        <a
-                            href="#contact"
-                            className="
-                inline-flex items-center gap-2
-                px-5 py-2.5 text-sm font-semibold
-                bg-accent-gradient text-white rounded-button
-                hover:shadow-button hover:brightness-110
-                transition-all duration-200
-              "
-                        >
-                            Start a project
-                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                                <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </a>
+                        <h3 className="text-foreground text-sm font-bold uppercase tracking-widest mb-6 border-l-2 border-accent pl-4">Company</h3>
+                        <ul className="space-y-4" role="list">
+                            {[
+                                { label: 'About', href: '/about' },
+                                { label: 'Case Studies', href: '/case-studies' },
+                                { label: 'Careers', href: '/careers' },
+                                { label: 'Blog', href: '/blog' },
+                                { label: 'Contact', href: '/contact' },
+                            ].map(link => (
+                                <li key={link.label}>
+                                    <Link
+                                        href={link.href}
+                                        className="text-foreground-secondary text-sm hover:text-foreground transition-colors duration-200"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Legal Column */}
+                    <div>
+                        <h3 className="text-foreground text-sm font-bold uppercase tracking-widest mb-6 border-l-2 border-accent pl-4">Legal</h3>
+                        <ul className="space-y-4" role="list">
+                            {[
+                                { label: 'Privacy Policy', href: '/privacy' },
+                                { label: 'Terms of Service', href: '/terms' },
+                            ].map(link => (
+                                <li key={link.label}>
+                                    <Link
+                                        href={link.href}
+                                        className="text-foreground-secondary text-sm hover:text-foreground transition-colors duration-200"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
 
                 {/* Divider + Copyright */}
-                <div className="mt-12 pt-8 border-t border-border">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <p className="text-foreground-muted text-xs">
-                            &copy; {currentYear} Brynex Labs. All rights reserved.
-                        </p>
-                        <p className="text-foreground-muted text-xs">
-                            Built with precision and care.
-                        </p>
+                <div className="mt-20 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-6">
+                    <p className="text-foreground-muted text-xs">
+                        &copy; {currentYear} Brynex Labs. Precision Engineering. Global Reach.
+                    </p>
+                    <div className="flex gap-8">
+                         <p className="text-foreground-muted text-xs">Based in India</p>
+                         <p className="text-foreground-muted text-xs">Working Globally</p>
                     </div>
                 </div>
             </div>
