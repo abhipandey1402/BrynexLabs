@@ -29,12 +29,14 @@ The footer was redesigned into a 3-column layout to facilitate better site-wide 
 ## New Feature Pages
 
 ### About Page (`/about`)
-A high-impact page focused on brand storytelling, mission statements, and the "Brynex Philosophy" of consultative engineering.
+A comprehensive brand narrative that establishes Brynex Labs as a senior-led engineering collective.
+- **Narrative Segments**: Founder Story, Mission, and Vision statements.
+- **Core Values DNA**: 4 key principles (Code is a Liability, Ship with Integrity, Zero Middlemen, Budget Respect) with descriptive icons.
+- **Delivery Methodology**: Overview of the 4-phase agile delivery process.
+- **Stats Row**: High-impact metrics (7+ years avg. exp, 100% success rate).
 
-### Placeholder Infrastructure
-To support the full navigation map, we've implemented placeholder pages for:
-- `/blog`: Insights and technical articles.
-- `/careers`: Culture and active job roles.
+### Homepage Refactor
+- **Compact Positioning**: The homepage "Who we are" section was streamlined to act as an entry point, with a direct CTA to the full brand story on the About page.
 - **Legal Infrastructure**: Professional `/privacy` and `/terms` pages with comprehensive clauses and premium dark-mode styling.
 
 ## Technical Details
