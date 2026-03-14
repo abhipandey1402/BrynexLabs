@@ -13,6 +13,9 @@ Detailed portfolio of past successes, technical challenges, and business outcome
 ### [Contact & Lead Generation](file:///Users/abhipandey/Desktop/Folders/BrynexLabs/docs/features/contact-page.md)
 Dedicated /contact page and site-wide booking modal powered by a reusable LeadForm component.
 
+### [Navigation & Brand Presence](file:///Users/abhipandey/Desktop/Folders/BrynexLabs/docs/features/navigation-overhaul.md)
+Comprehensive overhaul transition from anchor-links to multi-page architecture with premium Radix-powered menus.
+
 ---
 
 ## Getting Started
