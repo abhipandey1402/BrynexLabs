@@ -4,11 +4,62 @@
 
 /* ===== Base Styles ===== */
 :root {
-  --background: #050505;
-  --foreground: #F5F5F5;
+  --background: 253, 253, 253;
+  --background-secondary: 247, 247, 247;
+  --background-tertiary: 238, 238, 238;
+  --background-card: 255, 255, 255;
+  --background-card-hover: 249, 249, 249;
+  
+  --foreground: 10, 10, 10;
+  --foreground-secondary: 64, 64, 64;
+  --foreground-muted: 115, 115, 115;
+  
   --accent: #C2410C;
   --accent-light: #EA580C;
   --accent-lighter: #F59E0B;
+  --accent-dark: #9A3412;
+  
+  --border: 0, 0, 0, 0.08;
+  --border-hover: 0, 0, 0, 0.14;
+  --border-accent: 194, 65, 12, 0.3;
+  --border-accent-hover: 194, 65, 12, 0.5;
+
+  --selection-bg: 194, 65, 12, 0.15;
+  --selection-text: #0a0a0a;
+  
+  --scrollbar-track: 247, 247, 247;
+  --scrollbar-thumb: 0, 0, 0, 0.15;
+  --scrollbar-thumb-hover: 0, 0, 0, 0.25;
+
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-card-hover: 0 12px 24px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
+}
+
+.dark {
+  --background: 5, 5, 5;
+  --background-secondary: 10, 10, 10;
+  --background-tertiary: 17, 17, 17;
+  --background-card: 13, 13, 13;
+  --background-card-hover: 20, 20, 20;
+  
+  --foreground: 245, 245, 245;
+  --foreground-secondary: 163, 163, 163;
+  --foreground-muted: 115, 115, 115;
+  
+  --border: 255, 255, 255, 0.06;
+  --border-hover: 255, 255, 255, 0.12;
+  --border-accent: 194, 65, 12, 0.3;
+  --border-accent-hover: 194, 65, 12, 0.5;
+
+  --selection-bg: 194, 65, 12, 0.3;
+  --selection-text: #F5F5F5;
+  
+  --scrollbar-track: 10, 10, 10;
+  --scrollbar-thumb: 255, 255, 255, 0.1;
+  --scrollbar-thumb-hover: 255, 255, 255, 0.2;
+
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -26,8 +77,8 @@ html {
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: rgb(var(--background));
+  color: rgb(var(--foreground));
   overflow-x: hidden;
   position: relative;
   width: 100%;
@@ -61,8 +112,8 @@ body {
 
 /* ===== Selection ===== */
 ::selection {
-  background-color: rgba(194, 65, 12, 0.3);
-  color: #F5F5F5;
+  background-color: rgba(var(--selection-bg));
+  color: var(--selection-text);
 }
 
 /* ===== Scrollbar ===== */
@@ -71,16 +122,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: rgb(var(--scrollbar-track));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(var(--scrollbar-thumb));
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(var(--scrollbar-thumb-hover));
 }
 
 /* ===== Section Animations ===== */

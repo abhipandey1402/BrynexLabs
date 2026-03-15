@@ -128,26 +128,26 @@ export default function ContactForm({ onSuccess, className = '', isModal = false
                     }
                     .contact-phone-input .react-international-phone-input {
                         width: 100%;
-                        background-color: #0A0A0A !important; 
-                        color: #F5F5F5 !important;
-                        border-color: rgba(255, 255, 255, 0.06) !important;
+                        background-color: var(--background-secondary) !important; 
+                        color: var(--foreground) !important;
+                        border-color: var(--border) !important;
                         border-radius: 0 8px 8px 0 !important;
                         height: 42px !important;
                     }
                     .contact-phone-input .react-international-phone-country-selector-button {
-                        background-color: #0A0A0A !important;
-                        border-color: rgba(255, 255, 255, 0.06) !important;
+                        background-color: var(--background-secondary) !important;
+                        border-color: var(--border) !important;
                         border-radius: 8px 0 0 8px !important;
                         border-right: none !important;
                         height: 42px !important;
                     }
                     .contact-phone-input .react-international-phone-country-selector-button:hover {
-                        background-color: #1a1a1a !important;
+                        background-color: var(--background-tertiary) !important;
                     }
                     .contact-phone-input .react-international-phone-country-selector-dropdown {
-                        background-color: #0A0A0A !important;
-                        color: #F5F5F5 !important;
-                        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+                        background-color: var(--background-card) !important;
+                        color: var(--foreground) !important;
+                        border: 1px solid var(--border-hover) !important;
                         z-index: 100;
                     }
                 `}</style>

@@ -17,7 +17,7 @@ export default function CaseStudiesIndex() {
                         Success <span className="text-accent italic">Stories.</span>
                     </h1>
                     <p className="text-xl text-foreground-secondary max-w-2xl mx-auto leading-relaxed">
-                        A deep dive into the engineering challenges we've solved and the business outcomes we've delivered.
+                        We don&apos;t just build features; we engineer outcomes. Here&apos;s a look at how we&apos;ve helped our partners scale.
                     </p>
                 </div>
 

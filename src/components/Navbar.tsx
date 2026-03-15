@@ -7,13 +7,7 @@ import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import { services } from '@/data/services';
 import ContactModal from './ContactModal';
 
-const navLinks = [
-    { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
-    { label: 'Case Studies', href: '/case-studies' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Contact', href: '/contact' },
-];
+// Unused variable removed
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -51,7 +45,7 @@ export default function Navbar() {
                     className={`
           transition-all duration-300
           ${isScrolled
-                            ? 'bg-[rgba(5,5,5,0.85)] backdrop-blur-xl border-b border-border shadow-lg shadow-black/20'
+                            ? 'bg-background/80 backdrop-blur-xl border-b border-border shadow-sm dark:shadow-black/20'
                             : 'bg-transparent'
                         }
         `}
@@ -79,7 +73,7 @@ export default function Navbar() {
                                 <NavigationMenu.List className="flex items-center gap-1 list-none m-0 p-0">
                                     <NavigationMenu.Item>
                                         <Link href="/" legacyBehavior passHref>
-                                            <NavigationMenu.Link className="px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-white/[0.03]">
+                                            <NavigationMenu.Link className="px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-background-secondary/80">
                                                 Home
                                             </NavigationMenu.Link>
                                         </Link>
@@ -87,27 +81,27 @@ export default function Navbar() {
 
                                     <NavigationMenu.Item>
                                         <Link href="/about" legacyBehavior passHref>
-                                            <NavigationMenu.Link className="px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-white/[0.03]">
+                                            <NavigationMenu.Link className="px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-background-secondary/80">
                                                 About
                                             </NavigationMenu.Link>
                                         </Link>
                                     </NavigationMenu.Item>
 
                                     <NavigationMenu.Item>
-                                        <NavigationMenu.Trigger className="group flex items-center justify-between gap-1 px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-white/[0.03] outline-none select-none">
+                                        <NavigationMenu.Trigger className="group flex items-center justify-between gap-1 px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-background-secondary/80 outline-none select-none">
                                             Services
                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-200 group-data-[state=open]:rotate-180">
                                                 <path d="M6 9l6 6 6-6" />
                                             </svg>
                                         </NavigationMenu.Trigger>
-                                        <NavigationMenu.Content className="absolute top-0 left-0 w-auto bg-background-card border border-border rounded-xl shadow-2xl p-6 animate-in fade-in zoom-in-95 duration-200">
+                                        <NavigationMenu.Content className="absolute top-0 left-0 w-auto bg-background-card backdrop-blur-xl border border-border ring-1 ring-border/40 rounded-xl shadow-[0_8px_40px_rgba(0,0,0,0.18)] p-6 animate-in fade-in zoom-in-95 duration-200">
                                             <ul className="m-0 flex flex-col gap-2 w-[400px] list-none p-0">
                                                 {services.map((service) => (
                                                     <li key={service.slug}>
                                                         <NavigationMenu.Link asChild>
                                                             <Link
                                                                 href={`/services/${service.slug}`}
-                                                                className="block p-3 rounded-lg hover:bg-white/[0.03] transition-colors group"
+                                                                className="block p-3 rounded-lg hover:bg-background-secondary/80 transition-colors group"
                                                             >
                                                                 <div className="font-bold text-foreground mb-1 group-hover:text-accent transition-colors">
                                                                     {service.title}
@@ -130,7 +124,7 @@ export default function Navbar() {
 
                                     <NavigationMenu.Item>
                                         <Link href="/case-studies" legacyBehavior passHref>
-                                            <NavigationMenu.Link className="px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-white/[0.03]">
+                                            <NavigationMenu.Link className="px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-background-secondary/80">
                                                 Case Studies
                                             </NavigationMenu.Link>
                                         </Link>
@@ -138,7 +132,7 @@ export default function Navbar() {
 
                                     <NavigationMenu.Item>
                                         <Link href="/blog" legacyBehavior passHref>
-                                            <NavigationMenu.Link className="px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-white/[0.03]">
+                                            <NavigationMenu.Link className="px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-background-secondary/80">
                                                 Blog
                                             </NavigationMenu.Link>
                                         </Link>
@@ -146,7 +140,7 @@ export default function Navbar() {
 
                                     <NavigationMenu.Item>
                                         <Link href="/contact" legacyBehavior passHref>
-                                            <NavigationMenu.Link className="px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-white/[0.03]">
+                                            <NavigationMenu.Link className="px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-background-secondary/80">
                                                 Contact
                                             </NavigationMenu.Link>
                                         </Link>
@@ -207,10 +201,10 @@ export default function Navbar() {
                         aria-hidden={!isMobileOpen}
                     >
                         <div className="px-6 py-8 space-y-2">
-                            <Link href="/" onClick={() => setIsMobileOpen(false)} className="block px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-white/[0.03] rounded-lg transition-colors duration-200">
+                            <Link href="/" onClick={() => setIsMobileOpen(false)} className="block px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-background-secondary/80 rounded-lg transition-colors duration-200">
                                 Home
                             </Link>
-                            <Link href="/about" onClick={() => setIsMobileOpen(false)} className="block px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-white/[0.03] rounded-lg transition-colors duration-200">
+                            <Link href="/about" onClick={() => setIsMobileOpen(false)} className="block px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-background-secondary/80 rounded-lg transition-colors duration-200">
                                 About
                             </Link>
                             
@@ -218,7 +212,7 @@ export default function Navbar() {
                             <div>
                                 <button 
                                     onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                                    className="flex items-center justify-between w-full px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-white/[0.03] rounded-lg transition-colors duration-200"
+                                    className="flex items-center justify-between w-full px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-background-secondary/80 rounded-lg transition-colors duration-200"
                                 >
                                     Services
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-200 ${mobileServicesOpen ? 'rotate-180' : ''}`}>
@@ -232,7 +226,7 @@ export default function Navbar() {
                                                 key={service.slug} 
                                                 href={`/services/${service.slug}`}
                                                 onClick={() => setIsMobileOpen(false)}
-                                                className="block px-4 py-2 text-base text-foreground-secondary hover:text-foreground hover:bg-white/[0.03] rounded-lg transition-colors"
+                                                className="block px-4 py-2 text-base text-foreground-secondary hover:text-foreground hover:bg-background-secondary/80 rounded-lg transition-colors"
                                             >
                                                 {service.title}
                                             </Link>
@@ -248,13 +242,13 @@ export default function Navbar() {
                                 )}
                             </div>
 
-                            <Link href="/case-studies" onClick={() => setIsMobileOpen(false)} className="block px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-white/[0.03] rounded-lg transition-colors duration-200">
+                            <Link href="/case-studies" onClick={() => setIsMobileOpen(false)} className="block px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-background-secondary/80 rounded-lg transition-colors duration-200">
                                 Case Studies
                             </Link>
-                            <Link href="/blog" onClick={() => setIsMobileOpen(false)} className="block px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-white/[0.03] rounded-lg transition-colors duration-200">
+                            <Link href="/blog" onClick={() => setIsMobileOpen(false)} className="block px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-background-secondary/80 rounded-lg transition-colors duration-200">
                                 Blog
                             </Link>
-                            <Link href="/contact" onClick={() => setIsMobileOpen(false)} className="block px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-white/[0.03] rounded-lg transition-colors duration-200">
+                            <Link href="/contact" onClick={() => setIsMobileOpen(false)} className="block px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-background-secondary/80 rounded-lg transition-colors duration-200">
                                 Contact
                             </Link>
                             

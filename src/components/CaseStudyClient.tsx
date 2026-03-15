@@ -76,7 +76,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
                         </div>
                         
                         <div className="p-8 rounded-2xl bg-background-card border border-border italic relative">
-                            <div className="text-5xl text-accent opacity-20 absolute -top-2 left-6 leading-none">"</div>
+                            <div className="text-5xl text-accent opacity-20 absolute -top-2 left-6 leading-none">&quot;</div>
                             <p className="text-foreground relative z-10 mb-4">
                                 {project.testimonial?.quote}
                             </p>
@@ -127,7 +127,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
                             Build your own <span className="text-accent italic">success story.</span>
                         </h2>
                         <p className="text-white/60 text-lg mb-12 max-w-xl">
-                            Let's discuss how we can engineer a custom solution tailored to your business goals.
+                            Let&apos;s discuss how we can engineer a custom solution tailored to your business goals.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
                             <Button 
