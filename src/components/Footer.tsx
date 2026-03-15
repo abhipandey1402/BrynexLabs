@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ThemeToggle } from './ThemeToggle';
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -109,13 +110,31 @@ export default function Footer() {
 
                 {/* Divider + Copyright */}
                 <div className="mt-20 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-6">
-                    <p className="text-foreground-muted text-xs">
-                        &copy; {currentYear} Brynex Labs. Precision Engineering. Global Reach.
-                    </p>
-                    <div className="flex gap-8">
-                         <p className="text-foreground-muted text-xs">Based in India</p>
-                         <p className="text-foreground-muted text-xs">Working Globally</p>
+                    <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+                        <p className="text-foreground-muted text-xs tracking-wide">
+                            &copy; {currentYear}{' '}
+                            <span className="text-foreground font-semibold">Brynex Labs</span>
+                            <span className="mx-2 text-border">·</span>
+                            Precision Engineering. Global Reach.
+                        </p>
+                        <div className="hidden md:block w-px h-3 bg-border" />
+                        <div className="flex items-center gap-4">
+                            <span className="flex items-center gap-1.5 text-foreground-muted text-xs">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent opacity-80" aria-hidden="true">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+                                </svg>
+                                Based in&nbsp;<span className="text-accent font-medium">India</span>
+                            </span>
+                            <span className="text-border text-xs">·</span>
+                            <span className="flex items-center gap-1.5 text-foreground-muted text-xs">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-foreground-muted" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                </svg>
+                                Working Globally
+                            </span>
+                        </div>
                     </div>
+                    <ThemeToggle />
                 </div>
             </div>
         </footer>

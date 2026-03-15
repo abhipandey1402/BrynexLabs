@@ -25,7 +25,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             <div
                 className="
                     relative z-10 w-full max-w-xl 
-                    bg-background-card border border-border rounded-xl shadow-2xl
+                    bg-background-card/90 backdrop-blur-2xl border border-border/80 rounded-xl shadow-2xl
                     flex flex-col max-h-[90vh] overflow-hidden
                     animate-in fade-in zoom-in-95 duration-300 ease-out
                 "

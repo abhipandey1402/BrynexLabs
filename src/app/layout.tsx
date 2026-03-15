@@ -28,26 +28,38 @@ export const metadata: Metadata = {
   },
 };
 
+import { ThemeProvider } from '@/components/ThemeProvider';
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} dark`}>
-      <body className="font-sans antialiased bg-background text-foreground">
-        {/* Skip to content link for accessibility */}
-        <a href="#main-content" className="skip-to-content">
-          Skip to main content
-        </a>
+    <html lang="en" suppressHydrationWarning>
+      <body
+      className={`${inter.className} bg-background text-foreground antialiased selection:bg-accent selection:text-white transition-colors duration-300`}
+      suppressHydrationWarning
+    >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={true}
+          disableTransitionOnChange
+        >
+          {/* Skip to content link for accessibility */}
+          <a href="#main-content" className="skip-to-content">
+            Skip to main content
+          </a>
 
-        <Navbar />
+          <Navbar />
 
-        <main id="main-content" role="main">
-          {children}
-        </main>
+          <main id="main-content" role="main">
+            {children}
+          </main>
 
-        <Footer />
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

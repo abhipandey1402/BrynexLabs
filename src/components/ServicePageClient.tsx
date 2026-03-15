@@ -99,7 +99,7 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                 <div className="max-w-2xl mx-auto py-12 px-8 rounded-3xl bg-accent-gradient shadow-glow relative overflow-hidden">
                     <div className="relative z-10">
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to transform your business?</h2>
-                        <p className="text-white/80 text-lg mb-8">Let's discuss how we can build your next {service.title.toLowerCase()}.</p>
+                        <p className="text-white/80 text-lg mb-8">Let&apos;s discuss how we can build your next {service.title.toLowerCase()}.</p>
                         <Button 
                             onClick={() => setIsModalOpen(true)} 
                             variant="primary" 
