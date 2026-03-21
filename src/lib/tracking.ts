@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Core Telemetry & Tracking Utility
  * Safely triggers conversion events across all loaded tracking pixels (GA4, Meta).
@@ -23,7 +24,7 @@ export const trackEvent = (eventName: string, params?: Record<string, any>) => {
                 (window as any).fbq('trackCustom', eventName, params);
             }
         }
-    } catch (error) {
+    } catch {
         // Silently fail if tracking is physically blocked locally by PiHole/Brave/uBlock.
         console.warn('Telemetry blocker explicitly prevented tracking event:', eventName);
     }

@@ -25,7 +25,7 @@ export default function FAQ() {
                     Everything you need to know
                 </h2>
                 <p className="text-foreground-secondary text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-                    Have questions before we start engineering? We've got answers.
+                    Have questions before we start engineering? We&apos;ve got answers.
                 </p>
             </div>
 
