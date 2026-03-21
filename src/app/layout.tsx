@@ -4,7 +4,8 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import StickyCTA from '@/components/StickyCTA';
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics as VercelAnalytics } from '@vercel/analytics/next';
+import CustomAnalytics from '@/components/Analytics';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -36,6 +37,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION ? {
+    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION,
+  } : undefined,
 };
 
 import { ThemeProvider } from '@/components/ThemeProvider';
@@ -71,7 +75,8 @@ export default function RootLayout({
           <StickyCTA />
           <Footer />
         </ThemeProvider>
-        <Analytics />
+        <VercelAnalytics />
+        <CustomAnalytics />
       </body>
     </html>
   );

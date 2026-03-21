@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Button from '../Button';
 import ContactModal from '../ContactModal';
+import { trackConversion_StartProjectClick } from '@/lib/tracking';
 import TrustBadges from '../TrustBadges';
 
 export default function Hero() {
@@ -48,7 +49,13 @@ export default function Hero() {
 
                 {/* CTAs */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                    <Button onClick={() => setIsModalOpen(true)} variant="primary" size="lg">
+                    <Button 
+                        onClick={() => {
+                            trackConversion_StartProjectClick('Hero Primary Button');
+                            setIsModalOpen(true);
+                        }} 
+                        variant="primary" size="lg"
+                    >
                         Start a project
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                             <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

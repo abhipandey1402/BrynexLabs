@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import Button from './Button';
 import TrustBadges from './TrustBadges';
+import { trackConversion_StartProjectClick } from '@/lib/tracking';
 
 interface CTABlockProps {
     title: string;
@@ -33,7 +34,15 @@ export default function CTABlock({
             )}
             {children}
             <div className={`${centered ? 'flex justify-center' : ''} mt-8`}>
-                <Button href={buttonHref} onClick={onButtonClick} variant="primary" size="lg">
+                <Button 
+                    href={buttonHref} 
+                    onClick={() => {
+                        trackConversion_StartProjectClick('CTABlock');
+                        if (onButtonClick) onButtonClick();
+                    }} 
+                    variant="primary" 
+                    size="lg"
+                >
                     {buttonText}
                     <svg
                         width="16"

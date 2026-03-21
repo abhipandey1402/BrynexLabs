@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import ContactModal from './ContactModal';
+import { trackConversion_StartProjectClick } from '@/lib/tracking';
 
 export default function StickyCTA() {
     const [isVisible, setIsVisible] = useState(false);
@@ -38,7 +39,10 @@ export default function StickyCTA() {
                         Ready to accelerate your engineering?
                     </span>
                     <button 
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => {
+                            trackConversion_StartProjectClick('Sticky Scroll CTA');
+                            setIsModalOpen(true);
+                        }}
                         className="w-full md:w-auto bg-accent-gradient hover:brightness-110 transition-all text-white text-sm font-bold px-6 py-2.5 rounded-full flex items-center justify-center gap-2 shadow-button whitespace-nowrap"
                     >
                         Start a project

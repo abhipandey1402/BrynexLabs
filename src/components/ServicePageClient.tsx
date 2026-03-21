@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ServiceDetail } from '@/data/services';
 import SectionWrapper from './SectionWrapper';
 import Button from './Button';
 import ContactModal from './ContactModal';
+import { trackConversion_StartProjectClick, trackConversion_ServiceView } from '@/lib/tracking';
 
 interface ServicePageClientProps {
     service: ServiceDetail;
@@ -12,6 +13,12 @@ interface ServicePageClientProps {
 
 export default function ServicePageClient({ service }: ServicePageClientProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        if (service?.title) {
+            trackConversion_ServiceView(service.title);
+        }
+    }, [service?.title]);
 
     return (
         <div className="pt-24 pb-16">
@@ -101,7 +108,11 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                         <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to transform your business?</h2>
                         <p className="text-white/80 text-lg mb-8">Let&apos;s discuss how we can build your next {service.title.toLowerCase()}.</p>
                         <Button 
-                            onClick={() => setIsModalOpen(true)} 
+                            onClick={() => {
+                                trackConversion_StartProjectClick(`Service CTA - ${service.title}`);
+                                setIsModalOpen(true);
+                            }} 
+
                             variant="primary" 
                             size="lg" 
                             className="!bg-neutral-950 !text-white !bg-none hover:!bg-black border border-white/10 hover:border-white/20 shadow-2xl transition-all font-bold"
