@@ -3,9 +3,9 @@
 
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 
-export default function Analytics() {
+function AnalyticsInner() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
@@ -13,12 +13,11 @@ export default function Analytics() {
     const clarityId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
     const metaId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
-    // Track pageviews automatically manually if using App Router, 
-    // though the scripts below technically handle initialization natively.
+    // Track pageviews automatically
     useEffect(() => {
         if (pathname && gaId && typeof window !== 'undefined' && (window as any).gtag) {
             (window as any).gtag('config', gaId, {
-                page_path: pathname + searchParams.toString(),
+                page_path: pathname + (searchParams.toString() ? `?${searchParams.toString()}` : ''),
             });
         }
     }, [pathname, searchParams, gaId]);
@@ -73,5 +72,13 @@ export default function Analytics() {
                 </Script>
             )}
         </>
+    );
+}
+
+export default function Analytics() {
+    return (
+        <Suspense fallback={null}>
+            <AnalyticsInner />
+        </Suspense>
     );
 }
