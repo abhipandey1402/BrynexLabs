@@ -6,6 +6,12 @@ import { services } from '@/data/services';
 export const metadata: Metadata = {
     title: 'Expert Software Engineering Services | Brynex Labs',
     description: 'Explore our range of professional software engineering services, from custom app development and SaaS engineering to AI agents and cloud infrastructure.',
+    alternates: { canonical: '/services' },
+    openGraph: {
+        title: 'Expert Software Engineering Services | Brynex Labs',
+        description: 'Explore our range of professional software engineering services, from custom app development and SaaS engineering to AI agents and cloud infrastructure.',
+        url: '/services'
+    }
 };
 
 export default function ServicesIndex() {

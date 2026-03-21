@@ -5,6 +5,12 @@ import ContactForm from '@/components/ContactForm';
 export const metadata: Metadata = {
     title: 'Consult with Our Engineering Experts | Brynex Labs',
     description: 'Ready to build production-grade software? Contact Brynex Labs to discuss your AI, SaaS, or enterprise product vision. We respond within 6 business hours.',
+    alternates: { canonical: '/contact' },
+    openGraph: {
+        title: 'Consult with Our Engineering Experts | Brynex Labs',
+        description: 'Ready to build production-grade software? Contact Brynex Labs to discuss your AI, SaaS, or enterprise product vision. We respond within 6 business hours.',
+        url: '/contact'
+    }
 };
 
 export default function ContactPage() {
@@ -53,11 +59,11 @@ export default function ContactPage() {
 
                             {/* Social/Direct */}
                             <div className="flex gap-6 pt-4">
-                                <a href="#" className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-foreground-secondary hover:text-accent hover:border-accent transition-all">
+                                <a href="https://www.linkedin.com/company/brynexlabs" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-foreground-secondary hover:text-accent hover:border-accent transition-all">
                                     <span className="sr-only">LinkedIn</span>
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
                                 </a>
-                                <a href="#" className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-foreground-secondary hover:text-accent hover:border-accent transition-all">
+                                <a href="https://x.com/brynexlabs" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-border flex items-center justify-center text-foreground-secondary hover:text-accent hover:border-accent transition-all">
                                     <span className="sr-only">X (Twitter)</span>
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
                                 </a>

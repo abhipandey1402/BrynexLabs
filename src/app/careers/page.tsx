@@ -1,4 +1,16 @@
+import { Metadata } from 'next';
 import SectionWrapper from '@/components/SectionWrapper';
+
+export const metadata: Metadata = {
+    title: 'Careers at Brynex Labs | Join Our Engineering Team',
+    description: 'We are a team of technical purists building the next generation of SaaS and AI-powered infrastructure. View open roles at Brynex Labs.',
+    alternates: { canonical: '/careers' },
+    openGraph: {
+        title: 'Careers at Brynex Labs | Join Our Engineering Team',
+        description: 'We are a team of technical purists building the next generation of SaaS and AI-powered infrastructure. View open roles at Brynex Labs.',
+        url: '/careers'
+    }
+};
 
 export default function CareersPage() {
     return (
@@ -37,8 +49,8 @@ export default function CareersPage() {
                                 We&apos;re always looking for exceptional talent. Reach out to our engineering leads directly.
                             </p>
                             <div className="text-center">
-                                <a href="mailto:careers@brynex.in" className="text-accent font-bold text-lg hover:underline underline-offset-8">
-                                    careers@brynex.in
+                                <a href="mailto:hello@brynex.in" className="text-accent font-bold text-lg hover:underline underline-offset-8">
+                                    hello@brynex.in
                                 </a>
                             </div>
                         </section>

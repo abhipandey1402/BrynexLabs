@@ -1,8 +1,16 @@
 import SectionWrapper from '@/components/SectionWrapper';
 
-export const metadata = {
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
     title: 'Terms of Service | Brynex Labs',
     description: 'The legal agreement governing your use of Brynex Labs website and services. Read our terms, conditions, and service standards.',
+    alternates: { canonical: '/terms' },
+    openGraph: {
+        title: 'Terms of Service | Brynex Labs',
+        description: 'The legal agreement governing your use of Brynex Labs website and services. Read our terms, conditions, and service standards.',
+        url: '/terms'
+    }
 };
 
 export default function TermsPage() {
@@ -105,7 +113,7 @@ export default function TermsPage() {
                             <div className="flex flex-col md:flex-row gap-8">
                                 <div className="flex-1 p-6 bg-white/[0.02] border border-border rounded-2xl hover:border-accent/40 transition-colors group">
                                     <p className="text-sm text-foreground-muted mb-2">Legal Inquiries</p>
-                                    <a href="mailto:legal@brynex.in" className="text-lg font-bold text-foreground group-hover:text-accent">legal@brynex.in</a>
+                                    <a href="mailto:hello@brynex.in" className="text-lg font-bold text-foreground group-hover:text-accent">hello@brynex.in</a>
                                 </div>
                                 <div className="flex-1 p-6 bg-white/[0.02] border border-border rounded-2xl hover:border-accent/40 transition-colors group">
                                     <p className="text-sm text-foreground-muted mb-2">General Support</p>

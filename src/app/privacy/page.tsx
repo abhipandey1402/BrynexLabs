@@ -1,8 +1,16 @@
 import SectionWrapper from '@/components/SectionWrapper';
 
-export const metadata = {
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
     title: 'Privacy Policy | Brynex Labs',
     description: 'Learn how Brynex Labs collects, uses, and protects your personal data. Our commitment to privacy and data security for our clients and visitors.',
+    alternates: { canonical: '/privacy' },
+    openGraph: {
+        title: 'Privacy Policy | Brynex Labs',
+        description: 'Learn how Brynex Labs collects, uses, and protects your personal data. Our commitment to privacy and data security for our clients and visitors.',
+        url: '/privacy'
+    }
 };
 
 export default function PrivacyPage() {
@@ -116,8 +124,8 @@ export default function PrivacyPage() {
                             </p>
                             <div className="p-8 bg-background-secondary border border-border rounded-3xl">
                                 <p className="font-bold text-foreground text-lg mb-2">Brynex Labs Privacy Team</p>
-                                <a href="mailto:privacy@brynex.in" className="text-accent hover:underline text-lg font-medium">
-                                    privacy@brynex.in
+                                <a href="mailto:hello@brynex.in" className="text-accent hover:underline text-lg font-medium">
+                                    hello@brynex.in
                                 </a>
                                 <p className="mt-4 text-foreground-muted text-sm">
                                     Remote-First | Headquartered in India

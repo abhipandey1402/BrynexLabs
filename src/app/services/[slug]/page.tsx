@@ -21,9 +21,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title: service.seo.title,
         description: service.seo.metaDescription,
+        alternates: { canonical: `/services/${service.slug}` },
         openGraph: {
             title: service.seo.title,
             description: service.seo.metaDescription,
+            url: `/services/${service.slug}`,
             type: 'website',
         },
     };
@@ -42,5 +44,26 @@ export default function ServicePage({ params }: PageProps) {
         notFound();
     }
 
-    return <ServicePageClient service={service} />;
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": service.title,
+        "description": service.description,
+        "provider": {
+            "@type": "Organization",
+            "name": "Brynex Labs",
+            "url": "https://brynex.in"
+        },
+        "url": `https://brynex.in/services/${service.slug}`
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <ServicePageClient service={service} />
+        </>
+    );
 }

@@ -21,9 +21,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title: project.seo.title,
         description: project.seo.metaDescription,
+        alternates: { canonical: `/case-studies/${project.slug}` },
         openGraph: {
             title: project.seo.title,
             description: project.seo.metaDescription,
+            url: `/case-studies/${project.slug}`,
             type: 'article',
         },
     };
@@ -42,5 +44,37 @@ export default function CaseStudyPage({ params }: PageProps) {
         notFound();
     }
 
-    return <CaseStudyClient project={project} />;
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": project.title,
+        "description": project.summary,
+        "author": {
+            "@type": "Organization",
+            "name": "Brynex Labs",
+            "url": "https://brynex.in"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Brynex Labs",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://brynex.in/favicon.ico"
+            }
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": `https://brynex.in/case-studies/${project.slug}`
+        }
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <CaseStudyClient project={project} />
+        </>
+    );
 }
