@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import StickyCTA from '@/components/StickyCTA';
 import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({
@@ -67,6 +68,7 @@ export default function RootLayout({
             {children}
           </main>
 
+          <StickyCTA />
           <Footer />
         </ThemeProvider>
         <Analytics />

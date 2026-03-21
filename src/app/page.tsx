@@ -3,8 +3,10 @@ import Positioning from '@/components/sections/Positioning';
 import Services from '@/components/sections/Services';
 import WhoWeWorkWith from '@/components/sections/WhoWeWorkWith';
 import WhyBrynex from '@/components/sections/WhyBrynex';
+import Comparison from '@/components/sections/Comparison';
 import HowWeWork from '@/components/sections/HowWeWork';
 import Engagement from '@/components/sections/Engagement';
+import FAQ from '@/components/sections/FAQ';
 import FinalCTA from '@/components/sections/FinalCTA';
 import { Metadata } from 'next';
 
@@ -64,8 +66,10 @@ export default function Home() {
       <Services />
       <WhoWeWorkWith />
       <WhyBrynex />
+      <Comparison />
       <HowWeWork />
       <Engagement />
+      <FAQ />
       <FinalCTA />
     </>
   );

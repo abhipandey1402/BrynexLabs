@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import Button from './Button';
+import TrustBadges from './TrustBadges';
 
 interface CTABlockProps {
     title: string;
@@ -50,6 +51,10 @@ export default function CTABlock({
                         />
                     </svg>
                 </Button>
+            </div>
+            {/* Added Trust Badges underneath the final CTA button block */}
+            <div className={`${centered ? 'flex justify-center' : ''} mt-2`}>
+                <TrustBadges />
             </div>
         </div>
     );
