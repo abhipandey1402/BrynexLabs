@@ -6,6 +6,12 @@ import Link from 'next/link';
 export const metadata: Metadata = {
     title: 'How We Work | Our 6-Phase Engineering Methodology',
     description: 'Explore the Brynex Labs delivery process. From discovery and architecture to deployment and scaling, see how we build high-performance software.',
+    alternates: { canonical: '/how-we-work' },
+    openGraph: {
+        title: 'How We Work | Our 6-Phase Engineering Methodology',
+        description: 'Explore the Brynex Labs delivery process. From discovery and architecture to deployment and scaling, see how we build high-performance software.',
+        url: '/how-we-work'
+    }
 };
 
 const phases = [

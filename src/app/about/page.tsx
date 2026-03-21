@@ -5,6 +5,12 @@ import Link from 'next/link';
 export const metadata: Metadata = {
     title: 'About Brynex Labs | Precision Engineering & Product Strategy',
     description: 'Learn about Brynex Labs, our mission to bridge technical complexity with business outcomes, and the founder story behind our senior-led engineering collective.',
+    alternates: { canonical: '/about' },
+    openGraph: {
+        title: 'About Brynex Labs | Precision Engineering & Product Strategy',
+        description: 'Learn about Brynex Labs, our mission to bridge technical complexity with business outcomes, and the founder story behind our senior-led engineering collective.',
+        url: '/about'
+    }
 };
 
 const values = [

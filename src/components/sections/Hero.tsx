@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Button from '../Button';
 import ContactModal from '../ContactModal';
+import { trackConversion_StartProjectClick } from '@/lib/tracking';
+import TrustBadges from '../TrustBadges';
 
 export default function Hero() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,8 +48,14 @@ export default function Hero() {
                 </p>
 
                 {/* CTAs */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                    <Button onClick={() => setIsModalOpen(true)} variant="primary" size="lg">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                    <Button 
+                        onClick={() => {
+                            trackConversion_StartProjectClick('Hero Primary Button');
+                            setIsModalOpen(true);
+                        }} 
+                        variant="primary" size="lg"
+                    >
                         Start a project
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                             <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -56,6 +64,11 @@ export default function Hero() {
                     <Button href="#services" variant="secondary" size="lg">
                         View Services
                     </Button>
+                </div>
+                
+                {/* Embedded Trust Badges */}
+                <div className="mb-16">
+                    <TrustBadges />
                 </div>
 
                 {/* Trust Indicators */}

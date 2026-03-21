@@ -6,6 +6,12 @@ import Link from 'next/link';
 export const metadata: Metadata = {
     title: 'Success Stories & Case Studies | Brynex Labs',
     description: 'Explore how Brynex Labs helps startups and enterprises ship production-grade software through real-world examples of our work.',
+    alternates: { canonical: '/case-studies' },
+    openGraph: {
+        title: 'Success Stories & Case Studies | Brynex Labs',
+        description: 'Explore how Brynex Labs helps startups and enterprises ship production-grade software through real-world examples of our work.',
+        url: '/case-studies'
+    }
 };
 
 export default function CaseStudiesIndex() {

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ContactForm from './ContactForm';
+import { trackConversion_FormSubmit } from '@/lib/tracking';
 
 interface ContactModalProps {
     isOpen: boolean;
@@ -53,7 +54,10 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <div className="p-6 overflow-y-auto">
                     <ContactForm 
                         isModal 
-                        onSuccess={() => setTitle('Request Received')}
+                        onSuccess={() => {
+                            trackConversion_FormSubmit();
+                            setTitle('Request Received');
+                        }}
                     />
                     
                     {title === 'Request Received' && (
