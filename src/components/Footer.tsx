@@ -51,6 +51,7 @@ export default function Footer() {
                                 { label: 'AI Agents', href: '/services/ai-agents-automation' },
                                 { label: 'Cloud & Infra', href: '/services/cloud-infrastructure' },
                                 { label: 'Web & Mobile', href: '/services/web-mobile-development' },
+                                { label: 'SaaS SEO', href: '/services/saas-seo' },
                             ].map(link => (
                                 <li key={link.label}>
                                     <Link

@@ -32,6 +32,11 @@ const services = [
         title: 'Application Modernization',
         description: 'Transform legacy systems into modern, efficient, and secure digital assets.',
     },
+    {
+        slug: 'saas-seo',
+        title: 'SaaS SEO & Organic Growth',
+        description: 'Scale your MRR with sustainable, high-converting organic traffic strategies tailored for SaaS companies.',
+    },
 ];
 
 export default function Services() {
