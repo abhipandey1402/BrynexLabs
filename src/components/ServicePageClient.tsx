@@ -162,7 +162,7 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                     <div className="max-w-4xl mx-auto bg-background-secondary/30 rounded-3xl p-8 md:p-12 shadow-sm flex flex-col md:flex-row gap-8 items-center">
                         <div className="flex-1">
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" className="text-accent/30 mb-6"><path d="M10 11h-4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2zm10 0h-4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2zM10 15v-2a4 4 0 0 0-4-4H4a6 6 0 0 1 6 6zm10 0v-2a4 4 0 0 0-4-4h-2a6 6 0 0 1 6 6z" fill="currentColor"/></svg>
-                            <p className="text-xl md:text-2xl font-serif text-foreground leading-relaxed italic mb-6">"{service.testimonial.quote}"</p>
+                            <p className="text-xl md:text-2xl font-serif text-foreground leading-relaxed italic mb-6">&quot;{service.testimonial.quote}&quot;</p>
                             <div>
                                 <div className="font-bold text-foreground text-lg">{service.testimonial.author}</div>
                                 <div className="text-accent font-medium tracking-wide uppercase mt-1 text-xs">{service.testimonial.role}</div>
