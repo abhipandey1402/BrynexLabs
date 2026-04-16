@@ -10,6 +10,12 @@ export interface ServiceDetail {
     solutions: string[];
     techStack: { name: string; icon: string }[];
     faqs: { question: string; answer: string }[];
+    metrics?: { value: string; label: string }[];
+    hook?: string;
+    process?: { title: string; description: string }[];
+    targetAudience?: { for: string[]; notFor: string[] };
+    testimonial?: { quote: string; author: string; role: string; avatar?: string };
+    customCta?: { title: string; subtitle: string; buttonText: string };
 }
 
 export const services: ServiceDetail[] = [
@@ -270,5 +276,84 @@ export const services: ServiceDetail[] = [
                 answer: 'We aim for zero-downtime migrations by running old and new systems in parallel until we are confident in the switch.',
             },
         ],
+    },
+    {
+        slug: 'saas-seo',
+        title: 'SaaS SEO & Organic Growth',
+        description: 'Stop renting your audience from ad platforms. Build a compounding organic growth engine that scales MRR autonomously.',
+        hook: 'Stop renting your audience from ad platforms. We help B2B SaaS companies transition from high-CAC paid campaigns to a high-converting organic pipeline.',
+        metrics: [
+            { value: '300%', label: 'Average Traffic Increase' },
+            { value: '60%', label: 'Lower Cost Per Acquisition' },
+            { value: '10x', label: 'ROI vs Paid Channels' },
+        ],
+        seo: {
+            title: 'SaaS SEO & Organic Growth | Brynex Labs',
+            metaDescription: 'Drive high-intent traffic and scale your SaaS MRR with our specialized technical, programmatic, and content-driven SEO strategies.',
+        },
+        challenges: [
+            'Paid ad channels (CAC) are eating your profit margins and scaling is impossible without bleeding cash.',
+            'Your React/Next.js app is completely invisible to Google search bots due to SPA rendering walls.',
+            'You rank for low-intent "fluff" keywords that bring traffic but absolutely zero product trials.',
+            'Competitors with inferior products are dominating your niche using simple comparison pages.',
+        ],
+        solutions: [
+            'Zero-CAC Core Engine: Shift your acquisition from rented paid ads to an owned, compounding organic traffic pipeline.',
+            'SPA Technical Mastery: We implement comprehensive SSR/SSG for Next.js & React to obliterate rendering walls and guarantee indexing.',
+            'BOFU Conversion Architecture: Stop targeting informational fluff and dominate bottom-of-the-funnel keywords where buyers are actively ready to subscribe.',
+            'Programmatic SEO (pSEO): Rapidly deploy hundreds of automated "Alternative to X" comparison pages to steal competitor traffic.',
+            'Semantic Authority Building: Algorithmically outrank massive legacy competitors using targeted Digital PR and white-hat data-backed links.',
+        ],
+        techStack: [
+            { name: 'Ahrefs', icon: 'Ahf' },
+            { name: 'Semrush', icon: 'Sem' },
+            { name: 'GSC', icon: 'GSC' },
+            { name: 'GA4', icon: 'GA4' },
+            { name: 'Next.js', icon: 'Next' },
+            { name: 'Screaming Frog', icon: 'Frog' },
+        ],
+        faqs: [
+            {
+                question: 'How long does it take to see results from SaaS SEO?',
+                answer: 'While technical improvements can show rapid indexing benefits within weeks, a comprehensive content and authority strategy typically takes 3-6 months to show significant MRR impact.',
+            },
+            {
+                question: 'How do you handle SEO for React/Next.js apps?',
+                answer: 'We specialize in optimizing JavaScript frameworks. We implement Server-Side Rendering (SSR), Static Site Generation (SSG), dynamic sitemaps, and optimized metadata to ensure flawless crawling.',
+            },
+            {
+                question: 'What makes SEO for SaaS different from normal SEO?',
+                answer: 'SaaS SEO uniquely focuses on product-led growth (PLG), feature/use-case pages, comparison pages (vs. competitors), and driving free trials rather than simple form fills or e-commerce purchases.',
+            },
+        ],
+        process: [
+            { title: 'Technical & Architecture Audit', description: 'We resolve crawlability blockers, implement Next.js Server-Side Rendering (SSR), fix Core Web Vitals, and perfectly structure your URL hierarchy.' },
+            { title: 'BOFU Content Engine', description: 'We launch comparison pages (Alternative to X), use-case features, and integration pages designed strictly for lead conversion.' },
+            { title: 'Programmatic Scaling', description: 'Using pSEO, we generate high-quality hyper-targeted landing pages around combinations of your integrations and use-cases to dominate long-tail intent keywords.' },
+            { title: 'Semantic Authority PR', description: 'We acquire massive domain authority explicitly through data-backed digital PR and partnerships relevant strictly to the B2B SaaS space.' },
+        ],
+        targetAudience: {
+            for: [
+                'Post-Seed or Series A+ B2B SaaS companies',
+                'Products with high Customer Lifetime Value (LTV)',
+                'Companies spending $10k+/mo on paid ads with diminishing returns',
+                'Teams with React or Next.js frontends struggling with organic indexing',
+            ],
+            notFor: [
+                'Companies seeking cheap, high-volume generic AI content farms',
+                'Businesses expecting overnight 10x results without technical investment',
+                'Teams unwilling to implement crucial engineering and architecture recommendations',
+            ]
+        },
+        testimonial: {
+            quote: 'Working with Brynex Labs completely shifted our growth model. We were burning cash on Google Ads with horrible CAC. In 5 months, they built an organic architecture that now drives 60% of our enterprise demos on autopilot.',
+            author: 'Michael R.',
+            role: 'VP of Growth, Enterprise SaaS Platform',
+        },
+        customCta: {
+            title: 'Stop Burning Cash on Paid Ads',
+            subtitle: 'Get a free, no-obligation Technical SEO Audit and a custom 6-month organic growth blueprint for your SaaS.',
+            buttonText: 'Request Free Audit',
+        }
     },
 ];
