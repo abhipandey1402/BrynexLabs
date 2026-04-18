@@ -2,7 +2,7 @@ import Link from 'next/link';
 import SectionWrapper from '../SectionWrapper';
 
 const stats = [
-    { label: 'Avg. Experience', value: '7+ Years' },
+    { label: 'Avg. Experience', value: '3+ Years' },
     { label: 'Project Success', value: '100%' },
     { label: 'Senior Engineers', value: '10+' },
 ];
