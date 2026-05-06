@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { services } from '@/data/services';
 import ServicePageClient from '@/components/ServicePageClient';
+import SaaSSEOClient from '@/components/SaaSSEOClient';
 
 interface PageProps {
     params: {
@@ -63,7 +64,11 @@ export default function ServicePage({ params }: PageProps) {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <ServicePageClient service={service} />
+            {service.slug === 'saas-seo' ? (
+                <SaaSSEOClient service={service} />
+            ) : (
+                <ServicePageClient service={service} />
+            )}
         </>
     );
 }
