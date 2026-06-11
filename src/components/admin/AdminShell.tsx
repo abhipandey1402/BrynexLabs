@@ -17,7 +17,7 @@ export default function AdminShell({ title, subtitle, actions, children }: Admin
 
     return (
         <div className="min-h-screen">
-            <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
+            <header className="sticky top-0 z-40 border-b border-border bg-background">
                 <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-6">
                         <Link href="/super-admin" className="flex items-baseline gap-2 select-none">

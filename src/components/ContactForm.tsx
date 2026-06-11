@@ -123,32 +123,65 @@ export default function ContactForm({ onSuccess, className = '', isModal = false
                     />
                 </div>
                 <style jsx global>{`
+                    /* Theme vars are RGB(A) triplets, so they must be wrapped in rgb()/rgba(). */
                     .contact-phone-input .react-international-phone-input-container {
                         width: 100%;
                     }
                     .contact-phone-input .react-international-phone-input {
                         width: 100%;
-                        background-color: var(--background-secondary) !important; 
-                        color: var(--foreground) !important;
-                        border-color: var(--border) !important;
+                        background-color: rgb(var(--background-secondary)) !important;
+                        color: rgb(var(--foreground)) !important;
+                        border-color: rgba(var(--border)) !important;
                         border-radius: 0 8px 8px 0 !important;
                         height: 42px !important;
+                        transition: border-color 0.2s ease;
+                    }
+                    .contact-phone-input .react-international-phone-input:focus {
+                        border-color: var(--accent) !important;
                     }
                     .contact-phone-input .react-international-phone-country-selector-button {
-                        background-color: var(--background-secondary) !important;
-                        border-color: var(--border) !important;
+                        background-color: rgb(var(--background-secondary)) !important;
+                        border-color: rgba(var(--border)) !important;
                         border-radius: 8px 0 0 8px !important;
                         border-right: none !important;
                         height: 42px !important;
+                        transition: background-color 0.2s ease;
                     }
                     .contact-phone-input .react-international-phone-country-selector-button:hover {
-                        background-color: var(--background-tertiary) !important;
+                        background-color: rgb(var(--background-tertiary)) !important;
                     }
                     .contact-phone-input .react-international-phone-country-selector-dropdown {
-                        background-color: var(--background-card) !important;
-                        color: var(--foreground) !important;
-                        border: 1px solid var(--border-hover) !important;
+                        background-color: rgb(var(--background-card)) !important;
+                        color: rgb(var(--foreground)) !important;
+                        border: 1px solid rgba(var(--border-hover)) !important;
+                        border-radius: 12px !important;
+                        box-shadow: var(--shadow-card-hover) !important;
+                        padding: 4px !important;
                         z-index: 100;
+                    }
+                    .contact-phone-input .react-international-phone-country-selector-dropdown__list-item {
+                        background-color: rgb(var(--background-card)) !important;
+                        color: rgb(var(--foreground)) !important;
+                        border-radius: 8px !important;
+                        transition: background-color 0.15s ease;
+                    }
+                    .contact-phone-input .react-international-phone-country-selector-dropdown__list-item:hover,
+                    .contact-phone-input .react-international-phone-country-selector-dropdown__list-item--focused {
+                        background-color: rgb(var(--background-secondary)) !important;
+                    }
+                    .contact-phone-input .react-international-phone-country-selector-dropdown__list-item--selected {
+                        background-color: rgba(194, 65, 12, 0.12) !important;
+                        color: var(--accent) !important;
+                    }
+                    .contact-phone-input .react-international-phone-country-selector-dropdown__list-item-country-name {
+                        color: rgb(var(--foreground)) !important;
+                    }
+                    .contact-phone-input .react-international-phone-country-selector-dropdown__list-item--selected .react-international-phone-country-selector-dropdown__list-item-country-name {
+                        color: var(--accent) !important;
+                        font-weight: 600;
+                    }
+                    .contact-phone-input .react-international-phone-country-selector-dropdown__list-item-dial-code {
+                        color: rgba(var(--foreground-muted), 1) !important;
                     }
                 `}</style>
             </div>

@@ -80,7 +80,7 @@ function Toolbar({ editor }: { editor: Editor }) {
     const inTable = editor.isActive('table');
 
     return (
-        <div className="sticky top-0 z-10 border-b border-border bg-background-secondary/40 rounded-t-xl backdrop-blur">
+        <div className="sticky top-0 z-10 border-b border-border bg-background-secondary rounded-t-xl">
             <div role="toolbar" aria-label="Text formatting" className="flex flex-wrap items-center gap-1 p-2">
                 {/* Block type */}
                 <ToolbarButton label="Paragraph (⌘⌥0)" active={editor.isActive('paragraph') && !editor.isActive('bulletList') && !editor.isActive('orderedList')} onClick={() => editor.chain().focus().setParagraph().run()}>¶</ToolbarButton>

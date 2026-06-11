@@ -98,7 +98,7 @@ export default function SaaSSEOClient({ service }: SaaSSEOClientProps) {
                             </div>
                         ))}
                     </div>
-                    <div className="text-center p-6 rounded-2xl border border-border bg-background-card/80 backdrop-blur-sm">
+                    <div className="text-center p-6 rounded-2xl border border-border bg-background-card">
                         <p className="text-foreground-secondary text-lg">
                             <span className="font-semibold text-foreground">Result:</span> more visitors, but no meaningful increase in pipeline
                         </p>

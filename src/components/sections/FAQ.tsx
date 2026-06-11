@@ -17,7 +17,7 @@ export default function FAQ() {
     return (
         <SectionWrapper id="faq" ariaLabel="Frequently Asked Questions">
             <div className="text-center mb-16 md:mb-20 animate-fade-in-up">
-                <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full border border-border bg-background-secondary/30 backdrop-blur-md">
+                <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full border border-border bg-background-secondary">
                     <span className="w-2 h-2 rounded-full bg-accent animate-pulse" aria-hidden="true" />
                     <span className="text-foreground-muted text-[10px] font-black uppercase tracking-[0.2em] pt-px">FAQ</span>
                 </div>
@@ -35,9 +35,9 @@ export default function FAQ() {
                     return (
                         <div
                             key={index}
-                            className={`border rounded-[1.5rem] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] backdrop-blur-md ${isOpen
+                            className={`border rounded-[1.5rem] overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen
                                 ? 'bg-background-card border-accent/30 shadow-[0_10px_40px_rgba(194,65,12,0.06)]'
-                                : 'bg-background-secondary/20 border-border/50 hover:border-border hover:bg-background-card/50'
+                                : 'bg-background-secondary border-border/50 hover:border-border hover:bg-background-card'
                                 }`}
                         >
                             <button
