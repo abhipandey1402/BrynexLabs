@@ -14,6 +14,7 @@ interface ContactFormProps {
 export default function ContactForm({ onSuccess, className = '', isModal = false }: ContactFormProps) {
     const [step, setStep] = useState<'form' | 'success'>('form');
     const [isLoading, setIsLoading] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -33,18 +34,20 @@ export default function ContactForm({ onSuccess, className = '', isModal = false
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        setSubmitError(null);
 
         try {
             await api.post('/contact', {
                 ...formData,
                 timezone: userTimezone,
+                source: typeof window !== 'undefined' ? window.location.pathname : undefined,
             });
 
             setStep('success');
             if (onSuccess) onSuccess();
         } catch (error) {
             console.error('Handled error in component:', error);
-            alert('Failed to send request. Please try again later.');
+            setSubmitError('We could not send your request — please try again in a moment.');
         } finally {
             setIsLoading(false);
         }
@@ -81,6 +84,14 @@ export default function ContactForm({ onSuccess, className = '', isModal = false
 
     return (
         <form onSubmit={handleSubmit} className={`space-y-4 ${className}`}>
+            {submitError && (
+                <div role="alert" className="flex items-start gap-2.5 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-red-500">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0 mt-0.5">
+                        <circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" />
+                    </svg>
+                    {submitError}
+                </div>
+            )}
             <div>
                 <label htmlFor="name" className="block text-sm font-medium text-foreground-secondary mb-1.5">
                     Full Name

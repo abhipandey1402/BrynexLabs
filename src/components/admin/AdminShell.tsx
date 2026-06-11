@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import AdminNav from './AdminNav';
 import LogoutButton from './LogoutButton';
+import { countNewLeads } from '@/lib/contactStore';
 
 interface AdminShellProps {
     title: string;
@@ -12,8 +13,9 @@ interface AdminShellProps {
 }
 
 /** Shared chrome for authenticated super-admin pages. */
-export default function AdminShell({ title, subtitle, actions, children }: AdminShellProps) {
+export default async function AdminShell({ title, subtitle, actions, children }: AdminShellProps) {
     const adminEmail = process.env.ADMIN_EMAIL;
+    const newLeads = await countNewLeads();
 
     return (
         <div className="min-h-screen">
@@ -24,7 +26,7 @@ export default function AdminShell({ title, subtitle, actions, children }: Admin
                             <span className="font-extrabold text-lg tracking-tighter text-foreground">BRYNEX</span>
                             <span className="text-[10px] font-black tracking-[0.3em] text-accent uppercase">CMS</span>
                         </Link>
-                        <AdminNav />
+                        <AdminNav newLeads={newLeads} />
                     </div>
                     <div className="flex items-center gap-3">
                         <Link href="/blog" target="_blank" className="hidden md:inline text-xs font-bold text-foreground-secondary hover:text-accent transition-colors">
