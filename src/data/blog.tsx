@@ -6,6 +6,10 @@
 
 export type BlogCategory = 'AI' | 'SaaS' | 'Cloud' | 'DevOps' | 'Engineering';
 
+export const BLOG_CATEGORIES: BlogCategory[] = ['AI', 'SaaS', 'Cloud', 'DevOps', 'Engineering'];
+
+export type BlogPostStatus = 'draft' | 'published';
+
 export interface BlogPost {
     slug: string;
     title: string;
@@ -16,6 +20,15 @@ export interface BlogPost {
     category: BlogCategory;
     content: string; // The raw html output from the Rich Text Editor
     seoDescription: string;
+    /** Service slugs this article maps to (rendered as related-service cards). */
+    relatedServices?: string[];
+    /** Tech stack tags this article touches (rendered as chips, used for discovery). */
+    techTags?: string[];
+    /** ISO timestamp for precise sorting & SEO; static posts fall back to parsing `date`. */
+    publishedAt?: string;
+    status?: BlogPostStatus;
+    /** 'static' = defined in code (read-only), 'db' = managed from the super-admin CMS. */
+    source?: 'static' | 'db';
 }
 
 export const blogPosts: BlogPost[] = [
@@ -173,12 +186,5 @@ export const blogPosts: BlogPost[] = [
     }
 ];
 
-// MOCK APIs for Server Components (To seamlessly map to future real APIs)
-export const getAllPosts = async (): Promise<BlogPost[]> => {
-    // Await simulated network latency
-    return Promise.resolve(blogPosts);
-};
-
-export const getPostBySlug = async (slug: string): Promise<BlogPost | undefined> => {
-    return Promise.resolve(blogPosts.find(post => post.slug === slug));
-};
+// Data fetching lives in '@/lib/blogService', which merges these static posts
+// with CMS-managed posts from MongoDB.

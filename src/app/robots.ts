@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/admin/', '/private/'], // Common private areas, adjust if needed
+      disallow: ['/api/', '/admin/', '/super-admin/', '/private/'], // Common private areas, adjust if needed
     },
     sitemap: 'https://brynex.in/sitemap.xml',
   };

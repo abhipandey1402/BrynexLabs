@@ -1,5 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { services } from '@/data/services';
+import { getAllPosts } from '@/lib/blogService';
+
+// Computed per request so CMS-published articles appear immediately for crawlers.
+export const dynamic = 'force-dynamic';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://brynex.in';
@@ -32,5 +36,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }));
 
-  return [...staticMappings, ...serviceMappings];
+  const posts = await getAllPosts();
+  const blogMappings = posts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: post.publishedAt ? new Date(post.publishedAt) : lastModified,
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  return [...staticMappings, ...serviceMappings, ...blogMappings];
 }
