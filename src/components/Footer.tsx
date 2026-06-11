@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ThemeToggle } from './ThemeToggle';
+import { services } from '@/data/services';
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -45,20 +46,13 @@ export default function Footer() {
                     <div>
                         <h3 className="text-foreground text-sm font-bold uppercase tracking-widest mb-6 border-l-2 border-accent pl-4">Services</h3>
                         <ul className="space-y-4" role="list">
-                            {[
-                                { label: 'Custom Software', href: '/services/custom-software-development' },
-                                { label: 'SaaS Engineering', href: '/services/saas-product-engineering' },
-                                { label: 'AI Agents', href: '/services/ai-agents-automation' },
-                                { label: 'Cloud & Infra', href: '/services/cloud-infrastructure' },
-                                { label: 'Web & Mobile', href: '/services/web-mobile-development' },
-                                { label: 'SaaS SEO', href: '/services/saas-seo' },
-                            ].map(link => (
-                                <li key={link.label}>
+                            {services.map(service => (
+                                <li key={service.slug}>
                                     <Link
-                                        href={link.href}
+                                        href={`/services/${service.slug}`}
                                         className="text-foreground-secondary text-sm hover:text-foreground transition-colors duration-200"
                                     >
-                                        {link.label}
+                                        {service.shortTitle ?? service.title}
                                     </Link>
                                 </li>
                             ))}

@@ -5,6 +5,7 @@ import { ServiceDetail } from '@/data/services';
 import SectionWrapper from './SectionWrapper';
 import Button from './Button';
 import ContactModal from './ContactModal';
+import TechMarquee from './TechMarquee';
 import { trackConversion_StartProjectClick, trackConversion_ServiceView } from '@/lib/tracking';
 
 interface ServicePageClientProps {
@@ -178,16 +179,7 @@ export default function ServicePageClient({ service }: ServicePageClientProps) {
                     <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">The Tech Stack</h2>
                     <p className="text-foreground-secondary">Modern tools for robust, scalable results.</p>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6">
-                    {service.techStack.map((tech) => (
-                        <div key={tech.name} className="flex flex-col items-center p-6 rounded-xl border border-border bg-background-card hover:border-accent transition-colors">
-                            <div className="w-10 h-10 rounded-lg bg-background-secondary flex items-center justify-center mb-3 text-accent font-bold text-xs">
-                                {tech.icon}
-                            </div>
-                            <span className="text-sm font-medium text-foreground">{tech.name}</span>
-                        </div>
-                    ))}
-                </div>
+                <TechMarquee items={service.techStack} />
             </SectionWrapper>
 
             {/* FAQs */}

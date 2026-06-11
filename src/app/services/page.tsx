@@ -5,11 +5,11 @@ import { services } from '@/data/services';
 
 export const metadata: Metadata = {
     title: 'Expert Software Engineering Services | Brynex Labs',
-    description: 'Explore our range of professional software engineering services, from custom app development and SaaS engineering to AI agents and cloud infrastructure.',
+    description: 'Explore our services: agentic AI and intelligent automation, AI-native software engineering, and revenue-focused SaaS SEO.',
     alternates: { canonical: '/services' },
     openGraph: {
         title: 'Expert Software Engineering Services | Brynex Labs',
-        description: 'Explore our range of professional software engineering services, from custom app development and SaaS engineering to AI agents and cloud infrastructure.',
+        description: 'Explore our services: agentic AI and intelligent automation, AI-native software engineering, and revenue-focused SaaS SEO.',
         url: '/services'
     }
 };
@@ -31,8 +31,8 @@ export default function ServicesIndex() {
                     {services.map((service, index) => (
                         <ServiceCard
                             key={service.slug}
-                            title={service.title}
-                            description={service.description}
+                            title={service.shortTitle ?? service.title}
+                            description={service.cardDescription ?? service.description}
                             href={`/services/${service.slug}`}
                             index={index}
                         />

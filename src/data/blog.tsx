@@ -29,7 +29,7 @@ export const blogPosts: BlogPost[] = [
         category: 'SaaS',
         seoDescription: 'A complete, deeply technical guide to choosing the perfect technology stack for your SaaS product to scale globally without massive scaling bottlenecks or technical debt.',
         content: `
-            <p>Choosing a tech stack is arguably the most permanent architectural decision you will make regarding your <a href="/services/saas-product-engineering">SaaS product engineering</a>. A well-constructed stack acts as a massive force multiplier, allowing a lean engineering team of three to outpace a disjointed team of thirty. But making the wrong choice traps you in an endless cycle of technical debt, refactoring, and integration bottlenecks right as you reach the critical phase of Product-Market Fit.</p>
+            <p>Choosing a tech stack is arguably the most permanent architectural decision you will make regarding your <a href="/services/ai-native-software-engineering">SaaS product engineering</a>. A well-constructed stack acts as a massive force multiplier, allowing a lean engineering team of three to outpace a disjointed team of thirty. But making the wrong choice traps you in an endless cycle of technical debt, refactoring, and integration bottlenecks right as you reach the critical phase of Product-Market Fit.</p>
             
             <h2>The "Hype-Driven Development" Trap</h2>
             <p>The tech industry is infamous for "Hype-Driven Development." Bootstrapped founders and seed-stage startups frequently make the catastrophic mistake of adopting hyper-complex, massively distributed architectures (like Kubernetes orchestration paired with multi-language microservices) simply because Netflix or Uber uses it. What they fail to realize is that Uber uses microservices because they have 5,000 engineers and completely different scaling vectors.</p>
@@ -72,8 +72,8 @@ export const blogPosts: BlogPost[] = [
 
             <h2>Related Services</h2>
             <ul>
-                <li><strong><a href="/services/saas-product-engineering">Explore our SaaS Product Engineering capabilities &rarr;</a></strong></li>
-                <li><strong><a href="/services/custom-software-development">Explore our Custom Software Development capabilities &rarr;</a></strong></li>
+                <li><strong><a href="/services/ai-native-software-engineering">Explore our AI-Native Software Engineering capabilities &rarr;</a></strong></li>
+                <li><strong><a href="/services/saas-seo">Explore our SaaS SEO & Organic Growth capabilities &rarr;</a></strong></li>
             </ul>
         `
     },
@@ -118,8 +118,8 @@ export const blogPosts: BlogPost[] = [
 
             <h2>Related Services</h2>
             <ul>
-                <li><strong><a href="/services/ai-agents-automation">Explore our AI Agents & Automation capabilities &rarr;</a></strong></li>
-                <li><strong><a href="/services/custom-software-development">Explore our Custom Software Development capabilities &rarr;</a></strong></li>
+                <li><strong><a href="/services/ai-agents-automation">Explore our Agentic AI & Intelligent Automation capabilities &rarr;</a></strong></li>
+                <li><strong><a href="/services/ai-native-software-engineering">Explore our AI-Native Software Engineering capabilities &rarr;</a></strong></li>
             </ul>
         `
     },
@@ -133,7 +133,7 @@ export const blogPosts: BlogPost[] = [
         category: 'Cloud',
         seoDescription: 'A ruthless technical and financial analysis of when to stick with AWS/GCP and exactly when to repatriate your massive infrastructure strictly on-premise for multi-million dollar cost savings.',
         content: `
-            <p>The standard Silicon Valley playbook is identical for almost everyone: Startups default to AWS. Hyper-growth unicorns default to AWS. Massive public entities default to AWS. Building your initial platform exclusively using managed <a href="/services/cloud-infrastructure">cloud infrastructure</a> (AWS, Vercel, GCP, Azure) is an objectively correct decision for optimizing speed-to-market.</p>
+            <p>The standard Silicon Valley playbook is identical for almost everyone: Startups default to AWS. Hyper-growth unicorns default to AWS. Massive public entities default to AWS. Building your initial platform exclusively using managed <a href="/services/ai-native-software-engineering">cloud infrastructure</a> (AWS, Vercel, GCP, Azure) is an objectively correct decision for optimizing speed-to-market.</p>
             <p>But at a certain defined scale scale, the highly marketed "Cloud Tax" stops being a convenient operational expense and mathematically morphs into a massive, unsustainable margin killer.</p>
             
             <h2>The Price of "Infinite Elasticity"</h2>
@@ -166,8 +166,8 @@ export const blogPosts: BlogPost[] = [
 
             <h2>Related Services</h2>
             <ul>
-                <li><strong><a href="/services/cloud-infrastructure">Explore our Cloud & Infrastructure capabilities &rarr;</a></strong></li>
-                <li><strong><a href="/services/saas-product-engineering">Explore our SaaS Product Engineering capabilities &rarr;</a></strong></li>
+                <li><strong><a href="/services/ai-native-software-engineering">Explore our AI-Native Software Engineering capabilities &rarr;</a></strong></li>
+                <li><strong><a href="/services/ai-agents-automation">Explore our Agentic AI & Intelligent Automation capabilities &rarr;</a></strong></li>
             </ul>
         `
     }

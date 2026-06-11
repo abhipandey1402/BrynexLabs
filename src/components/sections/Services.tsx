@@ -1,43 +1,6 @@
 import SectionWrapper from '../SectionWrapper';
 import ServiceCard from '../ServiceCard';
-
-const services = [
-    {
-        slug: 'custom-software-development',
-        title: 'Custom Software Development',
-        description: 'Architect and build bespoke applications that solve your specific business challenges.',
-    },
-    {
-        slug: 'web-mobile-development',
-        title: 'Web & Mobile Development',
-        description: 'Engage users with lightning-fast, SEO-optimized websites and high-performance mobile apps.',
-    },
-    {
-        slug: 'saas-product-engineering',
-        title: 'SaaS Product Engineering',
-        description: 'Launch your product with scalable, production-grade code and modern architecture.',
-    },
-    {
-        slug: 'ai-agents-automation',
-        title: 'AI Agents & Automation',
-        description: 'Build autonomous AI agents to handle complex workflows, customer support, and data analysis 24/7.',
-    },
-    {
-        slug: 'cloud-infrastructure',
-        title: 'Cloud & Infrastructure',
-        description: 'Deploy with confidence using secure, scalable, and automated cloud solutions.',
-    },
-    {
-        slug: 'application-modernization',
-        title: 'Application Modernization',
-        description: 'Transform legacy systems into modern, efficient, and secure digital assets.',
-    },
-    {
-        slug: 'saas-seo',
-        title: 'SaaS SEO & Organic Growth',
-        description: 'Scale your MRR with sustainable, high-converting organic traffic strategies tailored for SaaS companies.',
-    },
-];
+import { services } from '@/data/services';
 
 export default function Services() {
     return (
@@ -56,10 +19,10 @@ export default function Services() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                 {services.map((service, index) => (
                     <ServiceCard
-                        key={service.title}
-                        title={service.title}
-                        description={service.description}
-                        href={service.slug ? `/services/${service.slug}` : undefined}
+                        key={service.slug}
+                        title={service.shortTitle ?? service.title}
+                        description={service.cardDescription ?? service.description}
+                        href={`/services/${service.slug}`}
                         index={index}
                     />
                 ))}

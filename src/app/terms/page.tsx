@@ -46,10 +46,9 @@ export default function TermsPage() {
                                 Brynex Labs provides consultative engineering services, including but not limited to:
                             </p>
                             <ul className="list-disc pl-6 space-y-2 text-foreground-secondary">
-                                <li>AI Agents & Automation Strategy</li>
-                                <li>SaaS Product Engineering</li>
-                                <li>Cloud Infrastructure Design</li>
-                                <li>High-Performance Web Platform Development</li>
+                                <li>Agentic AI & Intelligent Automation</li>
+                                <li>AI-Native Software Engineering</li>
+                                <li>SaaS SEO & Organic Growth</li>
                                 <li>Technical Architecture Consulting</li>
                             </ul>
                         </section>

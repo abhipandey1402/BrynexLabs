@@ -5,6 +5,7 @@ import { ServiceDetail } from '@/data/services';
 import SectionWrapper from './SectionWrapper';
 import Button from './Button';
 import ContactModal from './ContactModal';
+import TechMarquee from './TechMarquee';
 import { trackConversion_StartProjectClick, trackConversion_ServiceView } from '@/lib/tracking';
 
 interface SaaSSEOClientProps {
@@ -381,6 +382,16 @@ export default function SaaSSEOClient({ service }: SaaSSEOClientProps) {
                         </div>
                     </div>
                 </div>
+            </SectionWrapper>
+
+            {/* Tools & Stack */}
+            <SectionWrapper>
+                <div className="text-center mb-12">
+                    <SectionBadge label="Tools & Stack" />
+                    <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">The SEO Stack Behind the Results</h2>
+                    <p className="text-foreground-secondary max-w-2xl mx-auto">Industry-leading tools for research, technical audits, analytics, and conversion optimization.</p>
+                </div>
+                <TechMarquee items={service.techStack} />
             </SectionWrapper>
 
             {/* Comparison Table */}
