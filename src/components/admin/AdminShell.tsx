@@ -10,24 +10,36 @@ interface AdminShellProps {
     children: React.ReactNode;
 }
 
-/** Shared chrome for authenticated super-admin pages: sidebar + content area. */
+/**
+ * Shared chrome for authenticated super-admin pages.
+ * App-shell layout: sidebar and the page header stay pinned; only the
+ * content pane scrolls (desktop). On mobile the header is sticky under
+ * the top bar and the document scrolls naturally.
+ */
 export default async function AdminShell({ title, subtitle, actions, children }: AdminShellProps) {
     const adminEmail = process.env.ADMIN_EMAIL;
     const newLeads = await countNewLeads();
 
     return (
-        <div className="min-h-screen lg:flex">
+        <div className="min-h-screen lg:flex lg:h-screen lg:overflow-hidden">
             <AdminSidebar newLeads={newLeads} adminEmail={adminEmail} />
-            <div className="flex-1 min-w-0">
-                <main className="mx-auto max-w-6xl px-5 sm:px-8 py-8 lg:py-10">
-                    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-                        <div>
-                            <h1 className="text-2xl md:text-3xl font-black text-foreground tracking-tight">{title}</h1>
-                            {subtitle && <p className="mt-1.5 text-sm text-foreground-secondary">{subtitle}</p>}
+            <div className="flex-1 min-w-0 flex flex-col lg:h-screen">
+                {/* Pinned page header */}
+                <header className="sticky top-14 lg:static z-30 bg-background border-b border-border">
+                    <div className="px-5 sm:px-8 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="min-w-0">
+                            <h1 className="text-xl md:text-2xl font-black text-foreground tracking-tight truncate">{title}</h1>
+                            {subtitle && <p className="mt-0.5 text-xs sm:text-sm text-foreground-secondary truncate">{subtitle}</p>}
                         </div>
                         {actions && <div className="shrink-0">{actions}</div>}
                     </div>
-                    {children}
+                </header>
+
+                {/* Scrollable content pane */}
+                <main className="flex-1 lg:overflow-y-auto">
+                    <div className="px-5 sm:px-8 py-8">
+                        {children}
+                    </div>
                 </main>
             </div>
         </div>
