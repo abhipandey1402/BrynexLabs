@@ -10,17 +10,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // The CSS variables hold comma-separated RGB triplets (e.g. "255, 255, 255"),
+        // so the legacy rgba(..., alpha) form is required — the modern slash syntax
+        // (rgb(var(--x) / a)) produces invalid CSS and renders transparent.
         background: {
-          DEFAULT: 'rgb(var(--background) / <alpha-value>)',
-          secondary: 'rgb(var(--background-secondary) / <alpha-value>)',
-          tertiary: 'rgb(var(--background-tertiary) / <alpha-value>)',
-          card: 'rgb(var(--background-card) / <alpha-value>)',
-          'card-hover': 'rgb(var(--background-card-hover) / <alpha-value>)',
+          DEFAULT: 'rgba(var(--background), <alpha-value>)',
+          secondary: 'rgba(var(--background-secondary), <alpha-value>)',
+          tertiary: 'rgba(var(--background-tertiary), <alpha-value>)',
+          card: 'rgba(var(--background-card), <alpha-value>)',
+          'card-hover': 'rgba(var(--background-card-hover), <alpha-value>)',
         },
         foreground: {
-          DEFAULT: 'rgb(var(--foreground) / <alpha-value>)',
-          secondary: 'rgb(var(--foreground-secondary) / <alpha-value>)',
-          muted: 'rgb(var(--foreground-muted) / <alpha-value>)',
+          DEFAULT: 'rgba(var(--foreground), <alpha-value>)',
+          secondary: 'rgba(var(--foreground-secondary), <alpha-value>)',
+          muted: 'rgba(var(--foreground-muted), <alpha-value>)',
         },
         accent: {
           DEFAULT: 'var(--accent)',
