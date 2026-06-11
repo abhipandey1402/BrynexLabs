@@ -69,12 +69,22 @@ export function sanitizeContent(html: string): string {
     return sanitizeHtml(html, {
         allowedTags: [
             'h2', 'h3', 'h4', 'p', 'a', 'ul', 'ol', 'li', 'strong', 'em', 'b', 'i', 'u', 's',
-            'blockquote', 'br', 'hr', 'code', 'pre', 'img', 'figure', 'figcaption', 'table',
-            'thead', 'tbody', 'tr', 'th', 'td',
+            'mark', 'blockquote', 'br', 'hr', 'code', 'pre', 'img', 'figure', 'figcaption',
+            'table', 'thead', 'tbody', 'tr', 'th', 'td',
         ],
         allowedAttributes: {
             a: ['href', 'target', 'rel'],
             img: ['src', 'alt', 'width', 'height'],
+            th: ['colspan', 'rowspan'],
+            td: ['colspan', 'rowspan'],
+            // Text alignment from the editor arrives as inline style; allowedStyles narrows it.
+            p: ['style'],
+            h2: ['style'],
+            h3: ['style'],
+            h4: ['style'],
+        },
+        allowedStyles: {
+            '*': { 'text-align': [/^(left|center|right|justify)$/] },
         },
         allowedSchemes: ['https', 'http', 'mailto'],
         transformTags: {

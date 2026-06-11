@@ -26,7 +26,7 @@ function estimateReadTime(html: string): string {
     return `${Math.max(1, Math.round(words / 200))} min read`;
 }
 
-const FIELD_CLASS = 'w-full rounded-xl border border-border bg-background-card px-4 py-3 text-foreground placeholder:text-foreground-muted focus:border-accent focus:outline-none transition-colors';
+const FIELD_CLASS = 'w-full rounded-xl border border-border bg-background-card px-4 py-3 text-foreground placeholder:text-foreground-muted placeholder:opacity-50 placeholder:font-normal focus:border-accent focus:outline-none transition-colors';
 const LABEL_CLASS = 'block text-xs font-black uppercase tracking-widest text-foreground-secondary mb-2';
 
 export default function PostEditor({ mode, initialPost }: PostEditorProps) {
@@ -145,8 +145,8 @@ export default function PostEditor({ mode, initialPost }: PostEditorProps) {
                         id="post-title"
                         value={title}
                         onChange={(e) => handleTitleChange(e.target.value)}
-                        placeholder="How to Build Production-Grade AI Agents in 2026"
-                        className={`${FIELD_CLASS} text-xl font-bold`}
+                        placeholder="e.g. How to Build Production-Grade AI Agents in 2026"
+                        className={`${FIELD_CLASS} text-xl font-bold placeholder:text-base`}
                     />
                 </div>
 
@@ -157,7 +157,7 @@ export default function PostEditor({ mode, initialPost }: PostEditorProps) {
                         value={excerpt}
                         onChange={(e) => setExcerpt(e.target.value)}
                         rows={2}
-                        placeholder="A one-or-two sentence hook that makes readers click."
+                        placeholder="e.g. A one-or-two sentence hook that makes readers click…"
                         className={FIELD_CLASS}
                     />
                 </div>
@@ -173,11 +173,18 @@ export default function PostEditor({ mode, initialPost }: PostEditorProps) {
                                     role="tab"
                                     aria-selected={tab === t}
                                     onClick={() => setTab(t)}
-                                    className={`px-5 py-2 rounded-lg text-sm font-bold capitalize transition-colors ${
-                                        tab === t ? 'bg-background-card text-foreground shadow-sm' : 'text-foreground-secondary hover:text-foreground'
+                                    className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-bold capitalize transition-all duration-200 ${
+                                        tab === t
+                                            ? 'bg-accent text-white shadow-button scale-[1.02]'
+                                            : 'text-foreground-secondary hover:text-foreground hover:bg-background-card'
                                     }`}
                                 >
-                                    {t === 'write' ? '✍️ Write' : '👁 Preview'}
+                                    {t === 'write' ? (
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                                    ) : (
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                    )}
+                                    {t}
                                 </button>
                             ))}
                         </div>
@@ -257,7 +264,7 @@ export default function PostEditor({ mode, initialPost }: PostEditorProps) {
                                 id="post-slug"
                                 value={slug}
                                 onChange={(e) => { setSlug(slugify(e.target.value)); setSlugTouched(true); }}
-                                placeholder="my-article-slug"
+                                placeholder="your-article-slug"
                                 className={`${FIELD_CLASS} !py-2 font-mono text-sm`}
                             />
                         </div>
@@ -291,7 +298,7 @@ export default function PostEditor({ mode, initialPost }: PostEditorProps) {
                             value={seoDescription}
                             onChange={(e) => setSeoDescription(e.target.value)}
                             rows={3}
-                            placeholder="The summary search engines show under your title — make it count."
+                            placeholder="e.g. The summary search engines show under your title — make it count…"
                             className={FIELD_CLASS}
                         />
                         <p className={`mt-1.5 text-xs font-semibold ${seoDescription.length >= 50 && seoDescription.length <= 170 ? 'text-green-500' : 'text-foreground-muted'}`}>
@@ -363,7 +370,7 @@ export default function PostEditor({ mode, initialPost }: PostEditorProps) {
                             value={customTag}
                             onChange={(e) => setCustomTag(e.target.value)}
                             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCustomTag(); } }}
-                            placeholder="Custom tag…"
+                            placeholder="Add a custom tag…"
                             className={`${FIELD_CLASS} !py-2 text-sm`}
                         />
                         <button

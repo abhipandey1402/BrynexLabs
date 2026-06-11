@@ -56,6 +56,12 @@ export default function ArticleProse({ content }: { content: string }) {
             hover:prose-a:text-accent-light
             prose-a:font-semibold
             prose-a:no-underline hover:prose-a:underline
+
+            /* Media & tables */
+            prose-img:rounded-2xl
+            prose-img:shadow-card
+            prose-th:text-foreground
+            prose-td:text-foreground-secondary
         ">
             {contentBlocks.map((block, index) => (
                 <div key={index}>
