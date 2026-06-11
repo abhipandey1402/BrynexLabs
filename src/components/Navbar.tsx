@@ -45,7 +45,7 @@ export default function Navbar() {
                     className={`
           transition-all duration-300
           ${isScrolled
-                            ? 'bg-background/80 backdrop-blur-xl border-b border-border shadow-sm dark:shadow-black/20'
+                            ? 'bg-background border-b border-border shadow-sm dark:shadow-black/20'
                             : 'bg-transparent'
                         }
         `}
@@ -94,7 +94,7 @@ export default function Navbar() {
                                                 <path d="M6 9l6 6 6-6" />
                                             </svg>
                                         </NavigationMenu.Trigger>
-                                        <NavigationMenu.Content className="absolute top-0 left-0 w-auto bg-background-card backdrop-blur-xl border border-border ring-1 ring-border/40 rounded-xl shadow-[0_8px_40px_rgba(0,0,0,0.18)] p-6 animate-in fade-in zoom-in-95 duration-200">
+                                        <NavigationMenu.Content className="absolute top-0 left-0 w-auto bg-background-card border border-border ring-1 ring-border/40 rounded-xl shadow-[0_8px_40px_rgba(0,0,0,0.18)] p-6 animate-in fade-in zoom-in-95 duration-200">
                                             <ul className="m-0 flex flex-col gap-2 w-[400px] list-none p-0">
                                                 {services.map((service) => (
                                                     <li key={service.slug}>
@@ -193,7 +193,7 @@ export default function Navbar() {
                         className={`
             md:hidden
             fixed inset-x-0 top-[65px] bottom-0
-            bg-background/95 backdrop-blur-xl
+            bg-background
             border-t border-border
             transition-all duration-300 ease-out overflow-y-auto
             ${isMobileOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}

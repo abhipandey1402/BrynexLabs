@@ -30,11 +30,11 @@ export default function StickyCTA() {
                     isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95 pointer-events-none'
                 }`}
             >
-                {/* 
-                  The backdrop blur and subtle border make it pop over any content.
+                {/*
+                  Solid themed surface with a subtle border so it pops over any content.
                   Padding is asymmetrical to account for the button on the right.
                 */}
-                <div className="bg-background/90 backdrop-blur-xl border border-border/60 p-2 pr-2.5 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.15)] flex items-center justify-between gap-3 md:gap-5 ring-1 ring-white/5 mx-auto w-[90vw] md:w-auto max-w-[400px] md:max-w-none">
+                <div className="bg-background border border-border p-2 pr-2.5 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.15)] flex items-center justify-between gap-3 md:gap-5 ring-1 ring-white/5 mx-auto w-[90vw] md:w-auto max-w-[400px] md:max-w-none">
                     <span className="hidden md:inline-block pl-4 text-sm font-semibold text-foreground-secondary whitespace-nowrap">
                         Ready to accelerate your engineering?
                     </span>

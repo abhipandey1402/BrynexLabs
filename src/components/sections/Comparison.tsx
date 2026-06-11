@@ -51,7 +51,7 @@ export default function Comparison() {
                     <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-accent/10 blur-[50px] rounded-full pointer-events-none" />
 
                     <div className="relative z-10">
-                        <div className="inline-block px-3 py-1 bg-accent/10 text-accent backdrop-blur-md rounded-full text-xs font-bold tracking-wider mb-4 border border-accent/20">
+                        <div className="inline-block px-3 py-1 bg-accent/10 text-accent rounded-full text-xs font-bold tracking-wider mb-4 border border-accent/20">
                             THE STANDARD
                         </div>
                         <h3 className="text-2xl font-extrabold mb-2">Brynex Labs</h3>
