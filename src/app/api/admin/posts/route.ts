@@ -37,8 +37,11 @@ export async function POST(request: NextRequest) {
     const { input, error } = validatePostInput(raw);
     if (!input) return NextResponse.json({ error }, { status: 400 });
 
+    // Explicit opt-in lets the CMS override a code-defined article by reusing its slug.
+    const allowStaticSlug = (raw as Record<string, unknown>).overrideStatic === true;
+
     try {
-        const post = await createDbPost(input);
+        const post = await createDbPost(input, { allowStaticSlug });
         revalidateBlog(post.slug);
         return NextResponse.json({ post }, { status: 201 });
     } catch (err) {

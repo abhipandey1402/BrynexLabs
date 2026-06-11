@@ -172,8 +172,10 @@ export function isStaticSlug(slug: string): boolean {
     return staticPosts.some((p) => p.slug === slug);
 }
 
-export async function createDbPost(input: BlogPostInput): Promise<BlogPost> {
-    if (isStaticSlug(input.slug)) {
+export async function createDbPost(input: BlogPostInput, options?: { allowStaticSlug?: boolean }): Promise<BlogPost> {
+    // A DB post sharing a static slug acts as an override: getPostBySlug prefers
+    // the DB version, so the CMS copy replaces the code-defined article publicly.
+    if (!options?.allowStaticSlug && isStaticSlug(input.slug)) {
         throw new Error('This slug is already used by a code-defined article.');
     }
     const col = await collection();
