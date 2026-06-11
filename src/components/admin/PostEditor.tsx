@@ -8,7 +8,8 @@ import RichTextEditor from './RichTextEditor';
 import ArticleProse from '@/components/blog/ArticleProse';
 
 interface PostEditorProps {
-    mode: 'create' | 'edit';
+    /** 'override' edits a code-defined article: saving creates a CMS copy that takes precedence. */
+    mode: 'create' | 'edit' | 'override';
     initialPost?: BlogPost;
 }
 
@@ -34,7 +35,7 @@ export default function PostEditor({ mode, initialPost }: PostEditorProps) {
 
     const [title, setTitle] = useState(initialPost?.title ?? '');
     const [slug, setSlug] = useState(initialPost?.slug ?? '');
-    const [slugTouched, setSlugTouched] = useState(mode === 'edit');
+    const [slugTouched, setSlugTouched] = useState(mode !== 'create');
     const [excerpt, setExcerpt] = useState(initialPost?.excerpt ?? '');
     const [author, setAuthor] = useState(initialPost?.author ?? 'Brynex Labs Engineering');
     const [category, setCategory] = useState<BlogCategory>(initialPost?.category ?? 'Engineering');
@@ -91,6 +92,8 @@ export default function PostEditor({ mode, initialPost }: PostEditorProps) {
             relatedServices,
             techTags,
             status,
+            // Overriding a code-defined article reuses its slug on purpose.
+            overrideStatic: mode === 'override',
         };
 
         try {
@@ -133,6 +136,12 @@ export default function PostEditor({ mode, initialPost }: PostEditorProps) {
         <div className="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-8 items-start">
             {/* ===== Main column ===== */}
             <div className="space-y-6 min-w-0">
+                {mode === 'override' && (
+                    <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 text-sm text-foreground-secondary">
+                        <span className="font-bold text-amber-500">Code-defined article.</span>{' '}
+                        Saving creates a CMS copy that replaces the original on the live site. Deleting the CMS copy later restores the code-defined version.
+                    </div>
+                )}
                 {error && (
                     <div role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 px-5 py-4 text-sm font-semibold text-red-500">
                         {error}
@@ -240,7 +249,7 @@ export default function PostEditor({ mode, initialPost }: PostEditorProps) {
                             disabled={saving}
                             className="w-full py-3 rounded-xl bg-accent-gradient text-white font-bold shadow-button hover:brightness-110 transition-all disabled:opacity-50"
                         >
-                            {saving ? 'Saving…' : mode === 'edit' ? 'Update & Publish' : 'Publish Article'}
+                            {saving ? 'Saving…' : mode === 'edit' ? 'Update & Publish' : mode === 'override' ? 'Publish Override' : 'Publish Article'}
                         </button>
                         <button
                             type="button"
@@ -265,9 +274,13 @@ export default function PostEditor({ mode, initialPost }: PostEditorProps) {
                                 value={slug}
                                 onChange={(e) => { setSlug(slugify(e.target.value)); setSlugTouched(true); }}
                                 placeholder="your-article-slug"
-                                className={`${FIELD_CLASS} !py-2 font-mono text-sm`}
+                                disabled={mode === 'override'}
+                                className={`${FIELD_CLASS} !py-2 font-mono text-sm disabled:opacity-60 disabled:cursor-not-allowed`}
                             />
                         </div>
+                        {mode === 'override' && (
+                            <p className="mt-1.5 text-xs text-foreground-muted">Locked — the override must keep the original URL to replace it.</p>
+                        )}
                     </div>
                     <div>
                         <label htmlFor="post-author" className={LABEL_CLASS}>Author</label>

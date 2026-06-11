@@ -16,7 +16,11 @@ export async function getAllPosts(): Promise<BlogPost[]> {
         // The blog must stay up even if the database is unreachable.
         console.error('[blog] Failed to load posts from MongoDB:', err);
     }
-    const statics = staticPosts.map((p) => ({ ...p, source: 'static' as const }));
+    // A published DB post with the same slug overrides its code-defined original.
+    const dbSlugs = new Set(dbPosts.map((p) => p.slug));
+    const statics = staticPosts
+        .filter((p) => !dbSlugs.has(p.slug))
+        .map((p) => ({ ...p, source: 'static' as const }));
     return [...dbPosts, ...statics].sort((a, b) => postTime(b) - postTime(a));
 }
 

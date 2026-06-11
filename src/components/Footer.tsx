@@ -89,7 +89,6 @@ export default function Footer() {
                             {[
                                 { label: 'Privacy Policy', href: '/privacy' },
                                 { label: 'Terms of Service', href: '/terms' },
-                                { label: 'Admin', href: '/super-admin' },
                             ].map(link => (
                                 <li key={link.label}>
                                     <Link
@@ -130,7 +129,18 @@ export default function Footer() {
                             </span>
                         </div>
                     </div>
-                    <ThemeToggle />
+                    <div className="flex items-center gap-5">
+                        <Link
+                            href="/super-admin"
+                            className="flex items-center gap-1.5 text-foreground-muted text-xs hover:text-accent transition-colors duration-200"
+                        >
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                <rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                            </svg>
+                            Admin
+                        </Link>
+                        <ThemeToggle />
+                    </div>
                 </div>
             </div>
         </footer>
