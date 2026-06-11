@@ -104,10 +104,10 @@ export default function Navbar() {
                                                                 className="block p-3 rounded-lg hover:bg-background-secondary/80 transition-colors group"
                                                             >
                                                                 <div className="font-bold text-foreground mb-1 group-hover:text-accent transition-colors">
-                                                                    {service.title}
+                                                                    {service.shortTitle ?? service.title}
                                                                 </div>
                                                                 <p className="text-xs text-foreground-muted leading-relaxed line-clamp-1">
-                                                                    {service.description}
+                                                                    {service.cardDescription ?? service.description}
                                                                 </p>
                                                             </Link>
                                                         </NavigationMenu.Link>
@@ -228,7 +228,7 @@ export default function Navbar() {
                                                 onClick={() => setIsMobileOpen(false)}
                                                 className="block px-4 py-2 text-base text-foreground-secondary hover:text-foreground hover:bg-background-secondary/80 rounded-lg transition-colors"
                                             >
-                                                {service.title}
+                                                {service.shortTitle ?? service.title}
                                             </Link>
                                         ))}
                                         <Link 

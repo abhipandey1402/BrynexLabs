@@ -239,3 +239,61 @@ body {
   background: linear-gradient(90deg, transparent 0%, rgba(194, 65, 12, 0.5) 30%, rgba(234, 88, 12, 0.6) 50%, rgba(194, 65, 12, 0.5) 70%, transparent 100%);
   height: 1px;
 }
+/* ===== Tiptap Editor (Super Admin CMS) ===== */
+/* Placeholder must read as a hint, not authored content: half-opacity + normal weight */
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: rgba(var(--foreground-muted), 0.5);
+  font-weight: 400;
+}
+
+/* Tables need visible cell borders while editing */
+.tiptap table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.tiptap th,
+.tiptap td {
+  border: 1px solid rgba(var(--border));
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+  position: relative;
+}
+
+.tiptap th {
+  background: rgba(var(--background-secondary), 0.6);
+  font-weight: 700;
+}
+
+.tiptap .selectedCell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(194, 65, 12, 0.12);
+  pointer-events: none;
+}
+
+/* Brand-tinted highlight mark — editor and public article alike */
+.tiptap mark,
+.prose mark {
+  background: rgba(245, 158, 11, 0.28);
+  color: inherit;
+  padding: 0.05em 0.2em;
+  border-radius: 0.25em;
+}
+
+/* Public article tables (CMS-authored) */
+.prose table th,
+.prose table td {
+  border: 1px solid rgba(var(--border));
+  padding: 0.6rem 0.9rem;
+}
+
+.prose table th {
+  background: rgba(var(--background-secondary), 0.6);
+}

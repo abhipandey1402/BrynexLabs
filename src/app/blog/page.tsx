@@ -1,12 +1,23 @@
-import { getAllPosts, BlogCategory } from '@/data/blog';
+import { BlogCategory } from '@/data/blog';
+import { getAllPosts } from '@/lib/blogService';
 import BlogCard from '@/components/blog/BlogCard';
 import SectionWrapper from '@/components/SectionWrapper';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
+// Revalidate periodically; the admin CMS also revalidates on-demand after every save.
+export const revalidate = 300;
+
 export const metadata: Metadata = {
     title: 'Insights & Engineering Blog | Brynex Labs',
     description: 'Deep dives on SaaS Architecture, Autonomous AI Agents, and scalable Cloud engineering from the Brynex Labs collective.',
+    alternates: { canonical: '/blog' },
+    openGraph: {
+        title: 'Insights & Engineering Blog | Brynex Labs',
+        description: 'Deep dives on SaaS Architecture, Autonomous AI Agents, and scalable Cloud engineering from the Brynex Labs collective.',
+        url: '/blog',
+        type: 'website',
+    },
 };
 
 export default async function BlogIndex({ searchParams }: { searchParams: { category?: string } }) {

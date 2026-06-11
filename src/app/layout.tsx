@@ -4,6 +4,7 @@ import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import StickyCTA from '@/components/StickyCTA';
+import ChromeGate from '@/components/ChromeGate';
 import { Analytics as VercelAnalytics } from '@vercel/analytics/next';
 import CustomAnalytics from '@/components/Analytics';
 
@@ -66,14 +67,18 @@ export default function RootLayout({
             Skip to main content
           </a>
 
-          <Navbar />
+          <ChromeGate>
+            <Navbar />
+          </ChromeGate>
 
           <main id="main-content" role="main">
             {children}
           </main>
 
-          <StickyCTA />
-          <Footer />
+          <ChromeGate>
+            <StickyCTA />
+            <Footer />
+          </ChromeGate>
         </ThemeProvider>
         <VercelAnalytics />
         <CustomAnalytics />
