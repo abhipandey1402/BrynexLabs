@@ -1,3 +1,5 @@
+import LoadingGyan from '@/components/admin/LoadingGyan';
+
 /**
  * Instant skeleton shown while admin pages (force-dynamic, DB-backed)
  * render on the server — keeps navigation between sections feeling
@@ -45,10 +47,13 @@ export default function AdminLoading() {
                         <div className="h-10 w-72 max-w-[40%] rounded-xl bg-background-secondary animate-pulse" />
                     </div>
                     <div className="space-y-2">
-                        {Array.from({ length: 6 }).map((_, i) => (
+                        {Array.from({ length: 5 }).map((_, i) => (
                             <div key={i} className="h-[72px] rounded-xl border border-border bg-background-card animate-pulse" style={{ animationDelay: `${i * 80}ms` }} />
                         ))}
                     </div>
+
+                    {/* Rotating gyan while the data loads */}
+                    <LoadingGyan />
                 </div>
             </div>
         </div>
