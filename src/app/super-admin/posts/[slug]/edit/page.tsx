@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import AdminShell from '@/components/admin/AdminShell';
 import PostEditor from '@/components/admin/PostEditor';
-import { getDbPostBySlug, isStaticSlug } from '@/lib/blogStore';
+import { getDbPostBySlug } from '@/lib/blogStore';
 import { blogPosts as staticPosts } from '@/data/blog';
 
 export const dynamic = 'force-dynamic';
@@ -11,10 +11,7 @@ export default async function EditPostPage({ params }: { params: { slug: string 
 
     if (post) {
         return (
-            <AdminShell
-                title="Edit Article"
-                subtitle={isStaticSlug(post.slug) ? 'CMS override of a code-defined article' : `/blog/${post.slug}`}
-            >
+            <AdminShell title="Edit Article">
                 <PostEditor mode="edit" initialPost={post} />
             </AdminShell>
         );
@@ -25,7 +22,7 @@ export default async function EditPostPage({ params }: { params: { slug: string 
     if (!staticPost) notFound();
 
     return (
-        <AdminShell title="Edit Article" subtitle="Code-defined article — saving creates a CMS override">
+        <AdminShell title="Edit Article">
             <PostEditor mode="override" initialPost={staticPost} />
         </AdminShell>
     );

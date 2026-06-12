@@ -36,7 +36,6 @@ export default async function AdminDashboard() {
     return (
         <AdminShell
             title="Articles"
-            subtitle="Everything published on /blog — CMS-managed and code-defined."
             actions={
                 <Link
                     href="/super-admin/posts/new"
