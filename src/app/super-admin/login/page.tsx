@@ -1,8 +1,14 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
+import { headers } from 'next/headers';
 import LoginForm from '@/components/admin/LoginForm';
 
 export default function AdminLoginPage() {
+    // On admin.<domain> "/" is the dashboard, so "Back to website" must
+    // point at the main site instead.
+    const host = headers().get('host') ?? '';
+    const backHref = host.startsWith('admin.') ? `https://${host.replace(/^admin\./, '')}` : '/';
+
     return (
         <div className="relative min-h-screen flex items-center justify-center px-6 py-16 overflow-hidden">
             {/* Decorative backdrop */}
@@ -21,7 +27,7 @@ export default function AdminLoginPage() {
             </div>
 
             <Link
-                href="/"
+                href={backHref}
                 className="absolute top-6 left-6 z-10 flex items-center gap-2 text-sm font-semibold text-foreground-secondary hover:text-foreground transition-colors"
             >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

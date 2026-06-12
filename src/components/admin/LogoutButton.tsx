@@ -1,13 +1,16 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function LogoutButton() {
     const router = useRouter();
+    const pathname = usePathname();
 
     const logout = async () => {
         await fetch('/api/admin/logout', { method: 'POST' });
-        router.push('/super-admin/login');
+        // Clean URLs on admin.<domain>, /super-admin paths in dev/preview.
+        const base = pathname?.startsWith('/super-admin') ? '/super-admin' : '';
+        router.push(`${base}/login`);
         router.refresh();
     };
 
