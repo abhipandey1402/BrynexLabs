@@ -4,7 +4,7 @@
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
-import { captureAttribution } from '@/lib/attribution';
+import { captureAttribution, recordPageVisit } from '@/lib/attribution';
 
 function AnalyticsInner() {
     const pathname = usePathname();
@@ -18,6 +18,11 @@ function AnalyticsInner() {
     useEffect(() => {
         captureAttribution();
     }, []);
+
+    // Engagement trail (pages visited + time on site) for lead scoring.
+    useEffect(() => {
+        if (pathname) recordPageVisit(pathname);
+    }, [pathname]);
 
     // Track pageviews automatically
     useEffect(() => {

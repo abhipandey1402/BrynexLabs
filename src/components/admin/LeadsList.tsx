@@ -14,7 +14,7 @@ function Spinner({ className = '' }: { className?: string }) {
 }
 
 type StatusFilter = 'all' | 'new' | 'contacted' | 'qualified' | 'proposal' | 'won' | 'lost';
-type SortOrder = 'newest' | 'oldest' | 'followup' | 'value';
+type SortOrder = 'newest' | 'oldest' | 'followup' | 'value' | 'score';
 
 const PIPELINE: LeadStatus[] = ['new', 'contacted', 'qualified', 'proposal', 'won', 'lost'];
 
@@ -73,6 +73,20 @@ function todayISO(): string {
     return new Date().toISOString().slice(0, 10);
 }
 
+function scoreBadge(score?: number): { label: string; classes: string } | null {
+    if (score === undefined) return null;
+    if (score >= 70) return { label: `🔥 Hot · ${score}`, classes: 'bg-orange-500/10 text-orange-500 border-orange-500/30' };
+    if (score >= 40) return { label: `Warm · ${score}`, classes: 'bg-amber-500/10 text-amber-500 border-amber-500/30' };
+    return { label: `Cold · ${score}`, classes: 'bg-background-secondary text-foreground-muted border-border' };
+}
+
+function formatDuration(seconds?: number): string {
+    if (!seconds) return '—';
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return m > 0 ? `${m}m ${s}s` : `${s}s`;
+}
+
 function isOverdue(lead: ContactSubmission): boolean {
     return Boolean(
         lead.followUpAt &&
@@ -88,13 +102,17 @@ function escapeCsv(value: unknown): string {
 
 function exportCsv(leads: ContactSubmission[]) {
     const headers = [
-        'Name', 'Email', 'Phone', 'Status', 'Priority', 'Deal Value (USD)', 'Follow-up',
-        'Preferred Slot', 'Timezone', 'Country', 'Source Page', 'Landing Page', 'Referrer',
+        'Name', 'Email', 'Email Type', 'Company Domain', 'Phone', 'Status', 'Lead Score', 'Priority',
+        'Deal Value (USD)', 'Follow-up', 'Preferred Slot', 'Timezone', 'Country', 'City', 'Region',
+        'Language', 'Pages Visited', 'Session Seconds', 'Source Page', 'Landing Page', 'Referrer',
         'UTM Source', 'UTM Medium', 'UTM Campaign', 'Project Details', 'Submitted', 'Notes',
     ];
     const rows = leads.map((l) => [
-        l.name, l.email, l.phone ?? '', l.status, l.priority ? 'yes' : '', l.value ?? '',
-        l.followUpAt ?? '', `${l.preferredDate} ${l.preferredTime}`, l.timezone, l.country ?? '',
+        l.name, l.email, l.emailType ?? '', l.companyDomain ?? '', l.phone ?? '', l.status,
+        l.leadScore ?? '', l.priority ? 'yes' : '', l.value ?? '',
+        l.followUpAt ?? '', `${l.preferredDate} ${l.preferredTime}`, l.timezone,
+        l.country ?? '', l.city ?? '', l.region ?? '', l.language ?? '',
+        (l.pagesVisited ?? []).join(' > '), l.sessionSeconds ?? '',
         l.sourcePath ?? '', l.landingPage ?? '', l.referrer ?? '',
         l.utmSource ?? '', l.utmMedium ?? '', l.utmCampaign ?? '',
         l.projectDetails ?? '', l.createdAt,
@@ -191,6 +209,7 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
             switch (sortOrder) {
                 case 'oldest': return a.createdAt.localeCompare(b.createdAt);
                 case 'value': return (b.value ?? 0) - (a.value ?? 0);
+                case 'score': return (b.leadScore ?? -1) - (a.leadScore ?? -1);
                 case 'followup': {
                     const av = a.followUpAt ?? '9999-12-31';
                     const bv = b.followUpAt ?? '9999-12-31';
@@ -349,6 +368,7 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                         <option value="oldest">Oldest first</option>
                         <option value="followup">Follow-up due</option>
                         <option value="value">Highest value</option>
+                        <option value="score">Hottest leads</option>
                     </select>
                     <button
                         type="button"
@@ -428,11 +448,26 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                                                         Follow-up overdue
                                                     </span>
                                                 )}
+                                                {(() => {
+                                                    const badge = scoreBadge(lead.leadScore);
+                                                    return badge ? (
+                                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${badge.classes}`}>
+                                                            {badge.label}
+                                                        </span>
+                                                    ) : null;
+                                                })()}
+                                                {lead.emailType === 'business' && (
+                                                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border bg-blue-500/10 text-blue-500 border-blue-500/30" title={lead.companyDomain}>
+                                                        Business
+                                                    </span>
+                                                )}
                                                 {lead.value !== undefined && lead.value > 0 && (
                                                     <span className="text-[11px] font-bold text-green-500">${lead.value.toLocaleString()}</span>
                                                 )}
                                                 {lead.country && (
-                                                    <span className="text-[11px] font-semibold text-foreground-muted">{countryFlag(lead.country)} {lead.country}</span>
+                                                    <span className="text-[11px] font-semibold text-foreground-muted">
+                                                        {countryFlag(lead.country)} {lead.city ? `${lead.city}, ` : ''}{lead.country}
+                                                    </span>
                                                 )}
                                                 {lead.sourcePath && (
                                                     <span className="text-[11px] font-semibold text-foreground-muted truncate">from {lead.sourcePath}</span>
@@ -551,15 +586,40 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                                                 <p><span className="text-foreground-muted">Submitted:</span> <span className="font-semibold text-foreground">{fullTimestamp(lead.createdAt)}</span></p>
                                                 <p><span className="text-foreground-muted">Page:</span> <span className="font-semibold text-foreground">{lead.sourcePath ?? '—'}</span></p>
                                                 <p><span className="text-foreground-muted">Landing:</span> <span className="font-semibold text-foreground">{lead.landingPage ?? '—'}</span></p>
-                                                <p><span className="text-foreground-muted">Country:</span> <span className="font-semibold text-foreground">{lead.country ? `${countryFlag(lead.country)} ${lead.country}` : '—'}</span></p>
+                                                <p>
+                                                    <span className="text-foreground-muted">Location:</span>{' '}
+                                                    <span className="font-semibold text-foreground">
+                                                        {lead.country ? `${countryFlag(lead.country)} ${[lead.city, lead.region, lead.country].filter(Boolean).join(', ')}` : '—'}
+                                                    </span>
+                                                </p>
                                                 <p className="truncate"><span className="text-foreground-muted">Referrer:</span> <span className="font-semibold text-foreground" title={lead.referrer}>{lead.referrer ?? 'Direct / none'}</span></p>
                                                 <p><span className="text-foreground-muted">UTM:</span> <span className="font-semibold text-foreground">{[lead.utmSource, lead.utmMedium, lead.utmCampaign].filter(Boolean).join(' / ') || '—'}</span></p>
                                                 <p><span className="text-foreground-muted">Device:</span> <span className="font-semibold text-foreground">{deviceFromUA(lead.userAgent)}</span></p>
+                                                <p><span className="text-foreground-muted">Language:</span> <span className="font-semibold text-foreground">{lead.language ?? '—'}</span></p>
+                                                <p>
+                                                    <span className="text-foreground-muted">Email type:</span>{' '}
+                                                    <span className="font-semibold text-foreground capitalize">
+                                                        {lead.emailType ?? '—'}{lead.companyDomain ? ` · ${lead.companyDomain}` : ''}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span className="text-foreground-muted">Session:</span>{' '}
+                                                    <span className="font-semibold text-foreground">
+                                                        {lead.pageCount ? `${lead.pageCount} page${lead.pageCount === 1 ? '' : 's'} · ${formatDuration(lead.sessionSeconds)}` : '—'}
+                                                    </span>
+                                                </p>
+                                                <p><span className="text-foreground-muted">IP:</span> <span className="font-semibold text-foreground">{lead.ip ?? '—'}</span></p>
                                                 <p>
                                                     <span className="text-foreground-muted">Notification:</span>{' '}
                                                     <span className="font-semibold text-foreground capitalize">{lead.emailStatus} · {lead.emailAttempts} attempt{lead.emailAttempts === 1 ? '' : 's'}</span>
                                                 </p>
                                             </div>
+                                            {(lead.pagesVisited?.length ?? 0) > 0 && (
+                                                <p className="text-[11px] text-foreground-muted mt-1.5 break-words">
+                                                    <span className="font-bold uppercase tracking-wider">Journey:</span>{' '}
+                                                    {lead.pagesVisited!.join(' → ')}
+                                                </p>
+                                            )}
                                             {lead.lastEmailError && (
                                                 <p className="text-xs text-red-500 break-words mt-1.5">{lead.lastEmailError}</p>
                                             )}

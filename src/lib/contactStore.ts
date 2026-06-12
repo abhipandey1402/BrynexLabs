@@ -35,6 +35,20 @@ export interface ContactSubmissionInput {
     referrer?: string;
     landingPage?: string;
     country?: string;
+    city?: string;
+    region?: string;
+    ip?: string;
+    /** Browser language, e.g. "en-IN". */
+    language?: string;
+    // Session engagement before submitting (client-tracked).
+    pagesVisited?: string[];
+    pageCount?: number;
+    sessionSeconds?: number;
+    // Automated enrichment.
+    emailType?: 'business' | 'personal';
+    companyDomain?: string;
+    /** 0–100 automated fit/engagement score. */
+    leadScore?: number;
 }
 
 export interface ContactSubmission extends ContactSubmissionInput {
