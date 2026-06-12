@@ -26,12 +26,20 @@ export default async function AdminShell({ title, subtitle, actions, children }:
             <div className="flex-1 min-w-0 flex flex-col lg:h-screen">
                 {/* Pinned page header */}
                 <header className="sticky top-14 lg:static z-30 bg-background border-b border-border">
-                    <div className="px-5 sm:px-8 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="relative px-5 sm:px-8 py-4 sm:py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div className="min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-accent" aria-hidden />
+                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-foreground-muted">
+                                    Super Admin <span className="text-border mx-1">/</span> <span className="text-accent">{title}</span>
+                                </span>
+                            </div>
                             <h1 className="text-xl md:text-2xl font-black text-foreground tracking-tight truncate">{title}</h1>
                             {subtitle && <p className="mt-0.5 text-xs sm:text-sm text-foreground-secondary truncate">{subtitle}</p>}
                         </div>
                         {actions && <div className="shrink-0">{actions}</div>}
+                        {/* Accent hairline */}
+                        <div className="absolute bottom-0 left-0 h-px w-32 bg-accent-gradient" aria-hidden />
                     </div>
                 </header>
 
