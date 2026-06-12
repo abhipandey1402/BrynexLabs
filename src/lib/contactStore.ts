@@ -4,8 +4,16 @@ import { getDb, isDbConfigured } from './mongodb';
 
 const COLLECTION = 'contact_submissions';
 
-export type LeadStatus = 'new' | 'contacted' | 'closed';
+// Pipeline: new → contacted → qualified → proposal → won/lost.
+// 'closed' is the legacy terminal status from before the pipeline existed.
+export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'proposal' | 'won' | 'lost' | 'closed';
 export type EmailStatus = 'sent' | 'failed' | 'pending';
+
+export interface LeadNote {
+    id: string;
+    text: string;
+    createdAt: string;
+}
 
 export interface ContactSubmissionInput {
     name: string;
@@ -18,6 +26,15 @@ export interface ContactSubmissionInput {
     /** Page path the form was submitted from (e.g. "/services/ai-agents-automation"). */
     sourcePath?: string;
     userAgent?: string;
+    // First-touch marketing attribution (captured client-side) + geo (server-side).
+    utmSource?: string;
+    utmMedium?: string;
+    utmCampaign?: string;
+    utmTerm?: string;
+    utmContent?: string;
+    referrer?: string;
+    landingPage?: string;
+    country?: string;
 }
 
 export interface ContactSubmission extends ContactSubmissionInput {
@@ -29,6 +46,13 @@ export interface ContactSubmission extends ContactSubmissionInput {
     emailSentAt?: string;
     createdAt: string;
     updatedAt: string;
+    /** Starred / high-priority flag. */
+    priority?: boolean;
+    /** Estimated deal value in USD. */
+    value?: number;
+    /** ISO date (yyyy-mm-dd) the next follow-up is due. */
+    followUpAt?: string;
+    notes?: LeadNote[];
 }
 
 type SubmissionDoc = Omit<ContactSubmission, 'id'>;
@@ -112,6 +136,71 @@ export async function updateSubmissionStatus(id: string, status: LeadStatus): Pr
     const result = await col.updateOne(
         { _id: new ObjectId(id) },
         { $set: { status, updatedAt: new Date().toISOString() } },
+    );
+    return result.matchedCount === 1;
+}
+
+export interface LeadUpdate {
+    status?: LeadStatus;
+    priority?: boolean;
+    /** null clears the deal value. */
+    value?: number | null;
+    /** null clears the follow-up date. */
+    followUpAt?: string | null;
+}
+
+export async function updateSubmission(id: string, update: LeadUpdate): Promise<boolean> {
+    if (!ObjectId.isValid(id)) return false;
+    const col = await collection();
+
+    const $set: Record<string, unknown> = { updatedAt: new Date().toISOString() };
+    const $unset: Record<string, ''> = {};
+
+    if (update.status !== undefined) $set.status = update.status;
+    if (update.priority !== undefined) $set.priority = update.priority;
+    if (update.value !== undefined) {
+        if (update.value === null) $unset.value = '';
+        else $set.value = update.value;
+    }
+    if (update.followUpAt !== undefined) {
+        if (update.followUpAt === null) $unset.followUpAt = '';
+        else $set.followUpAt = update.followUpAt;
+    }
+
+    const result = await col.updateOne(
+        { _id: new ObjectId(id) },
+        { $set, ...(Object.keys($unset).length > 0 ? { $unset } : {}) },
+    );
+    return result.matchedCount === 1;
+}
+
+export async function addNote(id: string, text: string): Promise<LeadNote | null> {
+    if (!ObjectId.isValid(id)) return null;
+    const col = await collection();
+    const note: LeadNote = {
+        id: new ObjectId().toHexString(),
+        text,
+        createdAt: new Date().toISOString(),
+    };
+    const result = await col.updateOne(
+        { _id: new ObjectId(id) },
+        {
+            $push: { notes: { $each: [note], $position: 0 } },
+            $set: { updatedAt: note.createdAt },
+        },
+    );
+    return result.matchedCount === 1 ? note : null;
+}
+
+export async function deleteNote(id: string, noteId: string): Promise<boolean> {
+    if (!ObjectId.isValid(id)) return false;
+    const col = await collection();
+    const result = await col.updateOne(
+        { _id: new ObjectId(id) },
+        {
+            $pull: { notes: { id: noteId } },
+            $set: { updatedAt: new Date().toISOString() },
+        },
     );
     return result.matchedCount === 1;
 }

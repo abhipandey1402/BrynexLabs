@@ -30,6 +30,17 @@ export async function POST(request: Request) {
     const timezone = cap(body.timezone, 60) || 'Unknown';
     const sourcePath = cap(body.source, 200);
 
+    // First-touch marketing attribution (client-captured) + geo (edge header).
+    const attribution = (body.attribution ?? {}) as Record<string, unknown>;
+    const utmSource = cap(attribution.utmSource, 120);
+    const utmMedium = cap(attribution.utmMedium, 120);
+    const utmCampaign = cap(attribution.utmCampaign, 160);
+    const utmTerm = cap(attribution.utmTerm, 160);
+    const utmContent = cap(attribution.utmContent, 160);
+    const referrer = cap(attribution.referrer, 300);
+    const landingPage = cap(attribution.landingPage, 200);
+    const country = cap(request.headers.get('x-vercel-ip-country'), 8);
+
     if (!name || !email || !date || !time) {
         return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
@@ -51,6 +62,14 @@ export async function POST(request: Request) {
                 projectDetails: projectDetails || undefined,
                 sourcePath: sourcePath || undefined,
                 userAgent: request.headers.get('user-agent')?.slice(0, 300) ?? undefined,
+                utmSource: utmSource || undefined,
+                utmMedium: utmMedium || undefined,
+                utmCampaign: utmCampaign || undefined,
+                utmTerm: utmTerm || undefined,
+                utmContent: utmContent || undefined,
+                referrer: referrer || undefined,
+                landingPage: landingPage || undefined,
+                country: country || undefined,
             });
             submissionId = submission.id;
         } catch (err) {

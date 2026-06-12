@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
+import { getAttribution } from '@/lib/attribution';
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
 
@@ -41,6 +42,7 @@ export default function ContactForm({ onSuccess, className = '', isModal = false
                 ...formData,
                 timezone: userTimezone,
                 source: typeof window !== 'undefined' ? window.location.pathname : undefined,
+                attribution: getAttribution(),
             });
 
             setStep('success');

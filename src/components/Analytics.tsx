@@ -4,6 +4,7 @@
 import Script from 'next/script';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
+import { captureAttribution } from '@/lib/attribution';
 
 function AnalyticsInner() {
     const pathname = usePathname();
@@ -12,6 +13,11 @@ function AnalyticsInner() {
     const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
     const clarityId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
     const metaId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+
+    // First-touch attribution for lead tracking (UTM, referrer, landing page).
+    useEffect(() => {
+        captureAttribution();
+    }, []);
 
     // Track pageviews automatically
     useEffect(() => {
