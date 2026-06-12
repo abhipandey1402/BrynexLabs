@@ -6,7 +6,9 @@ import { isDbConfigured } from '@/lib/mongodb';
 
 export const runtime = 'nodejs';
 
-const NOTIFY_EMAIL = process.env.CONTACT_NOTIFY_EMAIL || 'pandeyabhi142002@gmail.com';
+const NOTIFY_EMAIL =
+    process.env.CONTACT_NOTIFY_EMAIL ||
+    'pandeyabhi142002@gmail.com,hello@brynex.in,tiwari.rnf@gmail.com';
 
 /** Re-sends the notification email for a stored lead whose delivery failed. */
 export async function POST(_request: NextRequest, { params }: { params: { id: string } }) {

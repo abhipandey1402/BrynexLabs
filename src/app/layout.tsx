@@ -1,10 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import StickyCTA from '@/components/StickyCTA';
-import ChromeGate from '@/components/ChromeGate';
 import { Analytics as VercelAnalytics } from '@vercel/analytics/next';
 import CustomAnalytics from '@/components/Analytics';
 
@@ -62,23 +58,7 @@ export default function RootLayout({
           enableSystem={true}
           disableTransitionOnChange
         >
-          {/* Skip to content link for accessibility */}
-          <a href="#main-content" className="skip-to-content">
-            Skip to main content
-          </a>
-
-          <ChromeGate>
-            <Navbar />
-          </ChromeGate>
-
-          <main id="main-content" role="main">
-            {children}
-          </main>
-
-          <ChromeGate>
-            <StickyCTA />
-            <Footer />
-          </ChromeGate>
+          {children}
         </ThemeProvider>
         <VercelAnalytics />
         <CustomAnalytics />

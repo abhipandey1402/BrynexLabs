@@ -19,7 +19,7 @@ export default async function AdminLeadsPage() {
     }
 
     return (
-        <AdminShell title="Leads" subtitle="Every contact form submission across the site — consultation requests, CTAs, all of it.">
+        <AdminShell title="Leads">
             {!dbConfigured && (
                 <div className="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 text-sm text-foreground-secondary">
                     <span className="font-bold text-amber-500">MongoDB is not configured.</span>{' '}

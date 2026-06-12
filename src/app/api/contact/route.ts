@@ -6,7 +6,9 @@ import { isDbConfigured } from '@/lib/mongodb';
 
 export const runtime = 'nodejs';
 
-const NOTIFY_EMAIL = process.env.CONTACT_NOTIFY_EMAIL || 'pandeyabhi142002@gmail.com';
+const NOTIFY_EMAIL =
+    process.env.CONTACT_NOTIFY_EMAIL ||
+    'pandeyabhi142002@gmail.com,hello@brynex.in,tiwari.rnf@gmail.com';
 
 const cap = (value: unknown, max: number): string =>
     typeof value === 'string' ? value.trim().slice(0, max) : '';

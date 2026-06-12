@@ -30,9 +30,9 @@ export default function AdminLoading() {
 
             {/* Content placeholder */}
             <div className="flex-1 min-w-0 flex flex-col lg:h-screen">
-                <div className="border-b border-border px-5 sm:px-8 py-4">
-                    <div className="h-7 w-44 rounded-lg bg-background-secondary animate-pulse" />
-                    <div className="mt-2 h-3.5 w-72 max-w-full rounded bg-background-secondary/70 animate-pulse" />
+                <div className="h-14 lg:h-16 flex items-center justify-between border-b border-border px-5 sm:px-8">
+                    <div className="h-3.5 w-44 rounded bg-background-secondary animate-pulse" />
+                    <div className="h-9 w-32 rounded-xl bg-background-secondary animate-pulse" />
                 </div>
                 <div className="px-5 sm:px-8 py-8 space-y-6">
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
