@@ -4,11 +4,18 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { ContactSubmission, LeadStatus } from '@/lib/contactStore';
 
-type StatusFilter = 'all' | LeadStatus;
+type StatusFilter = 'all' | 'new' | 'contacted' | 'qualified' | 'proposal' | 'won' | 'lost';
+type SortOrder = 'newest' | 'oldest' | 'followup' | 'value';
+
+const PIPELINE: LeadStatus[] = ['new', 'contacted', 'qualified', 'proposal', 'won', 'lost'];
 
 const STATUS_STYLES: Record<LeadStatus, string> = {
     new: 'bg-accent/10 text-accent border-accent/30',
     contacted: 'bg-blue-500/10 text-blue-500 border-blue-500/30',
+    qualified: 'bg-violet-500/10 text-violet-500 border-violet-500/30',
+    proposal: 'bg-amber-500/10 text-amber-500 border-amber-500/30',
+    won: 'bg-green-500/10 text-green-500 border-green-500/30',
+    lost: 'bg-red-500/10 text-red-500 border-red-500/30',
     closed: 'bg-background-secondary text-foreground-muted border-border',
 };
 
@@ -36,44 +43,142 @@ function fullTimestamp(iso: string): string {
     });
 }
 
+/** ISO-3166 alpha-2 → flag emoji ("IN" → 🇮🇳). */
+function countryFlag(code?: string): string {
+    if (!code || code.length !== 2) return '';
+    return String.fromCodePoint(...code.toUpperCase().split('').map((c) => 0x1f1a5 + c.charCodeAt(0)));
+}
+
+function deviceFromUA(ua?: string): string {
+    if (!ua) return '—';
+    const isMobile = /mobile|iphone|android/i.test(ua);
+    const browser = /edg\//i.test(ua) ? 'Edge'
+        : /chrome\//i.test(ua) ? 'Chrome'
+        : /safari\//i.test(ua) ? 'Safari'
+        : /firefox\//i.test(ua) ? 'Firefox'
+        : 'Browser';
+    return `${isMobile ? 'Mobile' : 'Desktop'} · ${browser}`;
+}
+
+function todayISO(): string {
+    return new Date().toISOString().slice(0, 10);
+}
+
+function isOverdue(lead: ContactSubmission): boolean {
+    return Boolean(
+        lead.followUpAt &&
+        lead.followUpAt < todayISO() &&
+        !['won', 'lost', 'closed'].includes(lead.status),
+    );
+}
+
+function escapeCsv(value: unknown): string {
+    const s = String(value ?? '');
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function exportCsv(leads: ContactSubmission[]) {
+    const headers = [
+        'Name', 'Email', 'Phone', 'Status', 'Priority', 'Deal Value (USD)', 'Follow-up',
+        'Preferred Slot', 'Timezone', 'Country', 'Source Page', 'Landing Page', 'Referrer',
+        'UTM Source', 'UTM Medium', 'UTM Campaign', 'Project Details', 'Submitted', 'Notes',
+    ];
+    const rows = leads.map((l) => [
+        l.name, l.email, l.phone ?? '', l.status, l.priority ? 'yes' : '', l.value ?? '',
+        l.followUpAt ?? '', `${l.preferredDate} ${l.preferredTime}`, l.timezone, l.country ?? '',
+        l.sourcePath ?? '', l.landingPage ?? '', l.referrer ?? '',
+        l.utmSource ?? '', l.utmMedium ?? '', l.utmCampaign ?? '',
+        l.projectDetails ?? '', l.createdAt,
+        (l.notes ?? []).map((n) => `[${n.createdAt.slice(0, 10)}] ${n.text}`).join(' | '),
+    ].map(escapeCsv).join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `brynex-leads-${todayISO()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
 export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmission[] }) {
     const router = useRouter();
     const [query, setQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+    const [starredOnly, setStarredOnly] = useState(false);
+    const [sortOrder, setSortOrder] = useState<SortOrder>('newest');
     const [expanded, setExpanded] = useState<string | null>(null);
     const [busy, setBusy] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [notice, setNotice] = useState<string | null>(null);
+    const [noteDraft, setNoteDraft] = useState('');
+    const [valueDraft, setValueDraft] = useState<string>('');
+    const [valueEditing, setValueEditing] = useState<string | null>(null);
 
-    const counts = useMemo(() => ({
-        all: initialLeads.length,
-        new: initialLeads.filter((l) => l.status === 'new').length,
-        contacted: initialLeads.filter((l) => l.status === 'contacted').length,
-        closed: initialLeads.filter((l) => l.status === 'closed').length,
-    }), [initialLeads]);
+    // Legacy 'closed' leads ride along in the Lost bucket.
+    const inBucket = (lead: ContactSubmission, bucket: StatusFilter) =>
+        bucket === 'all' || lead.status === bucket || (bucket === 'lost' && lead.status === 'closed');
 
-    const failedEmails = useMemo(
-        () => initialLeads.filter((l) => l.emailStatus === 'failed').length,
-        [initialLeads],
-    );
+    const counts = useMemo(() => {
+        const c: Record<StatusFilter, number> = {
+            all: initialLeads.length, new: 0, contacted: 0, qualified: 0, proposal: 0, won: 0, lost: 0,
+        };
+        for (const l of initialLeads) {
+            const key = l.status === 'closed' ? 'lost' : l.status;
+            if (key in c) c[key as StatusFilter]++;
+        }
+        return c;
+    }, [initialLeads]);
 
-    const weekAgo = useMemo(() => Date.now() - 7 * 24 * 60 * 60 * 1000, []);
-    const thisWeek = useMemo(
-        () => initialLeads.filter((l) => new Date(l.createdAt).getTime() > weekAgo).length,
-        [initialLeads, weekAgo],
-    );
+    const metrics = useMemo(() => {
+        const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+        const inPipeline = counts.contacted + counts.qualified + counts.proposal;
+        const decided = counts.won + counts.lost;
+        const pipelineValue = initialLeads
+            .filter((l) => !['won', 'lost', 'closed'].includes(l.status))
+            .reduce((sum, l) => sum + (l.value ?? 0), 0);
+        const wonValue = initialLeads
+            .filter((l) => l.status === 'won')
+            .reduce((sum, l) => sum + (l.value ?? 0), 0);
+        return {
+            thisWeek: initialLeads.filter((l) => new Date(l.createdAt).getTime() > weekAgo).length,
+            inPipeline,
+            winRate: decided > 0 ? Math.round((counts.won / decided) * 100) : null,
+            pipelineValue,
+            wonValue,
+            overdue: initialLeads.filter(isOverdue).length,
+            emailFailures: initialLeads.filter((l) => l.emailStatus === 'failed').length,
+        };
+    }, [initialLeads, counts]);
 
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase();
-        return initialLeads.filter((lead) => {
-            if (statusFilter !== 'all' && lead.status !== statusFilter) return false;
+        const list = initialLeads.filter((lead) => {
+            if (!inBucket(lead, statusFilter)) return false;
+            if (starredOnly && !lead.priority) return false;
             if (q) {
-                const haystack = `${lead.name} ${lead.email} ${lead.phone ?? ''} ${lead.projectDetails ?? ''}`.toLowerCase();
+                const haystack = [
+                    lead.name, lead.email, lead.phone, lead.projectDetails, lead.sourcePath,
+                    lead.utmSource, lead.utmCampaign, lead.country,
+                    ...(lead.notes ?? []).map((n) => n.text),
+                ].join(' ').toLowerCase();
                 if (!haystack.includes(q)) return false;
             }
             return true;
         });
-    }, [initialLeads, query, statusFilter]);
+        return list.sort((a, b) => {
+            switch (sortOrder) {
+                case 'oldest': return a.createdAt.localeCompare(b.createdAt);
+                case 'value': return (b.value ?? 0) - (a.value ?? 0);
+                case 'followup': {
+                    const av = a.followUpAt ?? '9999-12-31';
+                    const bv = b.followUpAt ?? '9999-12-31';
+                    return av.localeCompare(bv);
+                }
+                default: return b.createdAt.localeCompare(a.createdAt);
+            }
+        });
+    }, [initialLeads, query, statusFilter, starredOnly, sortOrder]);
 
     const act = async (id: string, fn: () => Promise<Response>, successNotice?: string) => {
         setBusy(id);
@@ -95,12 +200,12 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
         }
     };
 
-    const setStatus = (id: string, status: LeadStatus) =>
+    const patch = (id: string, payload: Record<string, unknown>, successNotice?: string) =>
         act(id, () => fetch(`/api/admin/leads/${id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status }),
-        }));
+            body: JSON.stringify(payload),
+        }), successNotice);
 
     const retryEmail = (id: string) =>
         act(id, () => fetch(`/api/admin/leads/${id}/retry-email`, { method: 'POST' }), 'Notification email sent.');
@@ -110,11 +215,49 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
         return act(id, () => fetch(`/api/admin/leads/${id}`, { method: 'DELETE' }));
     };
 
+    const submitNote = (id: string) => {
+        const text = noteDraft.trim();
+        if (!text) return;
+        return act(id, () => fetch(`/api/admin/leads/${id}/notes`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text }),
+        }), 'Note added.').then(() => setNoteDraft(''));
+    };
+
+    const removeNote = (id: string, noteId: string) =>
+        act(id, () => fetch(`/api/admin/leads/${id}/notes?noteId=${noteId}`, { method: 'DELETE' }));
+
+    const saveValue = (id: string) => {
+        const raw = valueDraft.trim();
+        setValueEditing(null);
+        if (raw === '') return patch(id, { value: null });
+        const num = Number(raw);
+        if (!Number.isFinite(num) || num < 0) {
+            setError('Deal value must be a positive number.');
+            return;
+        }
+        return patch(id, { value: num });
+    };
+
+    const copyEmail = async (email: string) => {
+        try {
+            await navigator.clipboard.writeText(email);
+            setNotice(`Copied ${email}`);
+        } catch {
+            setError('Could not copy to clipboard.');
+        }
+    };
+
     const stats = [
         { label: 'Total Leads', value: counts.all },
         { label: 'New', value: counts.new, accent: counts.new > 0 ? 'text-accent' : undefined },
-        { label: 'This Week', value: thisWeek },
-        { label: 'Email Failures', value: failedEmails, accent: failedEmails > 0 ? 'text-red-500' : 'text-green-500' },
+        { label: 'In Pipeline', value: metrics.inPipeline },
+        { label: 'Won', value: `${counts.won}${metrics.winRate !== null ? ` · ${metrics.winRate}%` : ''}` },
+        { label: 'Pipeline Value', value: metrics.pipelineValue > 0 ? `$${metrics.pipelineValue.toLocaleString()}` : '—' },
+        { label: 'This Week', value: metrics.thisWeek },
+        { label: 'Overdue Follow-ups', value: metrics.overdue, accent: metrics.overdue > 0 ? 'text-red-500' : 'text-green-500' },
+        { label: 'Email Failures', value: metrics.emailFailures, accent: metrics.emailFailures > 0 ? 'text-red-500' : 'text-green-500' },
     ];
 
     return (
@@ -141,16 +284,16 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
             )}
 
             {/* Toolbar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex gap-1 p-1 rounded-xl bg-background-secondary border border-border w-fit" role="tablist" aria-label="Filter by status">
-                    {(['all', 'new', 'contacted', 'closed'] as const).map((s) => (
+            <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
+                <div className="flex gap-1 p-1 rounded-xl bg-background-secondary border border-border w-fit overflow-x-auto" role="tablist" aria-label="Filter by status">
+                    {(['all', 'new', 'contacted', 'qualified', 'proposal', 'won', 'lost'] as const).map((s) => (
                         <button
                             key={s}
                             type="button"
                             role="tab"
                             aria-selected={statusFilter === s}
                             onClick={() => setStatusFilter(s)}
-                            className={`px-4 py-1.5 rounded-lg text-xs font-bold capitalize transition-all ${
+                            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold capitalize whitespace-nowrap transition-all ${
                                 statusFilter === s
                                     ? 'bg-accent text-white shadow-button'
                                     : 'text-foreground-secondary hover:text-foreground hover:bg-background-card'
@@ -160,18 +303,50 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                         </button>
                     ))}
                 </div>
-                <div className="relative sm:w-72">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-foreground-muted">
-                        <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
-                    </svg>
-                    <input
-                        type="search"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search name, email, message…"
-                        aria-label="Search leads"
-                        className="w-full rounded-xl border border-border bg-background-card pl-10 pr-4 py-2.5 text-sm text-foreground placeholder:text-foreground-muted placeholder:opacity-60 focus:border-accent focus:outline-none transition-colors"
-                    />
+                <div className="flex flex-wrap items-center gap-2">
+                    <button
+                        type="button"
+                        onClick={() => setStarredOnly(!starredOnly)}
+                        aria-pressed={starredOnly}
+                        title="Show starred leads only"
+                        className={`px-3 py-2 rounded-xl border text-xs font-bold transition-colors ${
+                            starredOnly ? 'border-amber-500/50 bg-amber-500/10 text-amber-500' : 'border-border text-foreground-secondary hover:text-foreground'
+                        }`}
+                    >
+                        ★ Starred
+                    </button>
+                    <select
+                        value={sortOrder}
+                        onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+                        aria-label="Sort leads"
+                        className="rounded-xl border border-border bg-background-card px-3 py-2 text-xs font-bold text-foreground focus:border-accent focus:outline-none"
+                    >
+                        <option value="newest">Newest first</option>
+                        <option value="oldest">Oldest first</option>
+                        <option value="followup">Follow-up due</option>
+                        <option value="value">Highest value</option>
+                    </select>
+                    <button
+                        type="button"
+                        onClick={() => exportCsv(filtered)}
+                        disabled={filtered.length === 0}
+                        className="px-3 py-2 rounded-xl border border-border text-xs font-bold text-foreground-secondary hover:text-foreground hover:border-accent transition-colors disabled:opacity-50"
+                    >
+                        Export CSV ({filtered.length})
+                    </button>
+                    <div className="relative w-full sm:w-64">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-foreground-muted">
+                            <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
+                        </svg>
+                        <input
+                            type="search"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            placeholder="Search leads, notes, UTM…"
+                            aria-label="Search leads"
+                            className="w-full rounded-xl border border-border bg-background-card pl-10 pr-4 py-2 text-sm text-foreground placeholder:text-foreground-muted placeholder:opacity-60 focus:border-accent focus:outline-none transition-colors"
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -192,50 +367,102 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                     {filtered.map((lead) => {
                         const isOpen = expanded === lead.id;
                         const isBusy = busy === lead.id;
+                        const overdue = isOverdue(lead);
                         return (
                             <div
                                 key={lead.id}
                                 className={`rounded-xl border bg-background-card transition-colors ${isOpen ? 'border-accent/40' : 'border-border hover:border-accent/30'}`}
                             >
                                 {/* Row header */}
-                                <button
-                                    type="button"
-                                    onClick={() => setExpanded(isOpen ? null : lead.id)}
-                                    aria-expanded={isOpen}
-                                    className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-5 py-4 text-left"
-                                >
-                                    <div className="min-w-0 flex-1">
-                                        <div className="flex flex-wrap items-center gap-2 mb-1">
-                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${STATUS_STYLES[lead.status]}`}>
-                                                {lead.status}
-                                            </span>
-                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${EMAIL_STYLES[lead.emailStatus] ?? EMAIL_STYLES.pending}`}>
-                                                {lead.emailStatus === 'sent' ? 'Email sent' : lead.emailStatus === 'failed' ? 'Email failed' : 'Email pending'}
-                                            </span>
-                                            {lead.sourcePath && (
-                                                <span className="text-[11px] font-semibold text-foreground-muted truncate">from {lead.sourcePath}</span>
+                                <div className="w-full flex items-start sm:items-center gap-2 px-5 py-4">
+                                    <button
+                                        type="button"
+                                        disabled={isBusy}
+                                        onClick={() => patch(lead.id, { priority: !lead.priority })}
+                                        title={lead.priority ? 'Unstar lead' : 'Star lead'}
+                                        aria-label={lead.priority ? 'Unstar lead' : 'Star lead'}
+                                        className={`mt-0.5 sm:mt-0 text-lg leading-none transition-colors ${lead.priority ? 'text-amber-500' : 'text-foreground-muted/40 hover:text-amber-500'}`}
+                                    >
+                                        ★
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => { setExpanded(isOpen ? null : lead.id); setNoteDraft(''); setValueEditing(null); }}
+                                        aria-expanded={isOpen}
+                                        className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-left"
+                                    >
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex flex-wrap items-center gap-2 mb-1">
+                                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${STATUS_STYLES[lead.status]}`}>
+                                                    {lead.status}
+                                                </span>
+                                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${EMAIL_STYLES[lead.emailStatus] ?? EMAIL_STYLES.pending}`}>
+                                                    {lead.emailStatus === 'sent' ? 'Email sent' : lead.emailStatus === 'failed' ? 'Email failed' : 'Email pending'}
+                                                </span>
+                                                {overdue && (
+                                                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border bg-red-500/10 text-red-500 border-red-500/30">
+                                                        Follow-up overdue
+                                                    </span>
+                                                )}
+                                                {lead.value !== undefined && lead.value > 0 && (
+                                                    <span className="text-[11px] font-bold text-green-500">${lead.value.toLocaleString()}</span>
+                                                )}
+                                                {lead.country && (
+                                                    <span className="text-[11px] font-semibold text-foreground-muted">{countryFlag(lead.country)} {lead.country}</span>
+                                                )}
+                                                {lead.sourcePath && (
+                                                    <span className="text-[11px] font-semibold text-foreground-muted truncate">from {lead.sourcePath}</span>
+                                                )}
+                                            </div>
+                                            <p className="font-bold text-foreground truncate">
+                                                {lead.name} <span className="font-medium text-foreground-secondary">· {lead.email}</span>
+                                            </p>
+                                            {lead.projectDetails && !isOpen && (
+                                                <p className="text-sm text-foreground-muted truncate mt-0.5">{lead.projectDetails}</p>
                                             )}
                                         </div>
-                                        <p className="font-bold text-foreground truncate">
-                                            {lead.name} <span className="font-medium text-foreground-secondary">· {lead.email}</span>
-                                        </p>
-                                        {lead.projectDetails && !isOpen && (
-                                            <p className="text-sm text-foreground-muted truncate mt-0.5">{lead.projectDetails}</p>
-                                        )}
-                                    </div>
-                                    <div className="flex items-center gap-3 shrink-0">
-                                        <span className="text-xs font-semibold text-foreground-muted" title={fullTimestamp(lead.createdAt)}>
-                                            {timeAgo(lead.createdAt)}
-                                        </span>
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`text-foreground-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
-                                            <path d="m6 9 6 6 6-6" />
-                                        </svg>
-                                    </div>
-                                </button>
+                                        <div className="flex items-center gap-3 shrink-0">
+                                            {(lead.notes?.length ?? 0) > 0 && (
+                                                <span className="text-[11px] font-bold text-foreground-muted" title={`${lead.notes!.length} notes`}>
+                                                    {lead.notes!.length} 📝
+                                                </span>
+                                            )}
+                                            <span className="text-xs font-semibold text-foreground-muted" title={fullTimestamp(lead.createdAt)}>
+                                                {timeAgo(lead.createdAt)}
+                                            </span>
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={`text-foreground-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
+                                                <path d="m6 9 6 6 6-6" />
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </div>
 
                                 {/* Expanded detail */}
                                 {isOpen && (
                                     <div className="border-t border-border px-5 py-5 space-y-5">
+                                        {/* Pipeline */}
+                                        <div>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-foreground-muted mb-2">Pipeline Stage</p>
+                                            <div className="flex flex-wrap gap-1.5">
+                                                {PIPELINE.map((s) => (
+                                                    <button
+                                                        key={s}
+                                                        type="button"
+                                                        disabled={isBusy || lead.status === s}
+                                                        onClick={() => patch(lead.id, { status: s })}
+                                                        className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize border transition-colors disabled:cursor-default ${
+                                                            lead.status === s
+                                                                ? STATUS_STYLES[s]
+                                                                : 'border-border text-foreground-secondary hover:border-accent hover:text-foreground'
+                                                        }`}
+                                                    >
+                                                        {s}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Facts grid */}
                                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                                             <div>
                                                 <p className="text-[10px] font-black uppercase tracking-widest text-foreground-muted mb-1">Phone</p>
@@ -247,20 +474,59 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                                                 <p className="text-xs text-foreground-muted">{lead.timezone}</p>
                                             </div>
                                             <div>
-                                                <p className="text-[10px] font-black uppercase tracking-widest text-foreground-muted mb-1">Submitted</p>
-                                                <p className="font-semibold text-foreground">{fullTimestamp(lead.createdAt)}</p>
-                                                {lead.sourcePath && <p className="text-xs text-foreground-muted">via {lead.sourcePath}</p>}
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-foreground-muted mb-1">Follow-up Date</p>
+                                                <input
+                                                    type="date"
+                                                    value={lead.followUpAt ?? ''}
+                                                    disabled={isBusy}
+                                                    onChange={(e) => patch(lead.id, { followUpAt: e.target.value || null })}
+                                                    className={`rounded-lg border bg-background-secondary px-2.5 py-1.5 text-xs font-semibold focus:border-accent focus:outline-none ${overdue ? 'border-red-500/50 text-red-500' : 'border-border text-foreground'}`}
+                                                />
                                             </div>
                                             <div>
-                                                <p className="text-[10px] font-black uppercase tracking-widest text-foreground-muted mb-1">Notification</p>
-                                                <p className="font-semibold text-foreground capitalize">
-                                                    {lead.emailStatus}
-                                                    <span className="font-medium text-foreground-muted"> · {lead.emailAttempts} attempt{lead.emailAttempts === 1 ? '' : 's'}</span>
-                                                </p>
-                                                {lead.lastEmailError && (
-                                                    <p className="text-xs text-red-500 break-words mt-0.5">{lead.lastEmailError}</p>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-foreground-muted mb-1">Deal Value (USD)</p>
+                                                {valueEditing === lead.id ? (
+                                                    <input
+                                                        type="number"
+                                                        autoFocus
+                                                        min={0}
+                                                        value={valueDraft}
+                                                        onChange={(e) => setValueDraft(e.target.value)}
+                                                        onBlur={() => saveValue(lead.id)}
+                                                        onKeyDown={(e) => { if (e.key === 'Enter') saveValue(lead.id); }}
+                                                        className="w-28 rounded-lg border border-border bg-background-secondary px-2.5 py-1.5 text-xs font-semibold text-foreground focus:border-accent focus:outline-none"
+                                                    />
+                                                ) : (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => { setValueEditing(lead.id); setValueDraft(lead.value?.toString() ?? ''); }}
+                                                        className="font-semibold text-foreground hover:text-accent transition-colors"
+                                                    >
+                                                        {lead.value ? `$${lead.value.toLocaleString()}` : 'Set value +'}
+                                                    </button>
                                                 )}
                                             </div>
+                                        </div>
+
+                                        {/* Source & tracking */}
+                                        <div>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-foreground-muted mb-1.5">Source & Tracking</p>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-2 rounded-lg bg-background-secondary border border-border px-4 py-3 text-xs">
+                                                <p><span className="text-foreground-muted">Submitted:</span> <span className="font-semibold text-foreground">{fullTimestamp(lead.createdAt)}</span></p>
+                                                <p><span className="text-foreground-muted">Page:</span> <span className="font-semibold text-foreground">{lead.sourcePath ?? '—'}</span></p>
+                                                <p><span className="text-foreground-muted">Landing:</span> <span className="font-semibold text-foreground">{lead.landingPage ?? '—'}</span></p>
+                                                <p><span className="text-foreground-muted">Country:</span> <span className="font-semibold text-foreground">{lead.country ? `${countryFlag(lead.country)} ${lead.country}` : '—'}</span></p>
+                                                <p className="truncate"><span className="text-foreground-muted">Referrer:</span> <span className="font-semibold text-foreground" title={lead.referrer}>{lead.referrer ?? 'Direct / none'}</span></p>
+                                                <p><span className="text-foreground-muted">UTM:</span> <span className="font-semibold text-foreground">{[lead.utmSource, lead.utmMedium, lead.utmCampaign].filter(Boolean).join(' / ') || '—'}</span></p>
+                                                <p><span className="text-foreground-muted">Device:</span> <span className="font-semibold text-foreground">{deviceFromUA(lead.userAgent)}</span></p>
+                                                <p>
+                                                    <span className="text-foreground-muted">Notification:</span>{' '}
+                                                    <span className="font-semibold text-foreground capitalize">{lead.emailStatus} · {lead.emailAttempts} attempt{lead.emailAttempts === 1 ? '' : 's'}</span>
+                                                </p>
+                                            </div>
+                                            {lead.lastEmailError && (
+                                                <p className="text-xs text-red-500 break-words mt-1.5">{lead.lastEmailError}</p>
+                                            )}
                                         </div>
 
                                         {lead.projectDetails && (
@@ -272,6 +538,53 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                                             </div>
                                         )}
 
+                                        {/* Notes */}
+                                        <div>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-foreground-muted mb-1.5">
+                                                Notes {lead.notes?.length ? `(${lead.notes.length})` : ''}
+                                            </p>
+                                            <div className="flex gap-2 mb-3">
+                                                <input
+                                                    type="text"
+                                                    value={noteDraft}
+                                                    onChange={(e) => setNoteDraft(e.target.value)}
+                                                    onKeyDown={(e) => { if (e.key === 'Enter') submitNote(lead.id); }}
+                                                    placeholder="Add a note — call summary, next step, objection…"
+                                                    className="flex-1 rounded-lg border border-border bg-background-secondary px-3.5 py-2 text-sm text-foreground placeholder:text-foreground-muted placeholder:opacity-60 focus:border-accent focus:outline-none"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    disabled={isBusy || !noteDraft.trim()}
+                                                    onClick={() => submitNote(lead.id)}
+                                                    className="px-4 py-2 rounded-lg bg-accent-gradient text-white text-xs font-bold shadow-button hover:brightness-110 transition-all disabled:opacity-50"
+                                                >
+                                                    Add
+                                                </button>
+                                            </div>
+                                            {(lead.notes?.length ?? 0) > 0 && (
+                                                <ul className="space-y-2">
+                                                    {lead.notes!.map((note) => (
+                                                        <li key={note.id} className="group flex items-start justify-between gap-3 rounded-lg bg-background-secondary border border-border px-4 py-2.5">
+                                                            <div className="min-w-0">
+                                                                <p className="text-sm text-foreground-secondary whitespace-pre-wrap break-words">{note.text}</p>
+                                                                <p className="text-[11px] text-foreground-muted mt-0.5">{fullTimestamp(note.createdAt)}</p>
+                                                            </div>
+                                                            <button
+                                                                type="button"
+                                                                disabled={isBusy}
+                                                                onClick={() => removeNote(lead.id, note.id)}
+                                                                title="Delete note"
+                                                                className="opacity-0 group-hover:opacity-100 text-foreground-muted hover:text-red-500 text-xs font-bold transition-all shrink-0"
+                                                            >
+                                                                ✕
+                                                            </button>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
+
+                                        {/* Actions */}
                                         <div className="flex flex-wrap items-center gap-2">
                                             <a
                                                 href={`mailto:${lead.email}?subject=${encodeURIComponent('Re: Your consultation request — Brynex Labs')}`}
@@ -279,36 +592,23 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                                             >
                                                 Reply by Email
                                             </a>
-                                            {lead.status !== 'contacted' && (
-                                                <button
-                                                    type="button"
-                                                    disabled={isBusy}
-                                                    onClick={() => setStatus(lead.id, 'contacted')}
-                                                    className="px-4 py-2 rounded-lg border border-border text-xs font-bold text-foreground hover:border-accent transition-colors disabled:opacity-50"
+                                            {lead.phone && (
+                                                <a
+                                                    href={`https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hi ${lead.name.split(' ')[0]}, this is Brynex Labs — thanks for reaching out about your project!`)}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="px-4 py-2 rounded-lg border border-green-500/40 text-xs font-bold text-green-500 hover:bg-green-500/10 transition-colors"
                                                 >
-                                                    Mark Contacted
-                                                </button>
+                                                    WhatsApp
+                                                </a>
                                             )}
-                                            {lead.status !== 'closed' && (
-                                                <button
-                                                    type="button"
-                                                    disabled={isBusy}
-                                                    onClick={() => setStatus(lead.id, 'closed')}
-                                                    className="px-4 py-2 rounded-lg border border-border text-xs font-bold text-foreground-secondary hover:border-accent hover:text-foreground transition-colors disabled:opacity-50"
-                                                >
-                                                    Close Lead
-                                                </button>
-                                            )}
-                                            {lead.status !== 'new' && (
-                                                <button
-                                                    type="button"
-                                                    disabled={isBusy}
-                                                    onClick={() => setStatus(lead.id, 'new')}
-                                                    className="px-4 py-2 rounded-lg border border-border text-xs font-bold text-foreground-secondary hover:border-accent hover:text-foreground transition-colors disabled:opacity-50"
-                                                >
-                                                    Reopen
-                                                </button>
-                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => copyEmail(lead.email)}
+                                                className="px-4 py-2 rounded-lg border border-border text-xs font-bold text-foreground-secondary hover:border-accent hover:text-foreground transition-colors"
+                                            >
+                                                Copy Email
+                                            </button>
                                             {lead.emailStatus !== 'sent' && (
                                                 <button
                                                     type="button"
