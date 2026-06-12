@@ -13,7 +13,8 @@ export default function LoginForm() {
     const [loading, setLoading] = useState(false);
 
     const from = searchParams.get('from');
-    const continueTo = from && from.startsWith('/super-admin') && from !== '/super-admin' ? from : null;
+    const safeFrom = from && from.startsWith('/') && !from.startsWith('//') ? from : null;
+    const continueTo = safeFrom && safeFrom !== '/super-admin' && safeFrom !== '/' ? safeFrom : null;
 
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,7 +33,9 @@ export default function LoginForm() {
                 return;
             }
             // Keep the loading state on while navigating so the button doesn't flicker back.
-            router.push(from && from.startsWith('/super-admin') ? from : '/super-admin');
+            // On admin.<domain> the dashboard is "/"; in dev/preview it's /super-admin.
+            const fallback = window.location.hostname.startsWith('admin.') ? '/' : '/super-admin';
+            router.push(safeFrom ?? fallback);
             router.refresh();
         } catch {
             setError('Network error — please try again.');

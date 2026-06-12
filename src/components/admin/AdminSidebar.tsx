@@ -33,18 +33,18 @@ const ICONS = {
     ),
 };
 
-const SECTIONS: { label: string; items: { href: string; label: string; icon: keyof typeof ICONS; badge?: 'leads' }[] }[] = [
+const SECTIONS: { label: string; items: { sub: string; label: string; icon: keyof typeof ICONS; badge?: 'leads' }[] }[] = [
     {
         label: 'Content',
         items: [
-            { href: '/super-admin', label: 'Articles', icon: 'articles' },
-            { href: '/super-admin/posts/new', label: 'New Article', icon: 'newArticle' },
+            { sub: '', label: 'Articles', icon: 'articles' },
+            { sub: '/posts/new', label: 'New Article', icon: 'newArticle' },
         ],
     },
     {
         label: 'Engagement',
         items: [
-            { href: '/super-admin/leads', label: 'Leads', icon: 'leads', badge: 'leads' },
+            { sub: '/leads', label: 'Leads', icon: 'leads', badge: 'leads' },
         ],
     },
 ];
@@ -53,10 +53,15 @@ export default function AdminSidebar({ newLeads = 0, adminEmail }: AdminSidebarP
     const pathname = usePathname();
     const [drawerOpen, setDrawerOpen] = useState(false);
 
-    const isActive = (href: string) =>
-        href === '/super-admin'
-            ? pathname === '/super-admin' || pathname.startsWith('/super-admin/posts/') && pathname.endsWith('/edit')
-            : pathname === href;
+    // On admin.<domain> the URLs are clean ("/leads"); in dev/preview they
+    // live under /super-admin. Derive the base from the current path so
+    // links and active states work on both without hydration mismatches.
+    const base = pathname?.startsWith('/super-admin') ? '/super-admin' : '';
+    const hrefFor = (sub: string) => `${base}${sub}` || '/';
+    const isActive = (sub: string) =>
+        sub === ''
+            ? pathname === (base || '/') || (pathname.includes('/posts/') && pathname.endsWith('/edit'))
+            : pathname === `${base}${sub}`;
 
     const nav = (
         <nav className="flex-1 px-3 py-5 space-y-6 overflow-y-auto">
@@ -65,11 +70,11 @@ export default function AdminSidebar({ newLeads = 0, adminEmail }: AdminSidebarP
                     <p className="px-3 mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-foreground-muted">{section.label}</p>
                     <div className="space-y-1">
                         {section.items.map((item) => {
-                            const active = isActive(item.href);
+                            const active = isActive(item.sub);
                             return (
                                 <Link
-                                    key={item.href}
-                                    href={item.href}
+                                    key={item.sub || 'articles'}
+                                    href={hrefFor(item.sub)}
                                     onClick={() => setDrawerOpen(false)}
                                     aria-current={active ? 'page' : undefined}
                                     className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
@@ -121,7 +126,7 @@ export default function AdminSidebar({ newLeads = 0, adminEmail }: AdminSidebarP
     );
 
     const brand = (
-        <Link href="/super-admin" className="flex items-baseline gap-2 select-none" onClick={() => setDrawerOpen(false)}>
+        <Link href={hrefFor('')} className="flex items-baseline gap-2 select-none" onClick={() => setDrawerOpen(false)}>
             <span className="font-extrabold text-lg tracking-tighter text-foreground">BRYNEX</span>
             <span className="text-[10px] font-black tracking-[0.3em] text-accent uppercase">CMS</span>
         </Link>
