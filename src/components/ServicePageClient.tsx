@@ -329,7 +329,7 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                                     {tier.highlighted && (
                                         <>
                                             <div className="absolute top-0 left-0 right-0 h-1 bg-accent-gradient" />
-                                            <span className="absolute top-5 right-5 px-3 py-1 rounded-full bg-accent text-white text-[10px] font-black uppercase tracking-[0.15em]">
+                                            <span className="self-start mb-4 px-3 py-1 rounded-full bg-accent text-white text-[10px] font-black uppercase tracking-[0.15em]">
                                                 Most Popular
                                             </span>
                                         </>
