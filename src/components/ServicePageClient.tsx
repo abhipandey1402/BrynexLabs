@@ -286,6 +286,11 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                                             </span>
                                             <Link
                                                 href={alternateUrl}
+                                                scroll={false}
+                                                onClick={() => {
+                                                    // Choosing India re-enables auto geo-routing.
+                                                    document.cookie = 'bx-geo-optout=; path=/; max-age=0; samesite=lax';
+                                                }}
                                                 className="px-5 py-2 rounded-full text-sm font-bold text-foreground-secondary hover:text-foreground transition-all duration-300"
                                             >
                                                 🇮🇳 India · INR
@@ -295,6 +300,11 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                                         <>
                                             <Link
                                                 href={alternateUrl}
+                                                scroll={false}
+                                                onClick={() => {
+                                                    // Remember the global choice so middleware doesn't bounce back.
+                                                    document.cookie = `bx-geo-optout=1; path=/; max-age=${60 * 60 * 24 * 90}; samesite=lax`;
+                                                }}
                                                 className="px-5 py-2 rounded-full text-sm font-bold text-foreground-secondary hover:text-foreground transition-all duration-300"
                                             >
                                                 🌎 Global · USD
@@ -319,7 +329,7 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                                     {tier.highlighted && (
                                         <>
                                             <div className="absolute top-0 left-0 right-0 h-1 bg-accent-gradient" />
-                                            <span className="absolute top-5 right-5 px-3 py-1 rounded-full bg-accent text-white text-[10px] font-black uppercase tracking-[0.15em]">
+                                            <span className="self-start mb-4 px-3 py-1 rounded-full bg-accent text-white text-[10px] font-black uppercase tracking-[0.15em]">
                                                 Most Popular
                                             </span>
                                         </>

@@ -118,10 +118,12 @@ export default function IndiaServicePage({ params }: PageProps) {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
+            {/* The toggle sets the opt-out cookie client-side before navigating,
+                so the clean global URL loads directly (no redirect bounce). */}
             <ServicePageClient
                 service={service}
                 market="IN"
-                alternateUrl={`/services/${service.slug}?intl=1`}
+                alternateUrl={`/services/${service.slug}`}
             />
         </>
     );
