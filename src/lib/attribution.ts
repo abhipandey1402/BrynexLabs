@@ -47,3 +47,42 @@ export function getAttribution(): Attribution {
         return {};
     }
 }
+
+const VISIT_START_KEY = 'bx-visit-start';
+const PAGES_KEY = 'bx-pages';
+
+/** Call on every route change — builds the engagement trail for lead scoring. */
+export function recordPageVisit(pathname: string): void {
+    try {
+        if (!window.sessionStorage.getItem(VISIT_START_KEY)) {
+            window.sessionStorage.setItem(VISIT_START_KEY, String(Date.now()));
+        }
+        const pages: string[] = JSON.parse(window.sessionStorage.getItem(PAGES_KEY) ?? '[]');
+        if (pages[pages.length - 1] !== pathname) {
+            pages.push(pathname);
+            window.sessionStorage.setItem(PAGES_KEY, JSON.stringify(pages.slice(-25)));
+        }
+    } catch {
+        // best-effort
+    }
+}
+
+export interface Engagement {
+    pagesVisited: string[];
+    pageCount: number;
+    sessionSeconds: number;
+}
+
+export function getEngagement(): Engagement {
+    try {
+        const pages: string[] = JSON.parse(window.sessionStorage.getItem(PAGES_KEY) ?? '[]');
+        const start = Number(window.sessionStorage.getItem(VISIT_START_KEY) ?? Date.now());
+        return {
+            pagesVisited: pages,
+            pageCount: pages.length,
+            sessionSeconds: Math.max(0, Math.round((Date.now() - start) / 1000)),
+        };
+    } catch {
+        return { pagesVisited: [], pageCount: 0, sessionSeconds: 0 };
+    }
+}
