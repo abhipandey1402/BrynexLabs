@@ -12,13 +12,27 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://brynex.in'),
-  title: 'Brynex Labs — Premium Software Development',
+  title: {
+    default: 'Software Company for AI Agents, Automation & SaaS SEO | Brynex Labs',
+    template: '%s',
+  },
   description:
-    'Brynex Labs builds reliable websites, business systems, SaaS products and AI-powered software — from small improvements to large-scale platforms.',
+    'Build software that pays for itself. Brynex Labs is the software company behind AI agents, intelligent automation, custom software development & revenue-driving SaaS SEO — trusted by startups and enterprises across the USA & India.',
+  applicationName: 'Brynex Labs',
+  keywords: [
+    'AI agent development company',
+    'AI development company',
+    'custom software development company',
+    'SaaS development company',
+    'AI automation agency',
+    'SaaS SEO agency',
+    'software development company India',
+    'hire AI developers',
+  ],
   openGraph: {
-    title: 'Brynex Labs — Premium Software Development',
+    title: 'Software Company for AI Agents, Automation & SaaS SEO | Brynex Labs',
     description:
-      'Premium software development for businesses, startups and product teams. Websites, SaaS, AI solutions and more.',
+      'Build software that pays for itself — AI agents, intelligent automation, custom software & SaaS SEO from senior engineers. Serving the USA, India & worldwide.',
     type: 'website',
     url: 'https://brynex.in',
     locale: 'en_US',
@@ -26,14 +40,23 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Brynex Labs — Premium Software Development',
+    site: '@brynexlabs',
+    title: 'Software Company for AI Agents, Automation & SaaS SEO | Brynex Labs',
     description:
-      'Premium software development for businesses, startups and product teams. Websites, SaaS, AI solutions and more.',
+      'Build software that pays for itself — AI agents, intelligent automation, custom software & SaaS SEO from senior engineers. Serving the USA, India & worldwide.',
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
   },
+  category: 'technology',
   verification: process.env.NEXT_PUBLIC_GSC_VERIFICATION ? {
     google: process.env.NEXT_PUBLIC_GSC_VERIFICATION,
   } : undefined,

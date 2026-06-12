@@ -66,6 +66,8 @@ export default function Footer() {
                             {[
                                 { label: 'About', href: '/about' },
                                 { label: 'Case Studies', href: '/case-studies' },
+                                { label: 'Hire AI Developers', href: '/hire-ai-developers' },
+                                { label: 'AI Development in India', href: '/ai-development-company-in-india' },
                                 { label: 'Careers', href: '/careers' },
                                 { label: 'Blog', href: '/blog' },
                                 { label: 'Contact', href: '/contact' },

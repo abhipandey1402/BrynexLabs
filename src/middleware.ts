@@ -153,7 +153,55 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(loginUrl);
     }
 
-    return NextResponse.next();
+    // ----- Geo-routed service pages -----
+    // Indian visitors get the crawlable /in/* variant (INR pricing, India copy);
+    // everyone else stays on the global version. Crawlers are never redirected —
+    // both variants are static, self-canonical, and paired via hreflang, so
+    // Google/GSC index them independently and serve the right one per country.
+    const country = request.headers.get('x-vercel-ip-country') ?? '';
+    const geoServiceMatch = pathname.match(
+        /^\/services\/(ai-agents-automation|ai-native-software-engineering)$/
+    );
+
+    if (geoServiceMatch) {
+        // "Global · USD" toggle on the India page: remember the choice, serve global.
+        if (request.nextUrl.searchParams.get('intl') === '1') {
+            const url = request.nextUrl.clone();
+            url.searchParams.delete('intl');
+            const res = NextResponse.redirect(url, 302);
+            res.cookies.set('bx-geo-optout', '1', { path: '/', maxAge: 60 * 60 * 24 * 90, sameSite: 'lax' });
+            return res;
+        }
+
+        const ua = request.headers.get('user-agent') ?? '';
+        // Search + AI crawlers (ChatGPT, Claude, Perplexity, Gemini, …) must
+        // never be geo-redirected — they index the canonical hreflang pages.
+        const isBot = /bot|crawler|spider|crawling|slurp|bingpreview|facebookexternalhit|embedly|pinterest|whatsapp|telegrambot|linkedinbot|twitterbot|gptbot|chatgpt|oai-search|claude|anthropic|perplexity|cohere|meta-external|duckassist|google-extended|googleother|bytespider/i.test(ua);
+        const optedOut = request.cookies.get('bx-geo-optout')?.value === '1';
+
+        if (country === 'IN' && !isBot && !optedOut) {
+            const url = request.nextUrl.clone();
+            url.pathname = `/in${pathname}`;
+            return NextResponse.redirect(url, 302);
+        }
+    }
+
+    const response = NextResponse.next();
+
+    // Choosing the India version re-enables auto geo-routing.
+    if (pathname.startsWith('/in/services/') && request.cookies.get('bx-geo-optout')) {
+        response.cookies.delete('bx-geo-optout');
+    }
+
+    // Geo hint cookie for analytics / future client-side personalization.
+    if (country && request.cookies.get('bx-country')?.value !== country) {
+        response.cookies.set('bx-country', country, {
+            path: '/',
+            maxAge: 60 * 60 * 24 * 30,
+            sameSite: 'lax',
+        });
+    }
+    return response;
 }
 
 export const config = {

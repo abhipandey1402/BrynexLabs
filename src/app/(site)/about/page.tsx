@@ -3,12 +3,12 @@ import SectionWrapper from '@/components/SectionWrapper';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-    title: 'About Brynex Labs | Precision Engineering & Product Strategy',
-    description: 'Learn about Brynex Labs, our mission to bridge technical complexity with business outcomes, and the founder story behind our senior-led engineering collective.',
+    title: 'About Brynex Labs | AI & Software Development Company in India',
+    description: 'Brynex Labs is a senior-led AI and software development company based in India, serving startups and enterprises in the USA and worldwide. Meet the team and the mission behind our engineering collective.',
     alternates: { canonical: '/about' },
     openGraph: {
-        title: 'About Brynex Labs | Precision Engineering & Product Strategy',
-        description: 'Learn about Brynex Labs, our mission to bridge technical complexity with business outcomes, and the founder story behind our senior-led engineering collective.',
+        title: 'About Brynex Labs | AI & Software Development Company in India',
+        description: 'A senior-led AI and software development company based in India, serving startups and enterprises in the USA and worldwide.',
         url: '/about'
     }
 };
@@ -53,7 +53,7 @@ const values = [
 ];
 
 const stats = [
-    { label: 'Avg. Experience', value: '7+ Years' },
+    { label: 'Avg. Experience', value: '4+ Years' },
     { label: 'Project Success', value: '100%' },
     { label: 'Senior Engineers', value: '10+' },
     { label: 'Global Clients', value: '25+' },

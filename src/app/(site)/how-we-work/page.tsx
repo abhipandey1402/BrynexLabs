@@ -4,12 +4,12 @@ import Engagement from '@/components/sections/Engagement';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-    title: 'How We Work | Our 6-Phase Engineering Methodology',
-    description: 'Explore the Brynex Labs delivery process. From discovery and architecture to deployment and scaling, see how we build high-performance software.',
+    title: 'How We Work | Agile Software Development Process | Brynex Labs',
+    description: 'Our 6-phase agile software development process — from discovery and architecture to deployment and scaling. See how Brynex Labs delivers production-grade AI and SaaS products.',
     alternates: { canonical: '/how-we-work' },
     openGraph: {
-        title: 'How We Work | Our 6-Phase Engineering Methodology',
-        description: 'Explore the Brynex Labs delivery process. From discovery and architecture to deployment and scaling, see how we build high-performance software.',
+        title: 'How We Work | Agile Software Development Process | Brynex Labs',
+        description: 'Our 6-phase agile software development process — from discovery and architecture to deployment and scaling.',
         url: '/how-we-work'
     }
 };

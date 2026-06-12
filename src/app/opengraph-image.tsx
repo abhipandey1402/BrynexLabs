@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Brynex Labs — Premium Software Development';
+export const alt = 'Brynex Labs — AI Agent Development & Custom Software Company';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -38,7 +38,7 @@ export default function OpenGraphImage() {
                     </div>
                     <span style={{ fontSize: 28, fontWeight: 700, color: '#c2410c', letterSpacing: 18, marginTop: 4 }}>LABS</span>
                     <span style={{ fontSize: 30, color: '#a3a3a3', marginTop: 48 }}>
-                        AI-Native Software Engineering · Agentic AI · SaaS SEO
+                        AI Agent Development · Custom Software · SaaS SEO
                     </span>
                 </div>
                 <div
