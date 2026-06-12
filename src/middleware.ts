@@ -52,10 +52,10 @@ export async function middleware(request: NextRequest) {
         }
         // No sitemap on the admin host.
         if (pathname === '/sitemap.xml') {
-            return new NextResponse('Not found', { status: 404 });
+            return withNoIndex(new NextResponse('Not found', { status: 404 }));
         }
 
-        if (isStaticAsset(pathname)) return NextResponse.next();
+        if (isStaticAsset(pathname)) return withNoIndex(NextResponse.next());
 
         // Only the admin API belongs on this host.
         if (pathname.startsWith('/api/') && !pathname.startsWith('/api/admin')) {
