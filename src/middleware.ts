@@ -37,6 +37,24 @@ export async function middleware(request: NextRequest) {
     const isAdminHost = hostname.startsWith('admin.');
 
     if (isAdminHost) {
+        // The admin host must never be indexed.
+        const withNoIndex = (res: NextResponse) => {
+            res.headers.set('X-Robots-Tag', 'noindex, nofollow');
+            return res;
+        };
+
+        // Deny-all robots for the subdomain (the main site's robots.txt
+        // would otherwise be served here and allow crawling).
+        if (pathname === '/robots.txt') {
+            return new NextResponse('User-agent: *\nDisallow: /\n', {
+                headers: { 'content-type': 'text/plain', 'X-Robots-Tag': 'noindex, nofollow' },
+            });
+        }
+        // No sitemap on the admin host.
+        if (pathname === '/sitemap.xml') {
+            return new NextResponse('Not found', { status: 404 });
+        }
+
         if (isStaticAsset(pathname)) return NextResponse.next();
 
         // Only the admin API belongs on this host.
@@ -73,7 +91,7 @@ export async function middleware(request: NextRequest) {
                 }
                 const url = request.nextUrl.clone();
                 url.pathname = `${ADMIN_PREFIX}/login`;
-                return NextResponse.rewrite(url);
+                return withNoIndex(NextResponse.rewrite(url));
             }
             return NextResponse.next();
         }
@@ -94,7 +112,7 @@ export async function middleware(request: NextRequest) {
         // Authenticated page: serve the real route under /super-admin.
         const url = request.nextUrl.clone();
         url.pathname = pathname === '/' ? ADMIN_PREFIX : `${ADMIN_PREFIX}${pathname}`;
-        return NextResponse.rewrite(url);
+        return withNoIndex(NextResponse.rewrite(url));
     }
 
     // ----- Main domain / other hosts -----
