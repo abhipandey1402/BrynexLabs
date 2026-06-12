@@ -59,7 +59,7 @@ export default function CaseStudyPage({ params }: PageProps) {
             "name": "Brynex Labs",
             "logo": {
                 "@type": "ImageObject",
-                "url": "https://brynex.in/favicon.ico"
+                "url": "https://brynex.in/apple-icon"
             }
         },
         "mainEntityOfPage": {
