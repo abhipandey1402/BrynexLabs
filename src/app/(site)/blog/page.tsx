@@ -8,12 +8,12 @@ import { Metadata } from 'next';
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-    title: 'Insights & Engineering Blog | Brynex Labs',
-    description: 'Deep dives on SaaS Architecture, Autonomous AI Agents, and scalable Cloud engineering from the Brynex Labs collective.',
+    title: 'AI, SaaS & Software Engineering Blog | Brynex Labs',
+    description: 'Practical guides on AI agent development, SaaS architecture, cloud engineering, and SaaS SEO — written by the senior engineers at Brynex Labs.',
     alternates: { canonical: '/blog' },
     openGraph: {
-        title: 'Insights & Engineering Blog | Brynex Labs',
-        description: 'Deep dives on SaaS Architecture, Autonomous AI Agents, and scalable Cloud engineering from the Brynex Labs collective.',
+        title: 'AI, SaaS & Software Engineering Blog | Brynex Labs',
+        description: 'Practical guides on AI agent development, SaaS architecture, cloud engineering, and SaaS SEO — written by the senior engineers at Brynex Labs.',
         url: '/blog',
         type: 'website',
     },

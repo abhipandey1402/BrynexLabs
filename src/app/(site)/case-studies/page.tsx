@@ -4,12 +4,12 @@ import { caseStudies } from '@/data/case-studies';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-    title: 'Success Stories & Case Studies | Brynex Labs',
-    description: 'Explore how Brynex Labs helps startups and enterprises ship production-grade software through real-world examples of our work.',
+    title: 'Software & AI Development Case Studies | Brynex Labs',
+    description: 'Real results from AI agent, SaaS, and custom software development projects — see how Brynex Labs helps startups and enterprises in the USA & India ship production-grade software.',
     alternates: { canonical: '/case-studies' },
     openGraph: {
-        title: 'Success Stories & Case Studies | Brynex Labs',
-        description: 'Explore how Brynex Labs helps startups and enterprises ship production-grade software through real-world examples of our work.',
+        title: 'Software & AI Development Case Studies | Brynex Labs',
+        description: 'Real results from AI agent, SaaS, and custom software development projects for startups and enterprises.',
         url: '/case-studies'
     }
 };

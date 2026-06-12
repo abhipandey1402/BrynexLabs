@@ -4,12 +4,12 @@ import ServiceCard from '@/components/ServiceCard';
 import { services } from '@/data/services';
 
 export const metadata: Metadata = {
-    title: 'Expert Software Engineering Services | Brynex Labs',
-    description: 'Explore our services: agentic AI and intelligent automation, AI-native software engineering, and revenue-focused SaaS SEO.',
+    title: 'AI Development, Custom Software & SaaS SEO Services | Brynex Labs',
+    description: 'Explore Brynex Labs services: AI agent development & intelligent automation, custom software & SaaS development, and revenue-focused SaaS SEO — for startups and enterprises in the USA & India.',
     alternates: { canonical: '/services' },
     openGraph: {
-        title: 'Expert Software Engineering Services | Brynex Labs',
-        description: 'Explore our services: agentic AI and intelligent automation, AI-native software engineering, and revenue-focused SaaS SEO.',
+        title: 'AI Development, Custom Software & SaaS SEO Services | Brynex Labs',
+        description: 'AI agent development, custom software & SaaS engineering, and revenue-focused SaaS SEO — for startups and enterprises in the USA & India.',
         url: '/services'
     }
 };

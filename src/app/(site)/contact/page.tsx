@@ -3,12 +3,12 @@ import SectionWrapper from '@/components/SectionWrapper';
 import ContactForm from '@/components/ContactForm';
 
 export const metadata: Metadata = {
-    title: 'Consult with Our Engineering Experts | Brynex Labs',
-    description: 'Ready to build production-grade software? Contact Brynex Labs to discuss your AI, SaaS, or enterprise product vision. We respond within 6 business hours.',
+    title: 'Contact Brynex Labs | Hire AI & Software Development Experts',
+    description: 'Get a free consultation for AI agent development, custom software, or SaaS SEO. Brynex Labs serves clients in the USA, India & worldwide — we respond within 6 business hours.',
     alternates: { canonical: '/contact' },
     openGraph: {
-        title: 'Consult with Our Engineering Experts | Brynex Labs',
-        description: 'Ready to build production-grade software? Contact Brynex Labs to discuss your AI, SaaS, or enterprise product vision. We respond within 6 business hours.',
+        title: 'Contact Brynex Labs | Hire AI & Software Development Experts',
+        description: 'Get a free consultation for AI agent development, custom software, or SaaS SEO. We respond within 6 business hours.',
         url: '/contact'
     }
 };
