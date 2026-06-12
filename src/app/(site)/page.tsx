@@ -40,7 +40,7 @@ const jsonLd = {
       "name": "Brynex Labs",
       "alternateName": "Brynex",
       "url": "https://brynex.in",
-      "logo": "https://brynex.in/favicon.ico",
+      "logo": "https://brynex.in/apple-icon",
       "email": "hello@brynex.in",
       "description": "Software company building production-grade AI agents, intelligent automation, custom software, SaaS platforms, and revenue-focused SaaS SEO for startups and enterprises worldwide.",
       "areaServed": [
