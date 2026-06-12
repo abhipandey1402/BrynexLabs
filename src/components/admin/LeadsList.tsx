@@ -1,8 +1,17 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import type { ContactSubmission, LeadStatus } from '@/lib/contactStore';
+
+function Spinner({ className = '' }: { className?: string }) {
+    return (
+        <svg className={`animate-spin ${className}`} width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" opacity="0.25" />
+            <path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+        </svg>
+    );
+}
 
 type StatusFilter = 'all' | 'new' | 'contacted' | 'qualified' | 'proposal' | 'won' | 'lost';
 type SortOrder = 'newest' | 'oldest' | 'followup' | 'value';
@@ -108,12 +117,24 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
     const [starredOnly, setStarredOnly] = useState(false);
     const [sortOrder, setSortOrder] = useState<SortOrder>('newest');
     const [expanded, setExpanded] = useState<string | null>(null);
-    const [busy, setBusy] = useState<string | null>(null);
+    // busyKey targets the exact control being saved, e.g. "<id>:status:won".
+    const [busyKey, setBusyKey] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [notice, setNotice] = useState<string | null>(null);
     const [noteDraft, setNoteDraft] = useState('');
     const [valueDraft, setValueDraft] = useState<string>('');
     const [valueEditing, setValueEditing] = useState<string | null>(null);
+    const [isPending, startTransition] = useTransition();
+    const refreshing = useRef(false);
+
+    // Keep the loader visible until the refreshed server data has actually
+    // rendered — clearing it after the fetch alone makes the UI feel stuck.
+    useEffect(() => {
+        if (!isPending && refreshing.current) {
+            refreshing.current = false;
+            setBusyKey(null);
+        }
+    }, [isPending]);
 
     // Legacy 'closed' leads ride along in the Lost bucket.
     const inBucket = (lead: ContactSubmission, bucket: StatusFilter) =>
@@ -180,8 +201,8 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
         });
     }, [initialLeads, query, statusFilter, starredOnly, sortOrder]);
 
-    const act = async (id: string, fn: () => Promise<Response>, successNotice?: string) => {
-        setBusy(id);
+    const act = async (key: string, fn: () => Promise<Response>, successNotice?: string) => {
+        setBusyKey(key);
         setError(null);
         setNotice(null);
         try {
@@ -189,36 +210,37 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
             if (!res.ok) {
                 const data = await res.json().catch(() => ({}));
                 setError(data.error ?? 'Something went wrong.');
+                setBusyKey(null);
                 return;
             }
             if (successNotice) setNotice(successNotice);
-            router.refresh();
+            refreshing.current = true;
+            startTransition(() => router.refresh());
         } catch {
             setError('Network error — please try again.');
-        } finally {
-            setBusy(null);
+            setBusyKey(null);
         }
     };
 
-    const patch = (id: string, payload: Record<string, unknown>, successNotice?: string) =>
-        act(id, () => fetch(`/api/admin/leads/${id}`, {
+    const patch = (key: string, id: string, payload: Record<string, unknown>, successNotice?: string) =>
+        act(key, () => fetch(`/api/admin/leads/${id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
         }), successNotice);
 
     const retryEmail = (id: string) =>
-        act(id, () => fetch(`/api/admin/leads/${id}/retry-email`, { method: 'POST' }), 'Notification email sent.');
+        act(`${id}:retry`, () => fetch(`/api/admin/leads/${id}/retry-email`, { method: 'POST' }), 'Notification email sent.');
 
     const remove = (id: string, name: string) => {
         if (!window.confirm(`Delete the submission from "${name}"? This cannot be undone.`)) return;
-        return act(id, () => fetch(`/api/admin/leads/${id}`, { method: 'DELETE' }));
+        return act(`${id}:delete`, () => fetch(`/api/admin/leads/${id}`, { method: 'DELETE' }));
     };
 
     const submitNote = (id: string) => {
         const text = noteDraft.trim();
         if (!text) return;
-        return act(id, () => fetch(`/api/admin/leads/${id}/notes`, {
+        return act(`${id}:note`, () => fetch(`/api/admin/leads/${id}/notes`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text }),
@@ -226,24 +248,26 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
     };
 
     const removeNote = (id: string, noteId: string) =>
-        act(id, () => fetch(`/api/admin/leads/${id}/notes?noteId=${noteId}`, { method: 'DELETE' }));
+        act(`${id}:note-del:${noteId}`, () => fetch(`/api/admin/leads/${id}/notes?noteId=${noteId}`, { method: 'DELETE' }));
 
     const saveValue = (id: string) => {
         const raw = valueDraft.trim();
         setValueEditing(null);
-        if (raw === '') return patch(id, { value: null });
+        if (raw === '') return patch(`${id}:value`, id, { value: null });
         const num = Number(raw);
         if (!Number.isFinite(num) || num < 0) {
             setError('Deal value must be a positive number.');
             return;
         }
-        return patch(id, { value: num });
+        return patch(`${id}:value`, id, { value: num });
     };
 
-    const copyEmail = async (email: string) => {
+    const [copiedId, setCopiedId] = useState<string | null>(null);
+    const copyEmail = async (id: string, email: string) => {
         try {
             await navigator.clipboard.writeText(email);
-            setNotice(`Copied ${email}`);
+            setCopiedId(id);
+            setTimeout(() => setCopiedId((current) => (current === id ? null : current)), 2000);
         } catch {
             setError('Could not copy to clipboard.');
         }
@@ -285,7 +309,7 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
 
             {/* Toolbar */}
             <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
-                <div className="flex gap-1 p-1 rounded-xl bg-background-secondary border border-border w-fit overflow-x-auto" role="tablist" aria-label="Filter by status">
+                <div className="flex flex-wrap gap-1 p-1 rounded-xl bg-background-secondary border border-border w-fit" role="tablist" aria-label="Filter by status">
                     {(['all', 'new', 'contacted', 'qualified', 'proposal', 'won', 'lost'] as const).map((s) => (
                         <button
                             key={s}
@@ -293,7 +317,7 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                             role="tab"
                             aria-selected={statusFilter === s}
                             onClick={() => setStatusFilter(s)}
-                            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold capitalize whitespace-nowrap transition-all ${
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize whitespace-nowrap transition-all ${
                                 statusFilter === s
                                     ? 'bg-accent text-white shadow-button'
                                     : 'text-foreground-secondary hover:text-foreground hover:bg-background-card'
@@ -303,7 +327,7 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                         </button>
                     ))}
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2 sm:justify-end xl:shrink-0">
                     <button
                         type="button"
                         onClick={() => setStarredOnly(!starredOnly)}
@@ -334,7 +358,7 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                     >
                         Export CSV ({filtered.length})
                     </button>
-                    <div className="relative w-full sm:w-64">
+                    <div className="relative w-full sm:w-56">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-foreground-muted">
                             <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
                         </svg>
@@ -366,7 +390,7 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                 <div className="space-y-2">
                     {filtered.map((lead) => {
                         const isOpen = expanded === lead.id;
-                        const isBusy = busy === lead.id;
+                        const isBusy = busyKey?.startsWith(`${lead.id}:`) ?? false;
                         const overdue = isOverdue(lead);
                         return (
                             <div
@@ -378,12 +402,12 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                                     <button
                                         type="button"
                                         disabled={isBusy}
-                                        onClick={() => patch(lead.id, { priority: !lead.priority })}
+                                        onClick={() => patch(`${lead.id}:star`, lead.id, { priority: !lead.priority })}
                                         title={lead.priority ? 'Unstar lead' : 'Star lead'}
                                         aria-label={lead.priority ? 'Unstar lead' : 'Star lead'}
                                         className={`mt-0.5 sm:mt-0 text-lg leading-none transition-colors ${lead.priority ? 'text-amber-500' : 'text-foreground-muted/40 hover:text-amber-500'}`}
                                     >
-                                        ★
+                                        {busyKey === `${lead.id}:star` ? <Spinner className="text-amber-500" /> : '★'}
                                     </button>
                                     <button
                                         type="button"
@@ -444,21 +468,27 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                                         <div>
                                             <p className="text-[10px] font-black uppercase tracking-widest text-foreground-muted mb-2">Pipeline Stage</p>
                                             <div className="flex flex-wrap gap-1.5">
-                                                {PIPELINE.map((s) => (
-                                                    <button
-                                                        key={s}
-                                                        type="button"
-                                                        disabled={isBusy || lead.status === s}
-                                                        onClick={() => patch(lead.id, { status: s })}
-                                                        className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize border transition-colors disabled:cursor-default ${
-                                                            lead.status === s
-                                                                ? STATUS_STYLES[s]
-                                                                : 'border-border text-foreground-secondary hover:border-accent hover:text-foreground'
-                                                        }`}
-                                                    >
-                                                        {s}
-                                                    </button>
-                                                ))}
+                                                {PIPELINE.map((s) => {
+                                                    const stageBusy = busyKey === `${lead.id}:status:${s}`;
+                                                    return (
+                                                        <button
+                                                            key={s}
+                                                            type="button"
+                                                            disabled={isBusy || lead.status === s}
+                                                            onClick={() => patch(`${lead.id}:status:${s}`, lead.id, { status: s })}
+                                                            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold capitalize border transition-all disabled:cursor-default ${
+                                                                stageBusy
+                                                                    ? 'border-accent/50 bg-accent/10 text-accent'
+                                                                    : lead.status === s
+                                                                        ? STATUS_STYLES[s]
+                                                                        : `border-border text-foreground-secondary hover:border-accent hover:text-foreground ${isBusy ? 'opacity-50' : ''}`
+                                                            }`}
+                                                        >
+                                                            {stageBusy && <Spinner />}
+                                                            {stageBusy ? 'Moving…' : s}
+                                                        </button>
+                                                    );
+                                                })}
                                             </div>
                                         </div>
 
@@ -474,13 +504,15 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                                                 <p className="text-xs text-foreground-muted">{lead.timezone}</p>
                                             </div>
                                             <div>
-                                                <p className="text-[10px] font-black uppercase tracking-widest text-foreground-muted mb-1">Follow-up Date</p>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-foreground-muted mb-1 flex items-center gap-1.5">
+                                                    Follow-up Date {busyKey === `${lead.id}:followup` && <Spinner className="text-accent" />}
+                                                </p>
                                                 <input
                                                     type="date"
                                                     value={lead.followUpAt ?? ''}
                                                     disabled={isBusy}
-                                                    onChange={(e) => patch(lead.id, { followUpAt: e.target.value || null })}
-                                                    className={`rounded-lg border bg-background-secondary px-2.5 py-1.5 text-xs font-semibold focus:border-accent focus:outline-none ${overdue ? 'border-red-500/50 text-red-500' : 'border-border text-foreground'}`}
+                                                    onChange={(e) => patch(`${lead.id}:followup`, lead.id, { followUpAt: e.target.value || null })}
+                                                    className={`rounded-lg border bg-background-secondary px-2.5 py-1.5 text-xs font-semibold focus:border-accent focus:outline-none disabled:opacity-60 ${overdue ? 'border-red-500/50 text-red-500' : 'border-border text-foreground'}`}
                                                 />
                                             </div>
                                             <div>
@@ -496,6 +528,10 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                                                         onKeyDown={(e) => { if (e.key === 'Enter') saveValue(lead.id); }}
                                                         className="w-28 rounded-lg border border-border bg-background-secondary px-2.5 py-1.5 text-xs font-semibold text-foreground focus:border-accent focus:outline-none"
                                                     />
+                                                ) : busyKey === `${lead.id}:value` ? (
+                                                    <span className="inline-flex items-center gap-1.5 font-semibold text-accent text-sm">
+                                                        <Spinner /> Saving…
+                                                    </span>
                                                 ) : (
                                                     <button
                                                         type="button"
@@ -556,9 +592,9 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                                                     type="button"
                                                     disabled={isBusy || !noteDraft.trim()}
                                                     onClick={() => submitNote(lead.id)}
-                                                    className="px-4 py-2 rounded-lg bg-accent-gradient text-white text-xs font-bold shadow-button hover:brightness-110 transition-all disabled:opacity-50"
+                                                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-accent-gradient text-white text-xs font-bold shadow-button hover:brightness-110 transition-all disabled:opacity-50"
                                                 >
-                                                    Add
+                                                    {busyKey === `${lead.id}:note` ? <><Spinner /> Adding…</> : 'Add'}
                                                 </button>
                                             </div>
                                             {(lead.notes?.length ?? 0) > 0 && (
@@ -574,9 +610,9 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                                                                 disabled={isBusy}
                                                                 onClick={() => removeNote(lead.id, note.id)}
                                                                 title="Delete note"
-                                                                className="opacity-0 group-hover:opacity-100 text-foreground-muted hover:text-red-500 text-xs font-bold transition-all shrink-0"
+                                                                className={`text-foreground-muted hover:text-red-500 text-xs font-bold transition-all shrink-0 ${busyKey === `${lead.id}:note-del:${note.id}` ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
                                                             >
-                                                                ✕
+                                                                {busyKey === `${lead.id}:note-del:${note.id}` ? <Spinner className="text-red-500" /> : '✕'}
                                                             </button>
                                                         </li>
                                                     ))}
@@ -604,28 +640,32 @@ export default function LeadsList({ initialLeads }: { initialLeads: ContactSubmi
                                             )}
                                             <button
                                                 type="button"
-                                                onClick={() => copyEmail(lead.email)}
-                                                className="px-4 py-2 rounded-lg border border-border text-xs font-bold text-foreground-secondary hover:border-accent hover:text-foreground transition-colors"
+                                                onClick={() => copyEmail(lead.id, lead.email)}
+                                                className={`px-4 py-2 rounded-lg border text-xs font-bold transition-colors ${
+                                                    copiedId === lead.id
+                                                        ? 'border-green-500/40 bg-green-500/10 text-green-500'
+                                                        : 'border-border text-foreground-secondary hover:border-accent hover:text-foreground'
+                                                }`}
                                             >
-                                                Copy Email
+                                                {copiedId === lead.id ? '✓ Copied' : 'Copy Email'}
                                             </button>
                                             {lead.emailStatus !== 'sent' && (
                                                 <button
                                                     type="button"
                                                     disabled={isBusy}
                                                     onClick={() => retryEmail(lead.id)}
-                                                    className="px-4 py-2 rounded-lg border border-amber-500/40 text-xs font-bold text-amber-500 hover:bg-amber-500/10 transition-colors disabled:opacity-50"
+                                                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-amber-500/40 text-xs font-bold text-amber-500 hover:bg-amber-500/10 transition-colors disabled:opacity-50"
                                                 >
-                                                    {isBusy ? 'Sending…' : 'Retry Notification Email'}
+                                                    {busyKey === `${lead.id}:retry` ? <><Spinner /> Sending…</> : 'Retry Notification Email'}
                                                 </button>
                                             )}
                                             <button
                                                 type="button"
                                                 disabled={isBusy}
                                                 onClick={() => remove(lead.id, lead.name)}
-                                                className="ml-auto px-4 py-2 rounded-lg border border-red-500/30 text-xs font-bold text-red-500 hover:bg-red-500/10 transition-colors disabled:opacity-50"
+                                                className="ml-auto inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-red-500/30 text-xs font-bold text-red-500 hover:bg-red-500/10 transition-colors disabled:opacity-50"
                                             >
-                                                Delete
+                                                {busyKey === `${lead.id}:delete` ? <><Spinner /> Deleting…</> : 'Delete'}
                                             </button>
                                         </div>
                                     </div>
