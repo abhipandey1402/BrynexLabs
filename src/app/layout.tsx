@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Analytics as VercelAnalytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import CustomAnalytics from '@/components/Analytics';
 
 const inter = Inter({
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
     template: '%s',
   },
   description:
-    'Build software that pays for itself. Brynex Labs is the software company behind AI agents, intelligent automation, custom software development & revenue-driving SaaS SEO — trusted by startups and enterprises across the USA & India.',
+    'Brynex Labs is a software company building AI agents, automation, custom software & revenue-driving SaaS SEO for startups & enterprises in the USA & India.',
   applicationName: 'Brynex Labs',
   keywords: [
     'AI agent development company',
@@ -84,6 +85,7 @@ export default function RootLayout({
           {children}
         </ThemeProvider>
         <VercelAnalytics />
+        <SpeedInsights />
         <CustomAnalytics />
       </body>
     </html>

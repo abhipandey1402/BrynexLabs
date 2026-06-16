@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: 'How We Work | Agile Software Development Process | Brynex Labs',
-    description: 'Our 6-phase agile software development process — from discovery and architecture to deployment and scaling. See how Brynex Labs delivers production-grade AI and SaaS products.',
+    description: 'Brynex Labs 6-phase agile process — from discovery and architecture to deployment and scaling — for shipping production-grade AI and SaaS products.',
     alternates: { canonical: '/how-we-work' },
     openGraph: {
         title: 'How We Work | Agile Software Development Process | Brynex Labs',

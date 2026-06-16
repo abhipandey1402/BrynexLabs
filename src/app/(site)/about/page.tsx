@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: 'About Brynex Labs | AI & Software Development Company in India',
-    description: 'Brynex Labs is a senior-led AI and software development company based in India, serving startups and enterprises in the USA and worldwide. Meet the team and the mission behind our engineering collective.',
+    description: 'Meet Brynex Labs — a senior-led AI & software development company in India, serving startups and enterprises across the USA, UK & worldwide.',
     alternates: { canonical: '/about' },
     openGraph: {
         title: 'About Brynex Labs | AI & Software Development Company in India',
