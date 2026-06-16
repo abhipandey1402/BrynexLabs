@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { getDbPostBySlug, updateDbPost, deleteDbPost, validatePostInput } from '@/lib/blogStore';
 import { isDbConfigured } from '@/lib/mongodb';
+import { pingIndexNow } from '@/lib/indexnow';
 
 export const runtime = 'nodejs';
 
@@ -16,10 +17,11 @@ function dbNotConfigured() {
     );
 }
 
-function revalidateBlog(slug: string) {
+async function revalidateBlog(slug: string) {
     revalidatePath('/blog');
     revalidatePath(`/blog/${slug}`);
     revalidatePath('/sitemap.xml');
+    await pingIndexNow(['/blog', `/blog/${slug}`]);
 }
 
 export async function GET(_request: NextRequest, { params }: Params) {
@@ -45,8 +47,8 @@ export async function PUT(request: NextRequest, { params }: Params) {
     try {
         const post = await updateDbPost(params.slug, input);
         if (!post) return NextResponse.json({ error: 'Article not found.' }, { status: 404 });
-        revalidateBlog(params.slug);
-        if (post.slug !== params.slug) revalidateBlog(post.slug);
+        await revalidateBlog(params.slug);
+        if (post.slug !== params.slug) await revalidateBlog(post.slug);
         return NextResponse.json({ post });
     } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to update the article.';
@@ -58,6 +60,6 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
     if (!isDbConfigured()) return dbNotConfigured();
     const deleted = await deleteDbPost(params.slug);
     if (!deleted) return NextResponse.json({ error: 'Article not found.' }, { status: 404 });
-    revalidateBlog(params.slug);
+    await revalidateBlog(params.slug);
     return NextResponse.json({ ok: true });
 }

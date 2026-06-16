@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { getDbServiceBySlug, upsertDbService, deleteDbService, validateServiceInput } from '@/lib/servicePageStore';
 import { isDbConfigured } from '@/lib/mongodb';
+import { pingIndexNow } from '@/lib/indexnow';
 
 export const runtime = 'nodejs';
 
@@ -16,11 +17,12 @@ function dbNotConfigured() {
     );
 }
 
-function revalidateService(slug: string) {
+async function revalidateService(slug: string) {
     revalidatePath('/services');
     revalidatePath(`/services/${slug}`);
     revalidatePath(`/in/services/${slug}`);
     revalidatePath('/sitemap.xml');
+    await pingIndexNow(['/services', `/services/${slug}`, `/in/services/${slug}`]);
 }
 
 export async function GET(_request: NextRequest, { params }: Params) {
@@ -46,7 +48,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     try {
         // The slug in the URL is authoritative — the editor never renames a page.
         const service = await upsertDbService(params.slug, input);
-        revalidateService(params.slug);
+        await revalidateService(params.slug);
         return NextResponse.json({ service });
     } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to save the service page.';
@@ -59,6 +61,6 @@ export async function DELETE(_request: NextRequest, { params }: Params) {
     const deleted = await deleteDbService(params.slug);
     if (!deleted) return NextResponse.json({ error: 'Service page not found.' }, { status: 404 });
     // Restores the code-defined version (if any) on the live site.
-    revalidateService(params.slug);
+    await revalidateService(params.slug);
     return NextResponse.json({ ok: true });
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { getDbServices, createDbService, validateServiceInput } from '@/lib/servicePageStore';
 import { isDbConfigured } from '@/lib/mongodb';
+import { pingIndexNow } from '@/lib/indexnow';
 
 export const runtime = 'nodejs';
 
@@ -12,11 +13,12 @@ function dbNotConfigured() {
     );
 }
 
-function revalidateService(slug: string) {
+async function revalidateService(slug: string) {
     revalidatePath('/services');
     revalidatePath(`/services/${slug}`);
     revalidatePath(`/in/services/${slug}`);
     revalidatePath('/sitemap.xml');
+    await pingIndexNow(['/services', `/services/${slug}`, `/in/services/${slug}`]);
 }
 
 export async function GET() {
@@ -40,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     try {
         const service = await createDbService(input);
-        revalidateService(service.slug);
+        await revalidateService(service.slug);
         return NextResponse.json({ service }, { status: 201 });
     } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to create the service page.';
