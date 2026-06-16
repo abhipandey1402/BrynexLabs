@@ -1,8 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { services } from '@/data/services';
+import { getServiceBySlug, getAllServiceSlugs } from '@/lib/serviceService';
 import ServicePageClient from '@/components/ServicePageClient';
-import SaaSSEOClient from '@/components/SaaSSEOClient';
 
 interface PageProps {
     params: {
@@ -11,7 +10,7 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const service = services.find((s) => s.slug === params.slug);
+    const service = await getServiceBySlug(params.slug);
 
     if (!service) {
         return {
@@ -42,13 +41,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-    return services.map((service) => ({
-        slug: service.slug,
-    }));
+    const slugs = await getAllServiceSlugs();
+    return slugs.map((slug) => ({ slug }));
 }
 
-export default function ServicePage({ params }: PageProps) {
-    const service = services.find((s) => s.slug === params.slug);
+export default async function ServicePage({ params }: PageProps) {
+    const service = await getServiceBySlug(params.slug);
 
     if (!service) {
         notFound();
@@ -101,15 +99,11 @@ export default function ServicePage({ params }: PageProps) {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            {service.slug === 'saas-seo' ? (
-                <SaaSSEOClient service={service} />
-            ) : (
-                <ServicePageClient
-                    service={service}
-                    market="GLOBAL"
-                    alternateUrl={service.marketIN ? `/in/services/${service.slug}` : undefined}
-                />
-            )}
+            <ServicePageClient
+                service={service}
+                market="GLOBAL"
+                alternateUrl={service.marketIN ? `/in/services/${service.slug}` : undefined}
+            />
         </>
     );
 }

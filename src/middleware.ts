@@ -5,7 +5,7 @@ const ADMIN_PREFIX = '/super-admin';
 const ROOT_DOMAIN = process.env.NEXT_PUBLIC_ROOT_DOMAIN ?? 'brynex.in';
 
 /** Page paths that exist on the admin subdomain (clean URLs, no /super-admin prefix). */
-const ADMIN_PAGE_PREFIXES = ['/login', '/leads', '/posts'];
+const ADMIN_PAGE_PREFIXES = ['/login', '/leads', '/posts', '/services'];
 
 function isStaticAsset(pathname: string): boolean {
     return (
