@@ -66,6 +66,142 @@ export interface ServiceDetail {
     targetAudience?: { for: string[]; notFor: string[] };
     testimonial?: { quote: string; author: string; role: string; avatar?: string };
     customCta?: { title: string; subtitle: string; buttonText: string; bullets?: string[] };
+    /**
+     * Presentation config edited from the super-admin Design panel. Optional:
+     * code-defined services omit it and fall back to DEFAULT_SERVICE_THEME, so
+     * the look is unchanged until an admin customises it.
+     */
+    theme?: ServiceTheme;
+    /**
+     * Admin-authored blocks beyond the built-in sections. Each is placed in the
+     * section order (theme.sections) by its id, so it can be reordered, hidden,
+     * and re-backgrounded exactly like a built-in section.
+     */
+    customSections?: CustomSection[];
+}
+
+/** On-brand layouts a custom section can use. */
+export type CustomSectionLayout = 'text' | 'cards' | 'list' | 'cta';
+
+export interface CustomSection {
+    /** Stable id, referenced from theme.sections. Format: "custom-<token>". */
+    id: string;
+    layout: CustomSectionLayout;
+    /** Small uppercase label above the heading (optional). */
+    eyebrow?: string;
+    heading?: string;
+    subheading?: string;
+    /** Body copy for 'text' and 'cta' layouts (blank lines separate paragraphs). */
+    body?: string;
+    /** Cards ('cards') or checklist lines ('list'). */
+    items?: { title: string; description?: string }[];
+    /** CTA button label for the 'cta' layout. */
+    buttonText?: string;
+}
+
+export const CUSTOM_SECTION_LAYOUTS: { value: CustomSectionLayout; label: string; hint: string }[] = [
+    { value: 'text', label: 'Text block', hint: 'Heading + paragraphs, centered.' },
+    { value: 'cards', label: 'Card grid', hint: 'Heading + a grid of titled cards.' },
+    { value: 'list', label: 'Checklist', hint: 'Heading + a two-column ticked list.' },
+    { value: 'cta', label: 'CTA banner', hint: 'Accent banner with a button.' },
+];
+
+/** True when a section-order key refers to a custom section rather than a built-in. */
+export function isCustomSectionKey(key: string): boolean {
+    return key.startsWith('custom-');
+}
+
+/** Body sections that can be reordered, hidden, or re-backgrounded per service. */
+export type ServiceSectionKey =
+    | 'metrics'
+    | 'problem'
+    | 'solutions'
+    | 'subServices'
+    | 'process'
+    | 'targetAudience'
+    | 'pricing'
+    | 'whyUs'
+    | 'testimonial'
+    | 'techStack'
+    | 'comparison'
+    | 'faqs';
+
+export type HeroLayout = 'centered' | 'split' | 'minimal';
+export type ServiceButtonStyle = 'gradient' | 'solid' | 'outline';
+export type ServiceDensity = 'compact' | 'comfortable' | 'spacious';
+export type SectionBackground = 'default' | 'secondary' | 'muted' | 'accent';
+
+export interface ServiceSectionConfig {
+    /** A built-in ServiceSectionKey, or a custom section id ("custom-…"). */
+    key: string;
+    visible: boolean;
+    /** Surface tint behind the section; 'default' is the page background. */
+    background?: SectionBackground;
+}
+
+export interface ServiceTheme {
+    /** Hex (e.g. "#C2410C"). Overrides --accent for this page only. */
+    accentColor?: string;
+    /** Optional lighter gradient stop; derived from accentColor when omitted. */
+    accentLight?: string;
+    heroLayout?: HeroLayout;
+    buttonStyle?: ServiceButtonStyle;
+    density?: ServiceDensity;
+    /** Section order + visibility + per-section background. */
+    sections?: ServiceSectionConfig[];
+}
+
+/**
+ * Canonical section order with human labels and the default surface tint each
+ * section ships with today — so an un-customised page looks exactly as it does
+ * now, and the admin's per-section choice overrides only when changed.
+ */
+export const SERVICE_SECTIONS: { key: ServiceSectionKey; label: string; defaultBackground: SectionBackground }[] = [
+    { key: 'metrics', label: 'Metrics', defaultBackground: 'default' },
+    { key: 'problem', label: 'The Problem', defaultBackground: 'muted' },
+    { key: 'solutions', label: 'How We Solve It', defaultBackground: 'default' },
+    { key: 'subServices', label: 'Sub-Services', defaultBackground: 'muted' },
+    { key: 'process', label: 'Process / Methodology', defaultBackground: 'secondary' },
+    { key: 'targetAudience', label: 'Who This Is For', defaultBackground: 'default' },
+    { key: 'pricing', label: 'Pricing', defaultBackground: 'default' },
+    { key: 'whyUs', label: 'Why Us', defaultBackground: 'secondary' },
+    { key: 'testimonial', label: 'Testimonial', defaultBackground: 'default' },
+    { key: 'techStack', label: 'Tech Stack', defaultBackground: 'default' },
+    { key: 'comparison', label: 'Comparison Table', defaultBackground: 'default' },
+    { key: 'faqs', label: 'FAQs', defaultBackground: 'secondary' },
+];
+
+export const DEFAULT_SERVICE_THEME: Required<Omit<ServiceTheme, 'accentColor' | 'accentLight'>> = {
+    heroLayout: 'centered',
+    buttonStyle: 'gradient',
+    density: 'comfortable',
+    sections: SERVICE_SECTIONS.map((s) => ({ key: s.key, visible: true, background: s.defaultBackground })),
+};
+
+/**
+ * Merge a (possibly partial) theme onto the defaults and reconcile the section
+ * list: saved built-in/custom keys keep their order, visibility, and background;
+ * any built-in or custom section missing from the saved list is appended visible
+ * so the page never silently drops a section. `customIds` are the ids of the
+ * service's custom sections — passed in because they live outside the theme.
+ */
+export function resolveServiceTheme(theme?: ServiceTheme, customIds: string[] = []): Required<ServiceTheme> {
+    const saved = theme?.sections ?? DEFAULT_SERVICE_THEME.sections;
+    const validKeys = new Set<string>([...SERVICE_SECTIONS.map((d) => d.key), ...customIds]);
+    const seen = new Set(saved.map((s) => s.key));
+    const sections: ServiceSectionConfig[] = [
+        ...saved.filter((s) => validKeys.has(s.key)),
+        ...SERVICE_SECTIONS.filter((d) => !seen.has(d.key)).map((d) => ({ key: d.key, visible: true, background: d.defaultBackground })),
+        ...customIds.filter((id) => !seen.has(id)).map((id) => ({ key: id, visible: true, background: 'default' as SectionBackground })),
+    ];
+    return {
+        accentColor: theme?.accentColor ?? '',
+        accentLight: theme?.accentLight ?? '',
+        heroLayout: theme?.heroLayout ?? DEFAULT_SERVICE_THEME.heroLayout,
+        buttonStyle: theme?.buttonStyle ?? DEFAULT_SERVICE_THEME.buttonStyle,
+        density: theme?.density ?? DEFAULT_SERVICE_THEME.density,
+        sections,
+    };
 }
 
 export const services: ServiceDetail[] = [
@@ -626,6 +762,11 @@ export const services: ServiceDetail[] = [
         cardDescription: 'Scale your MRR with sustainable, high-converting organic traffic strategies tailored for SaaS companies.',
         description: 'Turn Organic Traffic into Pipeline, Demo Requests & Revenue. We help B2B SaaS companies turn SEO into a predictable revenue channel—not just a traffic source.',
         hook: 'Turn Organic Traffic into Pipeline, Demo Requests & Revenue. We help B2B SaaS companies turn SEO into a predictable revenue channel—not just a traffic source.',
+        badge: 'Revenue-Focused SEO',
+        problemHeading: 'The Problem with Most SaaS SEO Agencies',
+        problemSummary: 'more visitors, but no meaningful increase in pipeline',
+        processHeading: 'Our Approach: Revenue-Led SaaS SEO Framework',
+        processSummary: 'This is how SEO becomes a pipeline engine, not a content activity.',
         seo: {
             title: 'SaaS SEO Agency | B2B SaaS SEO Services That Drive Pipeline',
             metaDescription: 'Brynex Labs is a SaaS SEO agency for B2B companies in the USA & India. We turn organic traffic into demo requests, pipeline & MRR with BOFU keywords, programmatic SEO, and CRO.',
@@ -702,6 +843,54 @@ export const services: ServiceDetail[] = [
                 'There\'s no clear ICP or positioning',
                 'You\'re not ready to invest in long-term growth',
             ]
+        },
+        subServices: {
+            heading: 'Our SaaS SEO Services',
+            items: [
+                { title: 'Keyword Research & Strategy', intro: 'We map keywords to buyer intent and funnel stages:', points: ['High-intent (BOFU) keyword targeting', 'Competitor gap analysis', 'Revenue-driven prioritization'] },
+                { title: 'SaaS Content Marketing & Blog Strategy', intro: 'We build a content engine, not random blogs:', points: ['Topic clusters for authority', 'MOFU + BOFU content mix', 'Product-led SEO content'] },
+                { title: 'Conversion-Focused Landing Pages', intro: 'Traffic without conversion is wasted. We build pages that:', points: ['Rank for high-intent queries', 'Convert visitors into demo requests', 'Align with your funnel'] },
+                { title: 'Technical SEO for SaaS Platforms', intro: 'We remove growth bottlenecks:', points: ['Crawl & index optimization', 'Site structure improvements', 'Core Web Vitals', 'Scalable SEO architecture'] },
+                { title: 'Link Building', intro: 'We build authority where it matters:', points: ['High-quality backlinks', 'SaaS-relevant placements', 'Scalable link acquisition'] },
+                { title: 'Programmatic SEO', intro: 'We help you scale beyond manual SEO:', points: ['Data-driven page creation', 'Template-based SEO systems', '100s–1000s of scalable pages'] },
+                { title: 'SEO + CRO (Conversion Optimization)', intro: 'We optimize for outcomes:', points: ['Demo conversion rates', 'Funnel drop-offs', 'CTA performance', 'More traffic → more revenue (not just visits)'] },
+            ],
+        },
+        pricing: {
+            heading: 'SaaS SEO Pricing (Monthly Retainer)',
+            subheading: 'We work on a monthly retainer model designed for growth-stage SaaS:',
+            tiers: [
+                {
+                    name: 'Growth Retainer',
+                    tagline: 'Designed for growth-stage SaaS',
+                    priceLabel: 'Plans start from',
+                    price: '₹50K',
+                    period: '/month',
+                    highlighted: true,
+                    features: ['Custom scope based on your stage & goals', 'Focus on ROI, not deliverables', 'Long-term growth partnership'],
+                    buttonText: 'Discuss Your Plan',
+                },
+            ],
+        },
+        whyUs: {
+            heading: 'Why Choose Us Over Typical SaaS SEO Agencies',
+            items: [
+                { title: 'We Focus on Revenue, Not Just Traffic', description: 'Everything we do is tied to demo generation and pipeline growth.' },
+                { title: 'Built for SaaS (Not Generic SEO)', description: 'We understand SaaS funnels, product-led growth, and high-consideration buying journeys.' },
+                { title: 'Programmatic + Scalable SEO', description: 'We build systems that scale—not just manual execution.' },
+                { title: 'SEO + CRO Combined', description: 'We don\'t stop at traffic—we optimize conversions.' },
+                { title: 'Strategic Growth Partner', description: 'We don\'t just execute—we help you build a growth engine.' },
+            ],
+        },
+        comparison: {
+            heading: 'How We\'re Different from Other SaaS SEO Agencies',
+            rows: [
+                { typical: 'Traffic-focused', ours: 'Revenue-focused' },
+                { typical: 'Blog-heavy SEO', ours: 'BOFU + product-led SEO' },
+                { typical: 'Generic keyword targeting', ours: 'ICP + funnel-driven strategy' },
+                { typical: 'SEO in isolation', ours: 'SEO integrated with funnel & CRO' },
+                { typical: 'Manual scaling', ours: 'Programmatic SEO systems' },
+            ],
         },
         customCta: {
             title: 'Ready to Turn SEO into a Revenue Channel?',

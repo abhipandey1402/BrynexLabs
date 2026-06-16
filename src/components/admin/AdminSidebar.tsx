@@ -31,6 +31,11 @@ const ICONS = {
             <path d="M15 3h6v6" /><path d="M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
         </svg>
     ),
+    services: (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M12 2 2 7l10 5 10-5-10-5Z" /><path d="m2 17 10 5 10-5" /><path d="m2 12 10 5 10-5" />
+        </svg>
+    ),
 };
 
 const SECTIONS: { label: string; items: { sub: string; label: string; icon: keyof typeof ICONS; badge?: 'leads' }[] }[] = [
@@ -39,6 +44,7 @@ const SECTIONS: { label: string; items: { sub: string; label: string; icon: keyo
         items: [
             { sub: '', label: 'Articles', icon: 'articles' },
             { sub: '/posts/new', label: 'New Article', icon: 'newArticle' },
+            { sub: '/services', label: 'Service Pages', icon: 'services' },
         ],
     },
     {
@@ -61,7 +67,7 @@ export default function AdminSidebar({ newLeads = 0, adminEmail }: AdminSidebarP
     const isActive = (sub: string) =>
         sub === ''
             ? pathname === (base || '/') || (pathname.includes('/posts/') && pathname.endsWith('/edit'))
-            : pathname === `${base}${sub}`;
+            : pathname === `${base}${sub}` || pathname.startsWith(`${base}${sub}/`);
 
     const nav = (
         <nav className="flex-1 px-3 py-5 space-y-6 overflow-y-auto">

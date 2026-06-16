@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { services } from '@/data/services';
+import { getIndiaServiceBySlug, getAllIndiaServiceSlugs } from '@/lib/serviceService';
 import ServicePageClient from '@/components/ServicePageClient';
 
 interface PageProps {
@@ -9,10 +9,8 @@ interface PageProps {
     };
 }
 
-const indiaServices = () => services.filter((s) => s.marketIN);
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const service = indiaServices().find((s) => s.slug === params.slug);
+    const service = await getIndiaServiceBySlug(params.slug);
 
     if (!service) {
         return {
@@ -45,9 +43,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-    return indiaServices().map((service) => ({
-        slug: service.slug,
-    }));
+    const slugs = await getAllIndiaServiceSlugs();
+    return slugs.map((slug) => ({ slug }));
 }
 
 /** "₹1,49,999" -> "149999" for schema.org Offer price. */
@@ -56,8 +53,8 @@ function numericPrice(price: string): string | null {
     return digits.length > 0 ? digits : null;
 }
 
-export default function IndiaServicePage({ params }: PageProps) {
-    const service = indiaServices().find((s) => s.slug === params.slug);
+export default async function IndiaServicePage({ params }: PageProps) {
+    const service = await getIndiaServiceBySlug(params.slug);
 
     if (!service) {
         notFound();
