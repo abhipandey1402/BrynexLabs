@@ -338,7 +338,7 @@ export const services: ServiceDetail[] = [
         marketIN: {
             seo: {
                 title: 'AI Agent Development Company in India | Pilots from ₹49,999',
-                metaDescription: 'AI agent development in India — pilots from ₹49,999, production agent systems from ₹1,49,999. LangChain, RAG & guardrails for Indian startups & enterprises. GST invoicing, free consultation.',
+                metaDescription: 'AI agent development in India — pilots from ₹49,999, production systems from ₹1,49,999. LangChain, RAG & guardrails for startups & enterprises. GST invoicing.',
             },
             hook: 'Automate the work that eats your team\'s week. Production-grade AI agents for Indian startups, D2C brands, and enterprises — built on your own business data, at pricing that makes sense for the Indian market.',
             pricingSubheading: 'Honest Indian-market pricing — fixed scope, milestone billed, GST invoice included:',
@@ -404,7 +404,7 @@ export const services: ServiceDetail[] = [
         },
         seo: {
             title: 'AI Agent Development Company | Agentic AI & Automation Services',
-            metaDescription: 'Brynex Labs is an AI agent development company serving the USA & India. Production-grade AI agents with LangChain, LangGraph, RAG & vector databases — automate support, operations & workflows.',
+            metaDescription: 'AI agent development company serving the USA & India — production AI agents with LangChain, LangGraph, RAG & vector databases to automate support & operations.',
         },
         challenges: [
             'Excessive time spent on repetitive, multi-step manual workflows',
@@ -611,7 +611,7 @@ export const services: ServiceDetail[] = [
         marketIN: {
             seo: {
                 title: 'Custom Software Development Company in India | MVP from ₹99,999',
-                metaDescription: 'Custom software & SaaS development in India — MVPs from ₹99,999, multi-tenant SaaS platforms from ₹2,49,999. Senior engineers, fixed-scope quotes, GST invoicing. Free consultation.',
+                metaDescription: 'Custom software & SaaS development in India — MVPs from ₹99,999, multi-tenant SaaS from ₹2,49,999. Senior engineers, fixed-scope quotes, GST invoicing.',
             },
             hook: 'Your product, engineered for scale. SaaS platforms, web & mobile apps, and cloud infrastructure for Indian startups and businesses — senior engineers, global quality, Indian-market pricing.',
             pricingSubheading: 'Honest Indian-market pricing — fixed scope, weekly demos, GST invoice included:',
@@ -677,7 +677,7 @@ export const services: ServiceDetail[] = [
         },
         seo: {
             title: 'Custom Software Development Company | SaaS, Web & Mobile Apps',
-            metaDescription: 'Custom software development company for startups & enterprises in the USA and India — multi-tenant SaaS platforms, web & mobile apps, cloud & DevOps, and application modernization under one roof.',
+            metaDescription: 'Custom software development company for startups & enterprises in the USA & India — multi-tenant SaaS, web & mobile apps, cloud, DevOps & app modernization.',
         },
         challenges: [
             'Off-the-shelf software doesn\'t fit your unique business needs',
@@ -769,7 +769,7 @@ export const services: ServiceDetail[] = [
         processSummary: 'This is how SEO becomes a pipeline engine, not a content activity.',
         seo: {
             title: 'SaaS SEO Agency | B2B SaaS SEO Services That Drive Pipeline',
-            metaDescription: 'Brynex Labs is a SaaS SEO agency for B2B companies in the USA & India. We turn organic traffic into demo requests, pipeline & MRR with BOFU keywords, programmatic SEO, and CRO.',
+            metaDescription: 'SaaS SEO agency for B2B companies in the USA & India — we turn organic traffic into demo requests, pipeline & MRR with BOFU keywords, programmatic SEO & CRO.',
         },
         challenges: [
             'Traffic growth without mapping to demo conversions',

@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: 'Software & AI Development Case Studies | Brynex Labs',
-    description: 'Real results from AI agent, SaaS, and custom software development projects — see how Brynex Labs helps startups and enterprises in the USA & India ship production-grade software.',
+    description: 'Real results from AI agent, SaaS & custom software projects — see how Brynex Labs helps startups and enterprises in the USA & India ship production software.',
     alternates: { canonical: '/case-studies' },
     openGraph: {
         title: 'Software & AI Development Case Studies | Brynex Labs',

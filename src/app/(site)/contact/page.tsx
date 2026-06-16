@@ -4,7 +4,7 @@ import ContactForm from '@/components/ContactForm';
 
 export const metadata: Metadata = {
     title: 'Contact Brynex Labs | Hire AI & Software Development Experts',
-    description: 'Get a free consultation for AI agent development, custom software, or SaaS SEO. Brynex Labs serves clients in the USA, India & worldwide — we respond within 6 business hours.',
+    description: 'Get a free consultation for AI agent development, custom software, or SaaS SEO. Brynex Labs serves the USA, India & worldwide — reply within 6 business hours.',
     alternates: { canonical: '/contact' },
     openGraph: {
         title: 'Contact Brynex Labs | Hire AI & Software Development Experts',

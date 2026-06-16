@@ -12,7 +12,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Software Company for AI Agents, Automation & SaaS SEO | Brynex Labs',
-  description: 'Build software that pays for itself. Brynex Labs builds AI agents, intelligent automation, custom software & revenue-driving SaaS SEO — senior engineers trusted by startups and enterprises across the USA & India.',
+  description: 'Brynex Labs builds AI agents, intelligent automation, custom software & revenue-driving SaaS SEO for startups and enterprises across the USA & India.',
   alternates: {
     canonical: '/',
   },

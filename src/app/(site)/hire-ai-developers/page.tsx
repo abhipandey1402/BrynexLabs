@@ -4,7 +4,7 @@ import SectionWrapper from '@/components/SectionWrapper';
 
 export const metadata: Metadata = {
     title: 'Hire AI Developers | Dedicated AI Engineers from $25/hr',
-    description: 'Hire senior AI developers skilled in LangChain, LangGraph, RAG, and LLM integration. Dedicated AI engineers for US, UK & global companies at 40–60% below US rates. Start within 72 hours.',
+    description: 'Hire senior AI developers skilled in LangChain, LangGraph, RAG & LLM integration for US, UK & global teams — 40–60% below US rates, start within 72 hours.',
     alternates: { canonical: '/hire-ai-developers' },
     openGraph: {
         title: 'Hire AI Developers | Dedicated AI Engineers from $25/hr',

@@ -5,7 +5,7 @@ import { services } from '@/data/services';
 
 export const metadata: Metadata = {
     title: 'AI Development, Custom Software & SaaS SEO Services | Brynex Labs',
-    description: 'Explore Brynex Labs services: AI agent development & intelligent automation, custom software & SaaS development, and revenue-focused SaaS SEO — for startups and enterprises in the USA & India.',
+    description: 'Explore Brynex Labs services: AI agents & automation, custom software & SaaS development, and revenue-focused SaaS SEO for startups & enterprises, USA & India.',
     alternates: { canonical: '/services' },
     openGraph: {
         title: 'AI Development, Custom Software & SaaS SEO Services | Brynex Labs',

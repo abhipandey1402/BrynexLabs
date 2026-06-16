@@ -4,7 +4,7 @@ import SectionWrapper from '@/components/SectionWrapper';
 
 export const metadata: Metadata = {
     title: 'AI Development Company in India | Brynex Labs',
-    description: 'Brynex Labs is a top AI development company in India building AI agents, LLM applications, RAG systems & custom software for clients in the USA, UK, Australia & India. Get a free consultation.',
+    description: 'A top AI development company in India building AI agents, LLM apps, RAG systems & custom software for clients in the USA, UK, Australia & India.',
     alternates: { canonical: '/ai-development-company-in-india' },
     openGraph: {
         title: 'AI Development Company in India | Brynex Labs',
