@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { getDbPosts, createDbPost, validatePostInput } from '@/lib/blogStore';
 import { isDbConfigured } from '@/lib/mongodb';
+import { pingIndexNow } from '@/lib/indexnow';
 
 export const runtime = 'nodejs';
 
@@ -12,10 +13,11 @@ function dbNotConfigured() {
     );
 }
 
-function revalidateBlog(slug: string) {
+async function revalidateBlog(slug: string) {
     revalidatePath('/blog');
     revalidatePath(`/blog/${slug}`);
     revalidatePath('/sitemap.xml');
+    await pingIndexNow(['/blog', `/blog/${slug}`]);
 }
 
 export async function GET() {
@@ -42,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     try {
         const post = await createDbPost(input, { allowStaticSlug });
-        revalidateBlog(post.slug);
+        await revalidateBlog(post.slug);
         return NextResponse.json({ post }, { status: 201 });
     } catch (err) {
         const message = err instanceof Error ? err.message : 'Failed to create the article.';
