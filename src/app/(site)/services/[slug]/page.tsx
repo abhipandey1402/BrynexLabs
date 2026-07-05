@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getServiceBySlug, getAllServiceSlugs } from '@/lib/serviceService';
 import ServicePageClient from '@/components/ServicePageClient';
+import { absoluteUrl, getBreadcrumbJsonLd } from '@/lib/seo';
 
 interface PageProps {
     params: {
@@ -37,6 +38,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             url: `/services/${service.slug}`,
             type: 'website',
         },
+        twitter: {
+            card: 'summary_large_image',
+            title: service.seo.title,
+            description: service.seo.metaDescription,
+        },
     };
 }
 
@@ -57,6 +63,7 @@ export default async function ServicePage({ params }: PageProps) {
         "@graph": [
             {
                 "@type": "Service",
+                "@id": `https://brynex.in/services/${service.slug}#service`,
                 "name": service.title,
                 "serviceType": service.title,
                 "description": service.description,
@@ -74,16 +81,14 @@ export default async function ServicePage({ params }: PageProps) {
                 ],
                 "url": `https://brynex.in/services/${service.slug}`
             },
-            {
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://brynex.in" },
-                    { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://brynex.in/services" },
-                    { "@type": "ListItem", "position": 3, "name": service.title, "item": `https://brynex.in/services/${service.slug}` }
-                ]
-            },
+            getBreadcrumbJsonLd([
+                { name: 'Home', href: '/' },
+                { name: 'Services', href: '/services' },
+                { name: service.title, href: `/services/${service.slug}` },
+            ]),
             ...(service.faqs.length > 0 ? [{
                 "@type": "FAQPage",
+                "@id": `${absoluteUrl(`/services/${service.slug}`)}#faq`,
                 "mainEntity": service.faqs.map((faq) => ({
                     "@type": "Question",
                     "name": faq.question,

@@ -9,6 +9,7 @@ import Engagement from '@/components/sections/Engagement';
 import FAQ from '@/components/sections/FAQ';
 import FinalCTA from '@/components/sections/FinalCTA';
 import { Metadata } from 'next';
+import { getWebSiteJsonLd } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Software Company for AI Agents, Automation & SaaS SEO | Brynex Labs',
@@ -34,80 +35,7 @@ const homeFaqs = [
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
-    {
-      "@type": ["Organization", "ProfessionalService"],
-      "@id": "https://brynex.in/#organization",
-      "name": "Brynex Labs",
-      "alternateName": "Brynex",
-      "url": "https://brynex.in",
-      "logo": "https://brynex.in/apple-icon",
-      "email": "hello@brynex.in",
-      "description": "Software company building production-grade AI agents, intelligent automation, custom software, SaaS platforms, and revenue-focused SaaS SEO for startups and enterprises worldwide.",
-      "areaServed": [
-        { "@type": "Country", "name": "United States" },
-        { "@type": "Country", "name": "India" },
-        { "@type": "Country", "name": "United Kingdom" },
-        { "@type": "Country", "name": "Australia" },
-        { "@type": "Country", "name": "Canada" }
-      ],
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "IN"
-      },
-      "knowsAbout": [
-        "AI agent development",
-        "agentic AI",
-        "LLM application development",
-        "RAG pipelines",
-        "custom software development",
-        "SaaS product engineering",
-        "cloud infrastructure",
-        "SaaS SEO"
-      ],
-      "sameAs": [
-        "https://x.com/brynexlabs",
-        "https://www.linkedin.com/company/brynexlabs"
-      ],
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Software & AI Services",
-        "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "AI Agent Development & Intelligent Automation",
-              "url": "https://brynex.in/services/ai-agents-automation"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Custom Software & SaaS Development",
-              "url": "https://brynex.in/services/ai-native-software-engineering"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "SaaS SEO Services for B2B Companies",
-              "url": "https://brynex.in/services/saas-seo"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "@type": "WebSite",
-      "@id": "https://brynex.in/#website",
-      "url": "https://brynex.in",
-      "name": "Brynex Labs",
-      "publisher": {
-        "@id": "https://brynex.in/#organization"
-      }
-    },
+    getWebSiteJsonLd(),
     {
       "@type": "FAQPage",
       "@id": "https://brynex.in/#faq",

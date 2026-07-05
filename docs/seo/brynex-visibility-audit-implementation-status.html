@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brynex Labs — Visibility Diagnostic Implementation Status</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F3EF; --bg-2:#ECEAE3; --panel:#FFFFFF; --panel-2:#FBFAF7;
+    --line:#E4E1D8; --line-soft:#EEECE5;
+    --text:#161513; --dim:#57544D; --mute:#98948B;
+    --yellow:#F2A100; --orange:#EA4C1A;
+    --ok:#161513; --warn:#B0740A; --crit:#EA4C1A; --ai:#EA4C1A;
+    --ok-dim:rgba(22,21,19,.055); --warn-dim:rgba(242,161,0,.16);
+    --crit-dim:rgba(234,76,26,.10); --ai-dim:rgba(234,76,26,.07);
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --disp:'Space Grotesk',system-ui,sans-serif;
+    --body:'Inter',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg); color:var(--text); font-family:var(--body);
+    font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden}
+  body::before{content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(720px 460px at 88% -6%, rgba(234,76,26,.05), transparent 60%),
+      radial-gradient(560px 420px at 4% 2%, rgba(242,161,0,.05), transparent 55%),
+      linear-gradient(rgba(0,0,0,.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,.018) 1px, transparent 1px);
+    background-size:auto,auto,46px 46px,46px 46px}
+  .wrap{position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:0 24px}
+  ::selection{background:rgba(234,76,26,.18)}
+
+  /* status bar */
+  .statusbar{position:sticky; top:0; z-index:40; backdrop-filter:blur(10px);
+    background:rgba(244,243,239,.86); border-bottom:1px solid var(--line)}
+  .statusbar .in{max-width:1100px; margin:0 auto; padding:11px 24px; display:flex; align-items:center;
+    gap:14px; flex-wrap:wrap; font-family:var(--mono); font-size:11.5px}
+  .logo{display:flex; align-items:center; gap:9px; font-weight:700; letter-spacing:.14em; color:var(--text)}
+  .logo .dot{width:9px; height:9px; border-radius:50%; background:var(--orange);
+    box-shadow:0 0 0 3px var(--crit-dim)}
+  .statusbar .sep{color:var(--mute)} .statusbar .meta{color:var(--dim)}
+  .statusbar .live{margin-left:auto; color:var(--dim); display:flex; align-items:center; gap:7px}
+  .statusbar .live .pulse{width:7px;height:7px;border-radius:50%;background:var(--orange);
+    animation:pulse 2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.65)}}
+
+  /* hero */
+  .hero{padding:54px 0 20px}
+  .kicker{font-family:var(--mono); font-size:12px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--orange); margin-bottom:18px}
+  .hero h1{font-family:var(--disp); font-weight:700; font-size:clamp(30px,5.2vw,54px);
+    line-height:1.02; letter-spacing:-.025em; margin-bottom:16px}
+  .hero h1 .u{color:var(--mute)}
+  .hero .lede{font-size:clamp(16px,2vw,19px); color:var(--dim); max-width:60ch}
+
+  .console{margin-top:34px; display:grid; grid-template-columns:300px 1fr; gap:26px;
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:30px;
+    box-shadow:0 22px 50px -34px rgba(0,0,0,.28)}
+  .gauge{display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+    border-right:1px solid var(--line-soft); padding-right:20px}
+  .dial{position:relative; width:150px; height:150px; display:grid; place-items:center}
+  .dial svg{position:absolute; inset:0; transform:rotate(-90deg)}
+  .ring-bg{fill:none; stroke:var(--line); stroke-width:14}
+  .ring-fg{fill:none; stroke:var(--yellow); stroke-width:14; stroke-linecap:round;
+    stroke-dasharray:327; stroke-dashoffset:327; transition:stroke-dashoffset 1.6s cubic-bezier(.2,.7,.2,1)}
+  .is-loaded .ring-fg{stroke-dashoffset:157}
+  .gauge .num{position:relative; z-index:1; font-family:var(--disp); font-weight:700; font-size:44px; line-height:1}
+  .gauge .num small{font-size:18px; color:var(--mute); font-weight:500}
+  .gauge .cap{font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--warn); margin-top:14px}
+  .gauge .verdict{font-size:13px; color:var(--dim); margin-top:12px; max-width:24ch}
+  .twin{display:flex; gap:10px; margin-top:16px; width:100%}
+  .twin div{flex:1; border:1px solid var(--line-soft); border-radius:11px; padding:9px 6px; background:var(--panel-2)}
+  .twin .t-num{font-family:var(--disp); font-weight:700; font-size:22px}
+  .twin .t-lab{font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mute)}
+  .twin .craft .t-num{color:var(--ok)} .twin .reach .t-num{color:var(--orange)}
+
+  .meters{display:flex; flex-direction:column; gap:15px; justify-content:center}
+  .meter .mrow{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px}
+  .meter .mname{font-size:13.5px; font-weight:500}
+  .meter .mscore{font-family:var(--mono); font-weight:700; font-size:13px}
+  .segs{display:flex; gap:4px}
+  .segs i{height:9px; flex:1; border-radius:2px; background:var(--line);
+    transform:scaleX(.001); transform-origin:left; transition:transform .5s ease}
+  .is-loaded .segs i{transform:scaleX(1)}
+  .segs i.lit.ok{background:var(--ok)} .segs i.lit.warn{background:var(--yellow)}
+  .segs i.lit.crit{background:var(--orange)} .segs i.lit.ai{background:var(--orange)}
+  .meter.ok .mscore{color:var(--ok)} .meter.warn .mscore{color:var(--warn)}
+  .meter.crit .mscore{color:var(--orange)} .meter.ai .mscore{color:var(--orange)}
+  .is-loaded .segs i:nth-child(1){transition-delay:.05s} .is-loaded .segs i:nth-child(2){transition-delay:.09s}
+  .is-loaded .segs i:nth-child(3){transition-delay:.13s} .is-loaded .segs i:nth-child(4){transition-delay:.17s}
+  .is-loaded .segs i:nth-child(5){transition-delay:.21s} .is-loaded .segs i:nth-child(6){transition-delay:.25s}
+  .is-loaded .segs i:nth-child(7){transition-delay:.29s} .is-loaded .segs i:nth-child(8){transition-delay:.33s}
+  .is-loaded .segs i:nth-child(9){transition-delay:.37s} .is-loaded .segs i:nth-child(10){transition-delay:.41s}
+
+  /* sections */
+  section{padding:46px 0; border-top:1px solid var(--line-soft)}
+  .eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--mute); display:flex; align-items:center; gap:10px; margin-bottom:14px}
+  .eyebrow .idx{color:var(--orange)}
+  .eyebrow .rule{flex:1; height:1px; background:var(--line-soft)}
+  h2{font-family:var(--disp); font-weight:700; font-size:clamp(23px,3.2vw,33px); line-height:1.1;
+    letter-spacing:-.02em; margin-bottom:12px}
+  h2 .hl,h2 .hl-ai{color:var(--orange)}
+  .sub{color:var(--dim); max-width:66ch; margin-bottom:26px}
+  p{margin-bottom:14px} p:last-child{margin-bottom:0}
+  strong{color:var(--text); font-weight:600}
+  a{color:var(--orange); text-decoration:none; border-bottom:1px solid rgba(234,76,26,.28)}
+  a:hover{border-color:var(--orange)}
+
+  .pill{display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px;
+    font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:4px 9px; border-radius:6px; white-space:nowrap}
+  .pill::before{content:""; width:6px; height:6px; border-radius:50%}
+  .p-ok{background:var(--ok-dim); color:var(--ok)} .p-ok::before{background:var(--ok)}
+  .p-warn{background:var(--warn-dim); color:var(--warn)} .p-warn::before{background:var(--yellow)}
+  .p-crit{background:var(--crit-dim); color:var(--orange)} .p-crit::before{background:var(--orange)}
+  .p-ai{background:var(--ai-dim); color:var(--orange)} .p-ai::before{background:var(--orange)}
+
+  .grid{display:grid; gap:16px}
+  .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)}
+  .card{background:var(--panel); border:1px solid var(--line-soft); border-radius:12px; padding:22px;
+    position:relative; transition:transform .2s ease, border-color .2s ease}
+  .card:hover{transform:translateY(-2px); border-color:var(--line)}
+  .card.edge-ok{border-left:3px solid var(--ok)} .card.edge-warn{border-left:3px solid var(--yellow)}
+  .card.edge-crit{border-left:3px solid var(--orange)} .card.edge-ai{border-left:3px solid var(--orange)}
+  .card h3{font-family:var(--disp); font-weight:600; font-size:17px; margin:10px 0 8px; line-height:1.25}
+  .card p{font-size:14.5px; color:var(--dim)}
+  .card .why{font-size:13px; color:var(--mute); margin-top:10px; padding-top:10px; border-top:1px dashed var(--line)}
+  .card .why b{color:var(--dim); font-weight:600}
+  .cnum{font-family:var(--mono); font-size:12px; color:var(--orange); font-weight:700}
+
+  .fix{display:flex; gap:9px; font-size:13.5px; color:var(--dim); margin-top:9px; align-items:flex-start}
+  .fix::before{content:"\2192"; color:var(--orange); font-family:var(--mono); flex-shrink:0; font-weight:700}
+
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:8px 0 4px}
+  .stat{background:var(--panel-2); border:1px solid var(--line-soft); border-radius:12px; padding:18px 16px}
+  .stat .v{font-family:var(--disp); font-weight:700; font-size:27px; line-height:1; color:var(--yellow)}
+  .stat .v.ai{color:var(--orange)} .stat .v.ok{color:var(--ok)} .stat .v.crit{color:var(--orange)}
+  .stat .k{font-size:12.5px; color:var(--dim); margin-top:7px}
+  .stat .src{font-family:var(--mono); font-size:9.5px; color:var(--mute); margin-top:6px; letter-spacing:.03em}
+
+  .collision{background:radial-gradient(560px 280px at 50% 120%, rgba(234,76,26,.07), transparent),var(--panel-2);
+    border:1px solid var(--line); border-radius:14px; padding:26px; margin-top:6px}
+  .chips{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center; margin-top:6px}
+  .chip{font-family:var(--mono); font-size:12px; padding:8px 12px; border-radius:9px;
+    border:1px solid var(--line-soft); background:var(--panel); color:var(--dim)}
+  .chip .tag{font-size:9.5px; color:var(--orange); display:block; margin-top:2px; letter-spacing:.03em}
+  .chip.you{color:#fff; background:var(--orange); border-color:var(--orange); font-weight:700;
+    box-shadow:0 0 0 4px var(--crit-dim), 0 10px 26px -8px rgba(234,76,26,.6); transform:scale(1.06)}
+  .chip.you .tag{color:rgba(255,255,255,.82)}
+  .collision .cap{text-align:center; font-size:13px; color:var(--dim); margin-top:18px}
+
+  .vs{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:6px}
+  .vs .col{border:1px solid var(--line-soft); border-radius:12px; padding:20px; background:var(--panel)}
+  .vs .col.them{border-top:3px solid var(--orange)} .vs .col.you2{border-top:3px solid var(--ok)}
+  .vs h4{font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:12px}
+  .vs .them h4{color:var(--dim)} .vs .you2 h4{color:var(--ok)}
+  .vs ul{list-style:none} .vs li{font-size:14px; color:var(--dim); padding:7px 0 7px 22px; position:relative; border-bottom:1px solid var(--line-soft)}
+  .vs li:last-child{border:0}
+  .vs .them li::before{content:"\25CF"; position:absolute; left:0; color:var(--orange); font-size:10px; top:9px}
+  .vs .you2 li::before{content:"\25CF"; position:absolute; left:0; color:var(--ok); font-size:10px; top:9px}
+
+  .rows{border:1px solid var(--line-soft); border-radius:12px; overflow:hidden; margin-top:6px; background:var(--panel)}
+  .r{display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center;
+    padding:15px 18px; border-bottom:1px solid var(--line-soft)}
+  .r:last-child{border-bottom:0} .r:nth-child(odd){background:rgba(0,0,0,.02)}
+  .r .rt{font-weight:500; font-size:14.5px} .r .rt small{display:block; color:var(--mute); font-size:12.5px; font-weight:400; margin-top:3px}
+  .r .ri{font-family:var(--mono); font-size:11px; color:var(--mute); font-weight:700}
+  .grouplabel{font-family:var(--disp); font-weight:600; font-size:16px; margin:26px 0 4px; display:flex; align-items:center; gap:10px}
+  .grouplabel .gi{font-family:var(--mono); font-size:12px; color:var(--orange); font-weight:700}
+
+  .road{border:1px solid var(--line); border-radius:14px; overflow:hidden; margin-top:6px; background:var(--panel)}
+  .road .head{display:grid; grid-template-columns:70px 1fr 92px 92px; gap:12px; padding:13px 18px;
+    background:var(--bg-2); font-family:var(--mono); font-size:10.5px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--mute); border-bottom:1px solid var(--line)}
+  .road .item{display:grid; grid-template-columns:70px 1fr 92px 92px; gap:12px; padding:16px 18px;
+    border-bottom:1px solid var(--line-soft); align-items:center}
+  .road .item:last-child{border-bottom:0}
+  .road .prio{font-family:var(--mono); font-weight:700; font-size:12px; text-align:center; padding:5px 0; border-radius:6px}
+  .prio.p0{background:var(--crit-dim); color:var(--orange)} .prio.p1{background:var(--warn-dim); color:var(--warn)}
+  .prio.p2{background:var(--ok-dim); color:var(--ok)}
+  .road .task{font-size:14px} .road .task small{display:block; color:var(--mute); font-size:12.5px; margin-top:3px}
+  .road .tag2{font-family:var(--mono); font-size:11px; text-align:center; color:var(--dim)}
+
+  .kpis{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:6px}
+  .kpi{background:var(--panel); border:1px solid var(--line-soft); border-radius:12px; padding:18px}
+  .kpi .n{font-family:var(--mono); font-size:11px; color:var(--mute); letter-spacing:.05em; text-transform:uppercase}
+  .kpi .now{font-family:var(--disp); font-weight:700; font-size:20px; margin:8px 0 2px; color:var(--orange)}
+  .kpi .goal{font-size:13px; color:var(--dim)} .kpi .goal b{color:var(--ok)}
+
+  .callout{background:var(--ai-dim); border:1px solid rgba(234,76,26,.26); border-radius:12px; padding:20px 22px; margin-top:20px}
+  .callout .lab{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--orange); margin-bottom:8px}
+  .callout p{font-size:14.5px; color:var(--dim)}
+  .status-panel{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:24px; margin-top:18px}
+  .status-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px}
+  .status-list{border:1px solid var(--line-soft); border-radius:12px; overflow:hidden; background:var(--panel-2)}
+  .status-list h3{font-family:var(--disp); font-size:17px; padding:16px 18px; border-bottom:1px solid var(--line-soft); margin:0}
+  .status-list ul{list-style:none}
+  .status-list li{padding:13px 18px; border-bottom:1px solid var(--line-soft); font-size:13.5px; color:var(--dim)}
+  .status-list li:last-child{border-bottom:0}
+  .status-list .done{color:var(--ok); font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.08em; margin-right:8px}
+  .status-list .remain{color:var(--orange); font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.08em; margin-right:8px}
+
+  .note{font-family:var(--mono); font-size:12px; color:var(--mute); line-height:1.7}
+  .note b{color:var(--dim)}
+
+  footer{padding:44px 0 70px; border-top:1px solid var(--line-soft); color:var(--mute); font-size:13px}
+  footer .big{font-family:var(--disp); font-weight:700; font-size:clamp(20px,3vw,28px); color:var(--text);
+    margin-bottom:14px; letter-spacing:-.015em}
+  footer .big span{color:var(--orange)}
+
+  @media(max-width:860px){
+    .console{grid-template-columns:1fr} .gauge{border-right:0; border-bottom:1px solid var(--line-soft); padding-right:0; padding-bottom:22px}
+    .g2,.g3{grid-template-columns:1fr} .stats{grid-template-columns:repeat(2,1fr)}
+    .vs{grid-template-columns:1fr} .kpis{grid-template-columns:1fr} .status-grid{grid-template-columns:1fr}
+    .road .head{display:none} .road .item{grid-template-columns:1fr; gap:8px}
+    .road .prio{justify-self:start; padding:5px 12px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .ring-fg{transition:none} .segs i{transition:none; transform:scaleX(1)}
+    .statusbar .live .pulse{animation:none} .is-loaded .ring-fg{stroke-dashoffset:157}
+  }
+  @media print{ body::before{display:none} .statusbar{position:static} .card,.stat,.kpi,.vs .col,.console,.r{break-inside:avoid} }
+</style>
+</head>
+<body>
+
+<div class="statusbar">
+  <div class="in">
+    <span class="logo"><span class="dot"></span>BRYNEX&nbsp;LABS</span>
+    <span class="sep">//</span><span class="meta">VISIBILITY&nbsp;DIAGNOSTIC</span>
+    <span class="sep">//</span><span class="meta">IMPLEMENTATION&nbsp;STATUS</span>
+    <span class="sep">//</span><span class="meta">SCOPE: US-PRIMARY / IN-SECONDARY</span>
+    <span class="live"><span class="pulse"></span>GENERATED&nbsp;JUL&nbsp;2026</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">Search &amp; AI-Answer Visibility Audit · brynex.in</div>
+    <h1>Beautifully built.<br><span class="u">Almost invisible.</span></h1>
+    <p class="lede">brynex.in is a genuinely strong piece of engineering and content — and right now it is barely present in Google, effectively absent from AI answers, and fighting a brand name that already belongs to someone else. This is the full diagnostic, scored, with the exact moves that turn craft into reach.</p>
+
+    <div class="console">
+      <div class="gauge">
+        <div class="dial">
+          <svg width="150" height="150" viewBox="0 0 150 150" aria-hidden="true">
+            <circle class="ring-bg" cx="75" cy="75" r="52"></circle>
+            <circle class="ring-fg" cx="75" cy="75" r="52"></circle>
+          </svg>
+          <div class="num" id="ovr">52<small>/100</small></div>
+        </div>
+        <div class="cap">Composite Visibility</div>
+        <div class="verdict">Strong foundation, critical reach deficit.</div>
+        <div class="twin">
+          <div class="craft"><div class="t-num">73</div><div class="t-lab">Craft / Build</div></div>
+          <div class="reach"><div class="t-num">36</div><div class="t-lab">Live Reach</div></div>
+        </div>
+      </div>
+      <div class="meters">
+        <div class="meter warn"><div class="mrow"><span class="mname">Technical Foundation</span><span class="mscore">68</span></div><div class="segs" data-lit="7" data-band="warn"></div></div>
+        <div class="meter crit"><div class="mrow"><span class="mname">Indexing &amp; Reach</span><span class="mscore">34</span></div><div class="segs" data-lit="3" data-band="crit"></div></div>
+        <div class="meter ok"><div class="mrow"><span class="mname">Content &amp; Topical Depth</span><span class="mscore">71</span></div><div class="segs" data-lit="7" data-band="ok"></div></div>
+        <div class="meter ai"><div class="mrow"><span class="mname">GEO — AI Citation Readiness</span><span class="mscore">42</span></div><div class="segs" data-lit="4" data-band="ai"></div></div>
+        <div class="meter warn"><div class="mrow"><span class="mname">AEO — Answer Structure</span><span class="mscore">54</span></div><div class="segs" data-lit="5" data-band="warn"></div></div>
+        <div class="meter crit"><div class="mrow"><span class="mname">E-E-A-T &amp; Trust / Entity</span><span class="mscore">38</span></div><div class="segs" data-lit="4" data-band="crit"></div></div>
+        <div class="meter crit"><div class="mrow"><span class="mname">Geo-Targeting Fit (USA)</span><span class="mscore">41</span></div><div class="segs" data-lit="4" data-band="crit"></div></div>
+      </div>
+    </div>
+  </header>
+
+  <section id="implementation-status">
+    <div class="eyebrow"><span class="idx">// STATUS</span> Branch implementation tracker <span class="rule"></span></div>
+    <h2>Code-backed on-page fixes completed on <span class="hl">seo/on-page-visibility-optimizations</span></h2>
+    <p class="sub">This copy tracks what has been implemented from the audit versus what still needs external account access, private company facts, or off-page execution. Original diagnostic content remains below for context.</p>
+
+    <div class="status-panel">
+      <span class="pill p-ok">Completed in this branch</span>
+      <div class="status-grid">
+        <div class="status-list">
+          <h3>Technical & metadata</h3>
+          <ul>
+            <li><span class="done">DONE</span>Removed the global meta keywords tag from Next metadata.</li>
+            <li><span class="done">DONE</span>Added sitewide Organization / ProfessionalService JSON-LD with consistent Brynex Labs entity and sameAs profiles.</li>
+            <li><span class="done">DONE</span>Kept WebSite JSON-LD on the homepage and avoided SearchAction until an on-site search endpoint exists.</li>
+            <li><span class="done">DONE</span>Added page-specific Twitter descriptions for Blog, About, Services, and dynamic Service pages.</li>
+            <li><span class="done">DONE</span>Changed sitemap lastmod values from always-now to stable route/content dates.</li>
+            <li><span class="done">DONE</span>Removed the public /super-admin link from the sitewide footer.</li>
+          </ul>
+        </div>
+        <div class="status-list">
+          <h3>Schema, content & linking</h3>
+          <ul>
+            <li><span class="done">DONE</span>Enriched BlogPosting schema with image, datePublished, dateModified, publisher logo, and mainEntityOfPage.</li>
+            <li><span class="done">DONE</span>Added BreadcrumbList schema parity and visible breadcrumb UI on blog and service templates.</li>
+            <li><span class="done">DONE</span>Added answer-first Direct Answer blocks to blog posts and service pages.</li>
+            <li><span class="done">DONE</span>Added related-post "Read Next" links on blog posts to strengthen topical clusters.</li>
+            <li><span class="done">DONE</span>Changed key service template H2s into question-style headings where natural.</li>
+            <li><span class="done">DONE</span>Fixed the 2025/2026 AI agents guide inconsistency and made SaaS SEO pricing USD-first on the global page.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="status-panel">
+      <span class="pill p-warn">Remaining / needs owner input</span>
+      <div class="status-grid">
+        <div class="status-list">
+          <h3>External validation</h3>
+          <ul>
+            <li><span class="remain">OPEN</span>Confirm Google Search Console coverage and submit sitemap / indexing requests.</li>
+            <li><span class="remain">OPEN</span>Confirm Bing Webmaster Tools sitemap status and IndexNow crawl results.</li>
+            <li><span class="remain">OPEN</span>Validate JSON-LD in Google Rich Results Test after deployment.</li>
+            <li><span class="remain">OPEN</span>Pull field Core Web Vitals from Search Console, CrUX, or PageSpeed Insights.</li>
+          </ul>
+        </div>
+        <div class="status-list">
+          <h3>Private proof & entity work</h3>
+          <ul>
+            <li><span class="remain">OPEN</span>Add real named founders / engineers, photos, credentials, LinkedIn URLs, and Person schema.</li>
+            <li><span class="remain">OPEN</span>Add legal entity name, registered address, and consistent NAP once confirmed.</li>
+            <li><span class="remain">OPEN</span>Publish attributed testimonials, client logos, and case-study metrics only after permission.</li>
+            <li><span class="remain">OPEN</span>Claim Crunchbase, Clutch, G2, GitHub, GoodFirms, DesignRush, and other third-party profiles.</li>
+            <li><span class="remain">OPEN</span>Decide the gTLD versus .in domain strategy before any canonical-host migration.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tldr">
+    <div class="eyebrow"><span class="idx">// 00</span> Executive Read <span class="rule"></span></div>
+    <h2>The one-paragraph verdict</h2>
+    <p class="sub">If you read nothing else: the product of your website is not the problem — the distribution of it is.</p>
+    <div class="grid g2">
+      <div class="card edge-ok"><span class="pill p-ok">What's working</span>
+        <h3>A well-engineered, well-written asset</h3>
+        <p>Clean Next.js build, disciplined meta and canonical hygiene, sharp positioning, a logical page architecture, and a real content library — 14 long-form posts targeting exactly the queries a buyer of AI-agent work would ask. The craft is here.</p>
+      </div>
+      <div class="card edge-crit"><span class="pill p-crit">The core problem</span>
+        <h3>Nobody can find it — human or machine</h3>
+        <p>A <span class="cnum">site:brynex.in</span> check surfaces effectively no indexed pages, the brand ranks for none of its own terms, and the name "Brynex" already resolves to a scam-flagged trading platform in most searches. To AI answer engines, your entity barely exists.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="lab">Top 3 moves — do these first</div>
+      <p><strong>1 · Get indexed and get authority.</strong> Confirm indexing in Search Console, submit sitemaps to Google <em>and</em> Bing (ChatGPT reads Bing's index), and start earning your first real citations. Nothing else matters until pages are in the index.</p>
+      <p><strong>2 · Win your own name.</strong> "Brynex" is a contested entity colliding with a trading site flagged for scam complaints. Disambiguate hard — full "Brynex Labs" branding, Organization schema with <span class="cnum">sameAs</span>, and entity profiles on the platforms AI engines trust — or the first impression a US buyer gets is someone else's reputation.</p>
+      <p><strong>3 · Engineer for AI citation, not just ranking.</strong> Your competitors are already doing it. Add original data, named-source statistics, definition-first answers, and verifiable proof — the specific things research shows make AI engines quote you.</p>
+    </div>
+  </section>
+
+  <section id="method">
+    <div class="eyebrow"><span class="idx">// 01</span> Methodology &amp; Scope <span class="rule"></span></div>
+    <h2>How this was scored</h2>
+    <p class="sub">A 20-year operator's audit is only as honest as its boundaries. Here is what was measured directly, what needs your private tooling, and how the numbers were built.</p>
+    <div class="grid g2">
+      <div class="card edge-ok"><span class="pill p-ok">Verified directly</span>
+        <h3>Live crawl + SERP &amp; AI-visibility research</h3>
+        <p>Homepage, About, Blog index, and the SaaS-SEO money page were fetched and read. Search visibility, brand-entity landscape, competitor GEO posture, and the current 2026 Google / AI-Overviews / GEO playbook were researched live at report time.</p>
+      </div>
+      <div class="card edge-warn"><span class="pill p-warn">Requires your access</span>
+        <h3>Confirm with GSC, GA4, CrUX &amp; Ahrefs/Semrush</h3>
+        <p>Field Core Web Vitals, exact indexed-page counts, crawl errors, backlink profile / Domain Rating, and live schema validation sit behind your own accounts. Scores here are directional on those axes and flagged where that's true — treat them as a map, then confirm the coordinates.</p>
+      </div>
+    </div>
+    <div class="rows" style="margin-top:16px">
+      <div class="r"><span class="pill p-ok">MODEL</span><span class="rt">Weighted composite across 7 pillars<small>Technical 15% · Indexing 15% · Content 15% · GEO 15% · AEO 10% · E-E-A-T 10% · Geo-fit 5% · plus Topical &amp; Off-page factors folded in</small></span><span class="ri">0–100</span></div>
+      <div class="r"><span class="pill p-warn">BANDS</span><span class="rt">Traffic-light scoring<small>70–100 strong (ink) · 50–69 needs fix (yellow) · below 50 critical (orange)</small></span><span class="ri">3-tier</span></div>
+      <div class="r"><span class="pill p-crit">TARGET</span><span class="rt">USA primary, India secondary<small>Every recommendation is weighted for a US-first buyer, with a distinct India track kept alive</small></span><span class="ri">US / IN</span></div>
+    </div>
+  </section>
+
+  <section id="strong">
+    <div class="eyebrow"><span class="idx">// 02</span> What's Strong <span class="rule"></span></div>
+    <h2><span class="hl">Keep doing this.</span> It's genuinely good.</h2>
+    <p class="sub">Credit where it's due — several things here are ahead of most agencies at this stage, and they're the foundation everything else builds on.</p>
+    <div class="grid g2">
+      <div class="card edge-ok"><span class="cnum">S-01</span><h3>Modern, clean technical build</h3><p>Next.js foundation, mobile viewport, a skip-to-content link for accessibility, and correct per-page canonical, robots, Open Graph and Twitter-card tags with sensible image-preview directives. The plumbing is right.</p></div>
+      <div class="card edge-ok"><span class="cnum">S-02</span><h3>Intent-mapped information architecture</h3><p>Dedicated service pages, a smart geo page (<span class="cnum">/ai-development-company-in-india</span>), a <span class="cnum">/hire-ai-developers</span> commercial page, case studies and careers — the URL structure maps to how buyers actually search.</p></div>
+      <div class="card edge-ok"><span class="cnum">S-03</span><h3>A real content engine, not filler</h3><p>14 long-form posts (many 9–11 min reads) on high-value themes: AI-agent cost, RAG, multi-agent tradeoffs, guardrails/evals, readiness checklists, RPA-vs-Zapier. This is proper topical-authority seeding for the AI-agent niche.</p></div>
+      <div class="card edge-ok"><span class="cnum">S-04</span><h3>Money pages that convert and partly answer</h3><p>The SaaS-SEO page runs problem → solution → framework → ICP qualification → comparison table → FAQ. That structure already does some Answer-Engine work and reads like it was built by someone who understands funnels.</p></div>
+      <div class="card edge-ok"><span class="cnum">S-05</span><h3>Sharp, differentiated positioning</h3><p>"Senior-only collective, revenue over hours, zero middlemen" is a clear wedge against both freelancers and bloated agencies. Good marketing fundamentals — the message is a real point of view, not mush.</p></div>
+      <div class="card edge-ok"><span class="cnum">S-06</span><h3>Correct dual-market intent in copy</h3><p>Titles and descriptions already name the USA and India deliberately, and the SaaS-SEO FAQ speaks to US/UK/AU buyers. The <em>intent</em> is right — the <em>signals</em> underneath just don't back it up yet (see §10).</p></div>
+    </div>
+  </section>
+
+  <section id="critical">
+    <div class="eyebrow"><span class="idx">// 03</span> Critical Gaps <span class="rule"></span></div>
+    <h2><span class="hl">Fix these or nothing else compounds.</span></h2>
+    <p class="sub">These are the P0 issues. They are not cosmetic — each one caps the ceiling on everything above it. Ordered by how much they're costing you.</p>
+    <div class="grid" style="gap:16px">
+      <div class="card edge-crit"><span class="pill p-crit">P0 · Existential</span> <span class="cnum" style="float:right">C-01</span>
+        <h3>Search invisibility — the indexing crisis</h3>
+        <p>A <span class="cnum">site:brynex.in</span> query returns essentially nothing, and the brand ranks for none of its own core terms. Search "Brynex Labs AI agents" and you get Brynk Labs, BrainX, Kodexo — never you. A brand-new domain with little to no earned authority gets crawled slowly and indexed reluctantly.</p>
+        <div class="why"><b>Why it matters:</b> an unindexed page can't rank, can't convert, and can't be cited by an AI engine. This is the tourniquet — apply it first.</div>
+        <div class="fix">Verify coverage in Google Search Console; check <span class="cnum">robots.txt</span> and confirm a valid XML sitemap is submitted.</div>
+        <div class="fix">Submit sitemaps to <strong>Bing Webmaster Tools</strong> too — ChatGPT's search retrieves through Bing's index. Enable IndexNow.</div>
+        <div class="fix">Kick-start crawl authority: a handful of real, relevant backlinks + directory profiles will do more than any on-page tweak right now.</div>
+      </div>
+      <div class="card edge-crit"><span class="pill p-crit">P0 · Brand</span> <span class="cnum" style="float:right">C-02</span>
+        <h3>You don't own your own name</h3>
+        <p>"Brynex" is a badly contested entity. The map below is what a buyer — or an AI model building a picture of you — actually finds.</p>
+        <div class="collision">
+          <div class="chips">
+            <span class="chip">brynex.com<span class="tag">&#9888; trading site · scam complaints</span></span>
+            <span class="chip">brynextech.com<span class="tag">UK trading "education"</span></span>
+            <span class="chip">Brynk Labs<span class="tag">near-clone · also AI agents</span></span>
+            <span class="chip you">brynex.in<span class="tag">Brynex Labs — YOU</span></span>
+            <span class="chip">Branex<span class="tag">lookalike dev agency</span></span>
+            <span class="chip">BrainX Technologies<span class="tag">lookalike · AI dev</span></span>
+            <span class="chip">Brynex Apparels</span>
+            <span class="chip">Brynex Corporation (Kerala)</span>
+            <span class="chip">Brynex Optive (Pune)</span>
+          </div>
+          <div class="cap">One small signal, lost in a field of noise — and one neighbour is actively toxic.</div>
+        </div>
+        <div class="why"><b>Why it matters:</b> for a US enterprise buyer, "let me google Brynex" can surface a scam-flagged trading platform first. For GEO, AI models conflate same-name entities and may attribute the wrong facts — or none — to you.</div>
+        <div class="fix">Always brand as <strong>"Brynex Labs"</strong> (never bare "Brynex") across every page, profile, byline and footer.</div>
+        <div class="fix">Ship Organization schema with <span class="cnum">sameAs</span> pointing to LinkedIn, X, Crunchbase, GitHub — build one consistent, machine-readable entity.</div>
+        <div class="fix">Establish entity profiles (Crunchbase, Clutch/G2, a Wikidata item) so knowledge graphs learn "Brynex Labs = AI software firm," decoupled from the trading name.</div>
+      </div>
+      <div class="card edge-crit"><span class="pill p-crit">P0 · Structural</span> <span class="cnum" style="float:right">C-03</span>
+        <h3>A <span class="cnum">.in</span> domain fights a US-first strategy</h3>
+        <p><span class="cnum">.in</span> is a country-code TLD that Google geo-targets to India by default — and unlike generic domains, you <em>cannot</em> override that country association in Search Console. You've chosen "USA mostly" on infrastructure that whispers "India" to the algorithm.</p>
+        <div class="why"><b>Why it matters:</b> it's a persistent headwind on exactly the market you say is primary. It won't stop you ranking in the US, but it makes every US ranking harder-won.</div>
+        <div class="fix"><strong>Decision required:</strong> commit to a gTLD (<span class="cnum">brynexlabs.com</span> / <span class="cnum">.ai</span>) as primary with clean 301s — or consciously accept <span class="cnum">.in</span> and over-compensate with US signals.</div>
+        <div class="fix">If you keep both, use them deliberately: <span class="cnum">.in</span> is an <em>asset</em> for the India track. Don't waste it — just don't ask it to carry the US.</div>
+      </div>
+      <div class="card edge-crit"><span class="pill p-crit">P0 · Trust</span> <span class="cnum" style="float:right">C-04</span>
+        <h3>No proof, no faces, no verifiable authority</h3>
+        <p>The About page tells a good story but names no founders, shows no engineers, lists no address or registration, and offers no client logos, attributed testimonials, or case studies with real numbers. Most pointed of all: an SEO-services page with zero demonstrated SEO results.</p>
+        <div class="why"><b>Why it matters:</b> high-ticket US buyers de-risk before they buy, and modern search rewards E-E-A-T. AI engines lean heavily on verifiable authority when deciding whom to cite — abstract claims don't qualify.</div>
+        <div class="fix">Add named team members with real bios, photos, credentials and LinkedIn links. Put humans on the site.</div>
+        <div class="fix">Publish 2–3 case studies with concrete before/after metrics; add a registered business address and legal entity.</div>
+        <div class="fix">Earn third-party validation: Clutch, G2, GoodFirms, DesignRush profiles + attributed testimonials.</div>
+      </div>
+      <div class="card edge-crit"><span class="pill p-crit">P0 · AI-search</span> <span class="cnum" style="float:right">C-05</span>
+        <h3>Zero citation engineering for AI answers</h3>
+        <p>The content is readable but built for humans reading top-to-bottom, not for a model extracting a quotable fact. It's missing original statistics, named-source data, definition-first answer sentences, and self-contained extractable passages. Your competitors already ship these (see §08).</p>
+        <div class="why"><b>Why it matters:</b> AI search now handles a rapidly growing slice of informational queries. Being unquotable there means being invisible to buyers who never click a blue link.</div>
+        <div class="fix">Full playbook in §08 (GEO) and §09 (AEO) — this card is the flag; those sections are the fix.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tech">
+    <div class="eyebrow"><span class="idx">// 04</span> Technical SEO <span class="rule"></span></div>
+    <h2>Under the hood</h2>
+    <p class="sub">The build is good; the gaps are in what search engines and crawlers can confirm about it. Verify the flagged items in your own tools.</p>
+    <div class="rows">
+      <div class="r"><span class="pill p-ok">GOOD</span><span class="rt">Meta &amp; canonical hygiene<small>Correct canonical, robots (index,follow), OG + Twitter cards, and image-preview directives on every page checked</small></span><span class="ri">verified</span></div>
+      <div class="r"><span class="pill p-ok">GOOD</span><span class="rt">Accessibility &amp; framework basics<small>Skip-to-content link, semantic nav, mobile viewport, Next.js (fast by default)</small></span><span class="ri">verified</span></div>
+      <div class="r"><span class="pill p-crit">FIX</span><span class="rt">Indexing &amp; sitemap confirmation<small>Confirm sitemap.xml exists, is valid, and is submitted to Google + Bing; check robots.txt isn't blocking anything critical</small></span><span class="ri">P0</span></div>
+      <div class="r"><span class="pill p-warn">CHECK</span><span class="rt">Core Web Vitals — field data (INP, LCP, CLS)<small>INP replaced FID as a Core Web Vital in 2024. Pull real CrUX field data in PageSpeed Insights / Search Console, not just lab scores</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-warn">FIX</span><span class="rt">Structured data / schema coverage<small>Add &amp; validate Organization, WebSite (+ SearchAction), Service, FAQPage, Article, BreadcrumbList, Person — see §05 &amp; §09</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-warn">FIX</span><span class="rt">Remove the meta keywords tag<small>The identical keywords meta on every page is ignored by Google and simply hands competitors your target list</small></span><span class="ri">P2</span></div>
+      <div class="r"><span class="pill p-warn">FIX</span><span class="rt">Public <span class="cnum">/super-admin</span> link in the footer<small>An admin entry point linked sitewide is an unnecessary attack-surface and crawl signal — gate it, don't link it publicly</small></span><span class="ri">P2</span></div>
+    </div>
+  </section>
+
+  <section id="onpage">
+    <div class="eyebrow"><span class="idx">// 05</span> On-Page Fix List <span class="rule"></span></div>
+    <h2>Every on-page fix, <span class="hl">element by element</span></h2>
+    <p class="sub">This is the working checklist — grouped by on-page element, each with the issue found, the fix, and a priority. Hand this straight to whoever edits the pages.</p>
+
+    <div class="grouplabel"><span class="gi">A</span> Title tags, meta &amp; head signals</div>
+    <div class="rows">
+      <div class="r"><span class="pill p-ok">GOOD</span><span class="rt">Titles are unique &amp; keyword-led per page<small>Keep them under ~60 chars and always end with "| Brynex Labs" for brand recall</small></span><span class="ri">keep</span></div>
+      <div class="r"><span class="pill p-warn">FIX</span><span class="rt">Twitter/OG descriptions are generic &amp; duplicated<small>The same homepage tagline is reused as twitter:description on Blog, About &amp; Service pages — write a page-specific social description for each</small></span><span class="ri">P2</span></div>
+      <div class="r"><span class="pill p-warn">FIX</span><span class="rt">Set <span class="cnum">og:type=article</span> on blog posts<small>Add article + published_time / modified_time OG tags on posts so they render and get treated as articles, not generic pages</small></span><span class="ri">P2</span></div>
+      <div class="r"><span class="pill p-crit">FIX</span><span class="rt">Remove the meta keywords tag<small>Identical on every page, ignored by Google, and it just publishes your target-keyword list to competitors</small></span><span class="ri">P2</span></div>
+      <div class="r"><span class="pill p-warn">CHECK</span><span class="rt">USD-first framing in US-target page descriptions<small>Meta descriptions should read naturally to a US buyer; lead with $ pricing/context on US pages (see pricing fix in Group C)</small></span><span class="ri">P1</span></div>
+    </div>
+
+    <div class="grouplabel"><span class="gi">B</span> Headings &amp; page structure</div>
+    <div class="rows">
+      <div class="r"><span class="pill p-warn">CHECK</span><span class="rt">Exactly one H1 per page<small>Confirm each page has a single H1 containing the primary term; sub-sections use H2/H3 in logical order</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-warn">FIX</span><span class="rt">Phrase key H2s as real questions<small>"How much do AI agents cost?" outperforms "Pricing" for AEO — question headings win People-Also-Ask &amp; AI-answer slots</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-warn">CHECK</span><span class="rt">Homepage H1 carries a core keyword<small>"AI-Powered Engineering. Real Business Results." is strong brand copy but keyword-light — consider weaving in "AI agent &amp; software development" nearby</small></span><span class="ri">P2</span></div>
+    </div>
+
+    <div class="grouplabel"><span class="gi">C</span> Body content &amp; copy</div>
+    <div class="rows">
+      <div class="r"><span class="pill p-ai">ADD</span><span class="rt">Answer-first "TL;DR" block on every post &amp; money page<small>2–3 sentence direct answer under the H1, then expand — the single biggest AEO win for existing content</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-ai">ADD</span><span class="rt">Definition-first sentences + original stats<small>Open sections with a crisp definition; add your own numbers (delivery speed, cost bands) and cite named sources for others</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-warn">FIX</span><span class="rt">Expand or merge the thin 2–3 min posts<small>Thin posts rarely rank in a competitive niche and dilute topical authority — deepen them or fold into pillar pages</small></span><span class="ri">P2</span></div>
+      <div class="r"><span class="pill p-crit">FIX</span><span class="rt">Pricing inconsistency: ₹50K/mo vs $1,500–3,000/mo<small>The SaaS-SEO page shows both — a 3–5× mismatch. Lead with USD for the US track, INR for India, and make them internally consistent</small></span><span class="ri">P0</span></div>
+      <div class="r"><span class="pill p-warn">FIX</span><span class="rt">"A Practical Guide for 2025" is dated Jun 2026<small>Small consistency slip in a blog title — align the year, and add visible Published/Updated dates site-wide</small></span><span class="ri">P2</span></div>
+      <div class="r"><span class="pill p-warn">CHECK</span><span class="rt">Unify the primary CTA label<small>"Start a project" / "Get Your Custom Growth Plan" / "Discuss Your Plan" all coexist — keep one consistent primary action per template</small></span><span class="ri">P2</span></div>
+    </div>
+
+    <div class="grouplabel"><span class="gi">D</span> Internal linking &amp; navigation</div>
+    <div class="rows">
+      <div class="r"><span class="pill p-ai">ADD</span><span class="rt">Contextual links from blog posts into money pages<small>Each post should link to the relevant service page with a descriptive, keyword-rich anchor — passes authority &amp; guides intent</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-ai">ADD</span><span class="rt">Topic-cluster interlinking to pillar pages<small>Wire the 14 posts into clusters that all link up to a canonical "AI agents" pillar — the structure Google reads as topical authority</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-warn">ADD</span><span class="rt">Breadcrumbs + BreadcrumbList schema<small>Improves crawl paths, UX, and earns breadcrumb rich results</small></span><span class="ri">P2</span></div>
+      <div class="r"><span class="pill p-warn">CHECK</span><span class="rt">Verify anchor targets (e.g. <span class="cnum">#contact</span>)<small>CTAs point to #contact — make sure that anchor actually exists on every page that links to it, or route to /contact</small></span><span class="ri">P2</span></div>
+    </div>
+
+    <div class="grouplabel"><span class="gi">E</span> On-page schema (JSON-LD)</div>
+    <div class="rows">
+      <div class="r"><span class="pill p-crit">ADD</span><span class="rt">Organization + <span class="cnum">sameAs</span> (all pages)<small>The single most important markup for you — anchors the "Brynex Labs" entity and disambiguates from the trading brand</small></span><span class="ri">P0</span></div>
+      <div class="r"><span class="pill p-warn">ADD</span><span class="rt">WebSite + SearchAction (home)<small>Enables sitelinks search box and clarifies the site entity</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-warn">ADD</span><span class="rt">Service schema (service pages)<small>Marks up each offering with description, provider and area served</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-warn">ADD</span><span class="rt">FAQPage (pages with FAQs)<small>You already have the FAQ copy — mark it up to be eligible for rich results and AI extraction</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-warn">ADD</span><span class="rt">Article + Person author + dates (blog)<small>datePublished / dateModified + a real Person author feed E-E-A-T and freshness signals</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-ok">DO</span><span class="rt">Validate everything in Rich Results Test<small>Every type above should pass with zero errors before you ship</small></span><span class="ri">gate</span></div>
+    </div>
+
+    <div class="grouplabel"><span class="gi">F</span> Trust, entity &amp; media on-page</div>
+    <div class="rows">
+      <div class="r"><span class="pill p-crit">ADD</span><span class="rt">Named author bylines with bio + photo<small>Replace "Brynex Labs Engineering / AI Division" with real people, author pages, and Person schema linked to LinkedIn</small></span><span class="ri">P0</span></div>
+      <div class="r"><span class="pill p-crit">ADD</span><span class="rt">Attributed testimonials, client logos &amp; case metrics<small>Real names, companies, and before/after numbers — proof that both buyers and AI engines can verify</small></span><span class="ri">P0</span></div>
+      <div class="r"><span class="pill p-warn">FIX</span><span class="rt">Use full "Brynex Labs" + consistent NAP in footer<small>Never bare "Brynex"; add a registered address so the entity has a fixed, citable identity</small></span><span class="ri">P1</span></div>
+      <div class="r"><span class="pill p-warn">CHECK</span><span class="rt">Descriptive image alt text, filenames &amp; dimensions<small>Confirm every image has meaningful alt text and set width/height (or next/image) to prevent layout shift (CLS)</small></span><span class="ri">P2</span></div>
+      <div class="r"><span class="pill p-warn">FIX</span><span class="rt">Remove the public <span class="cnum">/super-admin</span> footer link<small>On-page, sitewide exposure of an admin entry point — gate it behind auth and drop the link</small></span><span class="ri">P2</span></div>
+    </div>
+  </section>
+
+  <section id="content">
+    <div class="eyebrow"><span class="idx">// 06</span> Content &amp; Topical Authority <span class="rule"></span></div>
+    <h2>Strong library, <span class="hl">soft edges</span></h2>
+    <p class="sub">The topic selection is excellent. The gaps are in authorship, freshness, and turning the library into an interlinked authority cluster.</p>
+    <div class="grid g2">
+      <div class="card edge-warn"><span class="cnum">CT-01</span><h3>Anonymous authorship undercuts E-E-A-T</h3><p>Every post is credited to "Brynex Labs Engineering" or "AI Division." Search and AI engines increasingly reward a <em>named</em> expert with a bio and track record. Generic bylines leave your best signal on the table.</p><div class="fix">Attribute posts to real engineers with author pages, credentials, and <span class="cnum">Person</span> schema.</div></div>
+      <div class="card edge-warn"><span class="cnum">CT-02</span><h3>Freshness cadence has stalled</h3><p>Posts clustered into a ~6-week burst (late Apr–mid Jun 2026), then went quiet. Independent analysis (Yext, Oct 2025) found content updated within 30 days earns markedly more AI citations than stale content.</p><div class="fix">Hold a steady weekly cadence; add visible dates and a "What changed in 2026" refresh block to top posts.</div></div>
+      <div class="card edge-warn"><span class="cnum">CT-03</span><h3>A few posts are too thin to rank</h3><p>Alongside the strong 10-min pieces sit 2–3 min posts. For a competitive niche, thin posts rarely rank and dilute topical authority.</p><div class="fix">Expand the thin posts into genuine deep-dives, or consolidate them into stronger pillar pages.</div></div>
+      <div class="card edge-ok"><span class="cnum">CT-04</span><h3>Programmatic SEO — you sell it; use it</h3><p>You already offer programmatic SEO as a service. Turn it on yourself: templated, genuinely useful pages like "AI agent development for [industry]" can capture long-tail demand at scale — the same play Kodexo runs.</p><div class="fix">Build a small, high-quality programmatic cluster around industries and comparison intents.</div></div>
+    </div>
+  </section>
+
+  <section id="geo">
+    <div class="eyebrow"><span class="idx">// 07</span> GEO — Generative Engine Optimization <span class="rule"></span></div>
+    <h2>Being <span class="hl-ai">quoted</span> by the machine</h2>
+    <p class="sub">GEO is engineering your content so ChatGPT, Perplexity, Gemini, Google AI Overviews and Claude <em>cite</em> your brand inside their answers — not just rank you in a list. This is the fastest-moving, highest-leverage frontier, and where Brynex is currently weakest relative to its peers.</p>
+    <div class="stats">
+      <div class="stat"><div class="v">30–115%</div><div class="k">Visibility lift from GEO techniques on AI answers</div><div class="src">Princeton / GA Tech / IIT Delhi, 2024</div></div>
+      <div class="stat"><div class="v ai">+41% / +32%</div><div class="k">Citation lift from quotations / statistics in content</div><div class="src">same study</div></div>
+      <div class="stat"><div class="v">3.2×</div><div class="k">More AI citations for content updated within 30 days</div><div class="src">Yext, Oct 2025</div></div>
+      <div class="stat"><div class="v ai">~$1.9B</div><div class="k">Adobe's acquisition of Semrush — GEO's market signal</div><div class="src">announced Nov 19, 2025</div></div>
+    </div>
+    <p class="note" style="margin-top:12px"><b>Note on the numbers:</b> the strongest figures above come from the foundational academic study and named vendors; the GEO space is noisy with inflated marketing claims, which this report deliberately excludes. Google's own 2026 line is blunt: optimizing for its AI features "is still SEO" — do the fundamentals well and skip the gimmicks.</p>
+
+    <div class="grouplabel"><span class="gi">→</span> The levers that actually earn citations</div>
+    <div class="rows">
+      <div class="r"><span class="ri" style="color:var(--orange)">01</span><span class="rt">Definition-first answers<small>Open sections with a crisp, self-contained definition sentence — the single highest-leverage extractable format</small></span><span class="pill p-ai">DO</span></div>
+      <div class="r"><span class="ri" style="color:var(--orange)">02</span><span class="rt">Original data &amp; named-source statistics<small>Publish your own numbers and cite named sources for others — statistics measurably raise citation rates</small></span><span class="pill p-ai">DO</span></div>
+      <div class="r"><span class="ri" style="color:var(--orange)">03</span><span class="rt">Self-contained passages (~130–170 words)<small>Structure content in standalone chunks a model can lift without surrounding context</small></span><span class="pill p-ai">DO</span></div>
+      <div class="r"><span class="ri" style="color:var(--orange)">04</span><span class="rt">Comparison tables &amp; explicit tradeoffs<small>"X vs Y vs Z" tables are citation magnets for high-consideration B2B queries — you already have the raw material</small></span><span class="pill p-ai">DO</span></div>
+      <div class="r"><span class="ri" style="color:var(--orange)">05</span><span class="rt">Off-site brand mentions on trusted sources<small>AI answers skew toward earned media — founder bylines, guest posts, expert commentary</small></span><span class="pill p-ai">DO</span></div>
+      <div class="r"><span class="ri" style="color:var(--orange)">06</span><span class="rt">Own your first-party + listings surface<small>Yext found ~44% of AI citations come from first-party sites and ~42% from listings — ~86% are brand-managed. You control these.</small></span><span class="pill p-ai">DO</span></div>
+    </div>
+
+    <div class="grouplabel"><span class="gi">vs</span> The gap, made concrete</div>
+    <div class="vs">
+      <div class="col them"><h4>A cited competitor (e.g. Kodexo Labs)</h4><ul>
+        <li>"90%+ SQL accuracy across 207 tables"</li>
+        <li>"51 AI products across 25+ industries"</li>
+        <li>"85% reduction in search time across 160,000+ records"</li>
+        <li>Named clients, explicit pricing bands, compliance badges</li>
+        <li>Definition-first Q&amp;A blocks built to be lifted verbatim</li>
+      </ul></div>
+      <div class="col you2"><h4>Brynex Labs today</h4><ul>
+        <li>"50+ projects," "98% retention," "3× faster" — round, unsourced</li>
+        <li>No named clients or verifiable case metrics</li>
+        <li>Strong prose, but few extractable standalone facts</li>
+        <li>No original published data for a model to quote</li>
+        <li>Brand entity ambiguous (see C-02) — models may not attribute to you</li>
+      </ul></div>
+    </div>
+    <div class="callout"><div class="lab">The move</div>
+      <p>Rewrite your top 10–15 pages with definition-first openers, real numbers with sources, and self-contained answer blocks — then <strong>measure</strong>: run your 20–30 most important prompts through ChatGPT, Perplexity, Gemini and Claude monthly and track where you're cited versus competitors. Tools like Semrush AI Visibility, Ahrefs Brand Radar, Profound or Scrunch automate this. Expect a ~4–8 week lag between publishing and appearing in AI answers.</p>
+    </div>
+  </section>
+
+  <section id="aeo">
+    <div class="eyebrow"><span class="idx">// 08</span> AEO — Answer Engine Optimization <span class="rule"></span></div>
+    <h2>Structured so the <span class="hl-ai">answer is you</span></h2>
+    <p class="sub">AEO is GEO's technical half: the schema, formatting and query-coverage that let engines extract a clean answer from your page. You're partway there — the FAQ instinct is right — but the machine-readable layer is thin.</p>
+    <div class="grid g2">
+      <div class="card edge-ai"><span class="cnum">AE-01</span><h3>Schema is the missing translation layer</h3><p>Structured data tells engines exactly what your page is. Priority marks: <span class="cnum">Organization</span> (+ sameAs), <span class="cnum">WebSite</span> + SearchAction, <span class="cnum">Service</span>, <span class="cnum">FAQPage</span>, <span class="cnum">Article</span> with author + dates, <span class="cnum">BreadcrumbList</span>, <span class="cnum">Person</span>.</p><div class="fix">Implement and validate every type in Google's Rich Results Test. Fast, high-ROI win. (Full list in §05·E.)</div></div>
+      <div class="card edge-ai"><span class="cnum">AE-02</span><h3>Add answer-first "TL;DR" blocks</h3><p>Your posts dive straight into narrative. Lead each with a 2–3 sentence direct answer to the title's question, then expand. Engines (and skim-readers) grab the top summary first.</p><div class="fix">Add a short bolded answer block under every blog H1 and money-page section header.</div></div>
+      <div class="card edge-ai"><span class="cnum">AE-03</span><h3>Design for query fan-out</h3><p>Google's AI Mode and AI Overviews break one question into several sub-queries and answer each separately. Pages that comprehensively cover the sub-questions around a topic win more of those slots.</p><div class="fix">Map the People-Also-Ask and related sub-questions (AlsoAsked, Search Console, Reddit) and answer each in its own clean block.</div></div>
+      <div class="card edge-ok"><span class="cnum">AE-04</span><h3>Your FAQ instinct is right — extend it</h3><p>The FAQ sections on service pages are exactly the Q&amp;A format engines favour. Add FAQPage schema, phrase more headings as real questions, and carry the pattern across the blog.</p><div class="fix">Convert section headings to question form where natural, and mark up every FAQ block.</div></div>
+    </div>
+  </section>
+
+  <section id="eeat">
+    <div class="eyebrow"><span class="idx">// 09</span> E-E-A-T, Trust &amp; Entity <span class="rule"></span></div>
+    <h2>Become a <span class="hl">verifiable</span> entity</h2>
+    <p class="sub">Trust is now a ranking and citation input, not a nicety — and it's the axis where a name-collision with a scam-flagged site hurts most. The fix is to make Brynex Labs unmistakable and provable.</p>
+    <div class="rows">
+      <div class="r"><span class="pill p-crit">ADD</span><span class="rt">Named humans<small>Founders + senior engineers with photos, bios, credentials, and linked LinkedIn profiles</small></span><span class="ri">trust + GEO</span></div>
+      <div class="r"><span class="pill p-crit">ADD</span><span class="rt">Verifiable proof<small>2–3 case studies with real metrics, attributed testimonials, and client logos (with permission)</small></span><span class="ri">conversion</span></div>
+      <div class="r"><span class="pill p-crit">ADD</span><span class="rt">Corporate identity signals<small>Registered address, legal entity name, founding year — the facts a knowledge graph anchors to</small></span><span class="ri">entity</span></div>
+      <div class="r"><span class="pill p-warn">BUILD</span><span class="rt">Third-party presence<small>Clutch, G2, GoodFirms, DesignRush, Crunchbase, plus a Wikidata item — the sources AI engines trust</small></span><span class="ri">authority</span></div>
+      <div class="r"><span class="pill p-warn">BUILD</span><span class="rt">Consistent NAP + sameAs<small>Identical entity across the web, wired together via Organization schema — the disambiguation engine</small></span><span class="ri">entity</span></div>
+      <div class="r"><span class="pill p-warn">EARN</span><span class="rt">Digital PR &amp; founder bylines<small>Expert commentary and guest articles on respected tech/SaaS publications — the strongest off-site signal for SEO and GEO</small></span><span class="ri">off-page</span></div>
+    </div>
+  </section>
+
+  <section id="markets">
+    <div class="eyebrow"><span class="idx">// 10</span> Geo-Targeting Strategy · USA + India <span class="rule"></span></div>
+    <h2>Two markets, <span class="hl">two tracks</span></h2>
+    <p class="sub">You want the US primarily and India secondarily. That's very achievable — but it needs deliberate signals per market, not one blurred message on an India-coded domain.</p>
+    <div class="grid g2">
+      <div class="card edge-crit"><span class="pill p-crit">Primary</span><h3>&#127482;&#127480; The USA track — needs the most work</h3><p>Today the strongest signals (the <span class="cnum">.in</span> domain, INR pricing, India-based framing) point away from the US.</p>
+        <div class="fix">Resolve the domain question (C-03) — a gTLD is the cleaner long-term home for US-primary.</div>
+        <div class="fix">Lead with USD pricing; add US case studies, US client proof, and US-timezone response messaging.</div>
+        <div class="fix">Target US-specific queries; earn US backlinks and list on US directories (Clutch, G2, DesignRush, TechBehemoths).</div>
+      </div>
+      <div class="card edge-ok"><span class="pill p-ok">Secondary</span><h3>&#127470;&#127475; The India track — you're ahead here</h3><p>The <span class="cnum">.in</span> domain and <span class="cnum">/ai-development-company-in-india</span> page are genuine assets for India. It's your nearest-term ranking win.</p>
+        <div class="fix">Keep INR pricing and India-context content on this track; pursue India directories (GoodFirms India) and local proof.</div>
+        <div class="fix">If you build market-specific pages, use hreflang to serve the right version to each audience without cannibalizing.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="roadmap">
+    <div class="eyebrow"><span class="idx">// 11</span> The Roadmap <span class="rule"></span></div>
+    <h2>Sequenced by impact × effort</h2>
+    <p class="sub">Don't do everything at once. This is the order a 20-year operator would run it — foundations first, then the compounding plays.</p>
+    <div class="road">
+      <div class="head"><span>Priority</span><span>Action</span><span>Impact</span><span>Effort</span></div>
+      <div class="item"><span class="prio p0">P0</span><span class="task">Confirm indexing + submit sitemaps to Google &amp; Bing<small>Days 1–7 · the tourniquet</small></span><span class="tag2" style="color:var(--orange);font-weight:700">Critical</span><span class="tag2">Low</span></div>
+      <div class="item"><span class="prio p0">P0</span><span class="task">Entity disambiguation: "Brynex Labs" + Organization schema + sameAs<small>Week 1–2</small></span><span class="tag2" style="color:var(--orange);font-weight:700">Critical</span><span class="tag2">Low–Med</span></div>
+      <div class="item"><span class="prio p0">P0</span><span class="task">Decide domain strategy (gTLD vs .in) &amp; secure the brand<small>Week 1 decision · execute over 30–60 days</small></span><span class="tag2" style="color:var(--orange);font-weight:700">Critical</span><span class="tag2">Med–High</span></div>
+      <div class="item"><span class="prio p0">P0</span><span class="task">Add named team, proof, case studies &amp; address (E-E-A-T)<small>Weeks 2–4</small></span><span class="tag2" style="color:var(--orange);font-weight:700">Critical</span><span class="tag2">Medium</span></div>
+      <div class="item"><span class="prio p1">P1</span><span class="task">Implement &amp; validate full schema suite (see §05·E)<small>Weeks 3–5</small></span><span class="tag2" style="color:var(--warn);font-weight:700">High</span><span class="tag2">Low–Med</span></div>
+      <div class="item"><span class="prio p1">P1</span><span class="task">GEO/AEO rewrite of top 10–15 pages: definition-first, data, TL;DR<small>Weeks 4–8</small></span><span class="tag2" style="color:var(--warn);font-weight:700">High</span><span class="tag2">Medium</span></div>
+      <div class="item"><span class="prio p1">P1</span><span class="task">Build listings + start AI-citation monitoring (30 prompts, monthly)<small>Weeks 4–6, then ongoing</small></span><span class="tag2" style="color:var(--warn);font-weight:700">High</span><span class="tag2">Low</span></div>
+      <div class="item"><span class="prio p1">P1</span><span class="task">Reconcile USD/INR pricing per market track<small>Week 3</small></span><span class="tag2" style="color:var(--warn);font-weight:700">Med</span><span class="tag2">Low</span></div>
+      <div class="item"><span class="prio p2">P2</span><span class="task">Restart weekly content cadence + refresh thin/stale posts<small>Ongoing from week 4</small></span><span class="tag2" style="color:var(--ok);font-weight:700">Compounding</span><span class="tag2">Medium</span></div>
+      <div class="item"><span class="prio p2">P2</span><span class="task">Digital PR / founder bylines for earned mentions &amp; backlinks<small>Ongoing from week 6</small></span><span class="tag2" style="color:var(--ok);font-weight:700">Compounding</span><span class="tag2">Med–High</span></div>
+      <div class="item"><span class="prio p2">P2</span><span class="task">Programmatic SEO cluster (industry / comparison intents)<small>Weeks 8–12</small></span><span class="tag2" style="color:var(--ok);font-weight:700">Compounding</span><span class="tag2">Medium</span></div>
+      <div class="item"><span class="prio p2">P2</span><span class="task">On-page housekeeping: meta keywords, /super-admin, alt text, CWV<small>Week 2–4</small></span><span class="tag2" style="color:var(--ok);font-weight:700">Med</span><span class="tag2">Low</span></div>
+    </div>
+  </section>
+
+  <section id="kpi">
+    <div class="eyebrow"><span class="idx">// 12</span> KPI Console — What to Track <span class="rule"></span></div>
+    <h2>Measure the right things</h2>
+    <p class="sub">Vanity traffic is the wrong scoreboard for a firm that sells pipeline. Track leading indicators of visibility and the lagging indicator of revenue. "Now" values are directional starting points — baseline them in your own tools.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="n">Indexed pages (GSC)</div><div class="now">≈ minimal now</div><div class="goal">Target: <b>100% of intended URLs indexed</b></div></div>
+      <div class="kpi"><div class="n">Organic clicks / impressions</div><div class="now">near-zero</div><div class="goal">Target: <b>steady MoM growth, US-weighted</b></div></div>
+      <div class="kpi"><div class="n">Domain Rating (Ahrefs)</div><div class="now">very low (new)</div><div class="goal">Target: <b>DR 20+ within 2 quarters</b></div></div>
+      <div class="kpi"><div class="n">AI citation share (30 prompts)</div><div class="now">≈ 0%</div><div class="goal">Target: <b>cited in 25–30% of target prompts</b></div></div>
+      <div class="kpi"><div class="n">Brand SERP cleanliness</div><div class="now">contested / toxic neighbour</div><div class="goal">Target: <b>Brynex Labs owns its brand SERP</b></div></div>
+      <div class="kpi"><div class="n">Demo requests from organic + AI</div><div class="now">unmeasured</div><div class="goal">Target: <b>the metric that actually pays</b></div></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="big">The bottom line: <span>you built the hard part first.</span></div>
+    <p style="max-width:66ch;color:var(--dim);margin-bottom:18px">Most companies at this stage have a weak site and no content. Brynex Labs has the opposite problem — a strong, well-engineered asset that almost no one and no machine can find yet. That's a good problem, because it's fixable in weeks, not years. Get indexed, win your name, prove you're real, and engineer for AI citation — in that order.</p>
+    <p class="note"><b>Scope &amp; caveats:</b> This diagnostic is based on live page fetches and public SERP / AI-visibility research at report time (July 2026). Field Core Web Vitals, exact indexed-page counts, backlink/DR data, and live schema validation require your Google Search Console, GA4, PageSpeed Insights (CrUX) and Ahrefs/Semrush access — items dependent on them are flagged and scored directionally. Third-party statistics are attributed to their sources; the most speculative claims from the wider GEO marketing literature were deliberately excluded.</p>
+    <p class="note" style="margin-top:16px;color:var(--orange)">// END OF DIAGNOSTIC · BRYNEX LABS · SEO · GEO · AEO</p>
+  </footer>
+
+</div>
+
+<script>
+  (function(){
+    document.querySelectorAll('.segs').forEach(function(s){
+      var lit=parseInt(s.getAttribute('data-lit'),10)||0, band=s.getAttribute('data-band')||'ok';
+      for(var i=0;i<10;i++){var seg=document.createElement('i'); if(i<lit){seg.className='lit '+band;} s.appendChild(seg);}
+    });
+    function go(){ document.body.classList.add('is-loaded'); countUp(); }
+    function countUp(){
+      var el=document.getElementById('ovr'); if(!el) return;
+      if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ el.innerHTML='52<small>/100</small>'; return; }
+      var target=52, t0=null;
+      function step(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/1300,1);
+        var cur=Math.round(target*(1-Math.pow(1-p,2)));
+        el.innerHTML=cur+'<small>/100</small>'; if(p<1) requestAnimationFrame(step); }
+      requestAnimationFrame(step);
+    }
+    if(document.readyState!=='loading'){ setTimeout(go,120); }
+    else document.addEventListener('DOMContentLoaded', function(){ setTimeout(go,120); });
+  })();
+</script>
+</body>
+</html>

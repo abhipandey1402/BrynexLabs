@@ -26,6 +26,8 @@ export interface BlogPost {
     techTags?: string[];
     /** ISO timestamp for precise sorting & SEO; static posts fall back to parsing `date`. */
     publishedAt?: string;
+    /** ISO timestamp for visible freshness and Article dateModified schema. */
+    updatedAt?: string;
     status?: BlogPostStatus;
     /** 'static' = defined in code (read-only), 'db' = managed from the super-admin CMS. */
     source?: 'static' | 'db';
@@ -92,7 +94,7 @@ export const blogPosts: BlogPost[] = [
     },
     {
         slug: 'ai-agents-in-business-practical-guide',
-        title: 'AI Agents in Business: A Practical Guide for 2025',
+        title: 'AI Agents in Business: A Practical Guide for 2026',
         excerpt: 'Moving past the traditional conversational chatbot phase: How to securely deploy autonomous AI agents that definitively execute complex B2B workflows.',
         author: 'Brynex Labs AI Division',
         date: 'Jan 05, 2026',
@@ -100,7 +102,7 @@ export const blogPosts: BlogPost[] = [
         category: 'AI',
         seoDescription: 'The mechanisms and security architectures to reliably deploy autonomous AI agents into production SaaS — without hallucinations or leaking customer data.',
         content: `
-            <p>The era of conversational chatbot wrappers is over. In 2025, the enterprise demand has radically shifted entirely towards <a href="/services/ai-agents-automation">Actionable AI Agents</a>—systems that do not just retrieve or summarize data, but actively navigate environments, compose transactions, execute code, and finalize multi-step operational workflows autonomously.</p>
+            <p>The era of conversational chatbot wrappers is over. In 2026, the enterprise demand has radically shifted entirely towards <a href="/services/ai-agents-automation">Actionable AI Agents</a>—systems that do not just retrieve or summarize data, but actively navigate environments, compose transactions, execute code, and finalize multi-step operational workflows autonomously.</p>
             
             <h2>The Shift from Generative to Agentic</h2>
             <p>A standard generative AI model waits for a prompt, infers a probable response, and halts. An Agentic loop uses an LLM purely as the "Reasoning Engine." The model evaluates a macro-goal, breaks it down into deterministic sub-tasks, assigns API tools to those tasks, observes the execution results, and iterates until the macro-goal is solved.</p>

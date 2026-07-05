@@ -10,7 +10,12 @@ export const metadata: Metadata = {
         title: 'About Brynex Labs | AI & Software Development Company in India',
         description: 'A senior-led AI and software development company based in India, serving startups and enterprises in the USA and worldwide.',
         url: '/about'
-    }
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'About Brynex Labs | AI & Software Development Company in India',
+        description: 'Learn how Brynex Labs builds AI agents, custom software, and SaaS growth systems for USA and India clients.',
+    },
 };
 
 const values = [

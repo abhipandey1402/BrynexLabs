@@ -17,6 +17,11 @@ export const metadata: Metadata = {
         url: '/blog',
         type: 'website',
     },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'AI, SaaS & Software Engineering Blog | Brynex Labs',
+        description: 'Practical guides on AI agent development, SaaS architecture, cloud engineering, and SaaS SEO from Brynex Labs.',
+    },
 };
 
 export default async function BlogIndex({ searchParams }: { searchParams: { category?: string } }) {
