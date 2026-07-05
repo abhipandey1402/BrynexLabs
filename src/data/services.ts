@@ -49,9 +49,8 @@ export interface ServiceDetail {
         assurances?: string[];
     };
     /**
-     * India-market variant, rendered as a separate crawlable page at
-     * /in/services/[slug] (hreflang en-IN). Indian visitors are geo-routed
-     * to it by middleware; crawlers index both versions independently.
+     * India-market copy and pricing overrides. These are now rendered on the
+     * canonical /services/[slug] page; legacy /in/services/[slug] URLs redirect.
      */
     marketIN?: {
         seo?: { title: string; metaDescription: string };
@@ -284,7 +283,7 @@ export const services: ServiceDetail[] = [
                     name: 'Agent Pilot',
                     tagline: 'Prove the ROI on one workflow',
                     priceLabel: 'Starting at',
-                    price: '$4,999',
+                    price: '₹49,999',
                     priceIN: '₹49,999',
                     period: '/project',
                     features: [
@@ -300,7 +299,7 @@ export const services: ServiceDetail[] = [
                     name: 'Production Agent System',
                     tagline: 'The full automation engine',
                     priceLabel: 'Starting at',
-                    price: '$12,999',
+                    price: '₹1,49,999',
                     priceIN: '₹1,49,999',
                     period: '/project',
                     highlighted: true,
@@ -470,11 +469,11 @@ export const services: ServiceDetail[] = [
             },
             {
                 question: 'How much does AI agent development cost?',
-                answer: 'A focused single-workflow pilot starts at $4,999, production agent systems with integrations and multi-agent orchestration start at $12,999, and enterprise automation across departments is custom-scoped. Every project gets a fixed quote after a free discovery call — our India-based senior team delivers at 40–60% below US agency rates.',
+                answer: 'A focused single-workflow pilot starts at ₹49,999, production agent systems with integrations and multi-agent orchestration start at ₹1,49,999, and enterprise automation across departments is custom-scoped. Every project gets a fixed quote after a free discovery call — GST extra, milestone billing in INR.',
             },
             {
-                question: 'Do you build AI agents for companies in the USA and other countries?',
-                answer: 'Yes. We work with clients across the USA, UK, Australia, and India with significant timezone overlap, async-first communication, and contracts/invoicing in USD. Most of our AI agent projects are for US-based SaaS and enterprise teams.',
+                question: 'Do you build AI agents for companies across India?',
+                answer: 'Yes. We work remote-first with startups, D2C brands, and enterprises across India, with English or Hindi calls, GST invoicing, and INR payments via UPI or bank transfer.',
             },
         ],
     },
@@ -557,7 +556,7 @@ export const services: ServiceDetail[] = [
                     name: 'Launch MVP',
                     tagline: 'Validate fast with a real product',
                     priceLabel: 'Starting at',
-                    price: '$9,999',
+                    price: '₹99,999',
                     priceIN: '₹99,999',
                     period: '/project',
                     features: [
@@ -573,7 +572,7 @@ export const services: ServiceDetail[] = [
                     name: 'SaaS Platform',
                     tagline: 'Built to onboard paying customers',
                     priceLabel: 'Starting at',
-                    price: '$24,999',
+                    price: '₹2,49,999',
                     priceIN: '₹2,49,999',
                     period: '/project',
                     highlighted: true,
@@ -747,11 +746,11 @@ export const services: ServiceDetail[] = [
             },
             {
                 question: 'How much does custom software development cost?',
-                answer: 'A production-ready MVP starts at $9,999, full multi-tenant SaaS platforms at $24,999, and enterprise modernization is custom-scoped. Because our senior engineering team operates from India serving US and global clients, you get top-tier quality at 40–60% below typical US agency rates — with fixed-scope quotes, not open-ended hourly billing.',
+                answer: 'A production-ready MVP starts at ₹99,999, full multi-tenant SaaS platforms at ₹2,49,999, and enterprise modernization is custom-scoped. You get a fixed-scope quote within 72 hours of a free discovery call — GST extra, milestone billing in INR.',
             },
             {
-                question: 'Can US and European companies outsource software development to you?',
-                answer: 'Yes — most of our clients are in the USA and Europe. We provide overlapping working hours, daily async updates, US-style contracts with NDA and full IP transfer, and a single senior point of contact, making offshore development feel like an in-house team.',
+                question: 'Do you work with Indian startups and SMEs?',
+                answer: 'Yes — Indian startups, D2C brands, and SMEs are a core part of our client base. We work remote-first across Bangalore, Mumbai, Delhi NCR, Pune, Hyderabad, and all of India, with calls in English or Hindi, GST invoicing, and INR payments via UPI or bank transfer.',
             },
         ],
     },
@@ -815,11 +814,11 @@ export const services: ServiceDetail[] = [
             },
             {
                 question: 'How much do SaaS SEO services cost?',
-                answer: 'Engagements typically start at $1,500–$3,000/month for growth-stage SaaS companies and scale with scope. Every plan ties deliverables to pipeline metrics — demo requests and signups — not vanity traffic.',
+                answer: 'Engagements typically start at ₹50K/month for growth-stage SaaS companies and scale with scope. Every plan ties deliverables to pipeline metrics — demo requests and signups — not vanity traffic.',
             },
             {
-                question: 'Do you work with SaaS companies outside India?',
-                answer: 'Yes — we work with B2B SaaS companies in the USA, UK, Australia, and India. Strategy, content, and reporting are built for the market you sell into, including US-specific keyword and competitor research.',
+                question: 'Do you work with SaaS companies in India?',
+                answer: 'Yes — we work with B2B SaaS companies in India across buyer-intent SEO, product-led content, technical SEO, and conversion-focused landing pages.',
             },
         ],
         process: [
@@ -864,7 +863,7 @@ export const services: ServiceDetail[] = [
                     name: 'Growth Retainer',
                     tagline: 'Designed for growth-stage SaaS',
                     priceLabel: 'Plans start from',
-                    price: '$1,500+',
+                    price: '₹50K',
                     priceIN: '₹50K',
                     period: '/month',
                     highlighted: true,

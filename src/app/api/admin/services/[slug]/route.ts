@@ -20,9 +20,8 @@ function dbNotConfigured() {
 async function revalidateService(slug: string) {
     revalidatePath('/services');
     revalidatePath(`/services/${slug}`);
-    revalidatePath(`/in/services/${slug}`);
     revalidatePath('/sitemap.xml');
-    await pingIndexNow(['/services', `/services/${slug}`, `/in/services/${slug}`]);
+    await pingIndexNow(['/services', `/services/${slug}`]);
 }
 
 export async function GET(_request: NextRequest, { params }: Params) {

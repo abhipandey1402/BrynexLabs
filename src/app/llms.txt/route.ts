@@ -6,14 +6,14 @@ const LLMS_TXT = `# Brynex Labs
 
 ## Services
 
-- [Agentic AI & Intelligent Automation](https://brynex.in/services/ai-agents-automation): Autonomous AI agents built with LangChain, LangGraph, CrewAI, and RAG over business data. Pilots from $4,999; production agent systems from $12,999.
-- [AI-Native Software Engineering](https://brynex.in/services/ai-native-software-engineering): Custom software, multi-tenant SaaS platforms, web & mobile apps, cloud & DevOps, legacy modernization. MVPs from $9,999; SaaS platforms from $24,999.
+- [Agentic AI & Intelligent Automation](https://brynex.in/services/ai-agents-automation): Autonomous AI agents built with LangChain, LangGraph, CrewAI, and RAG over business data. Pilots from ₹49,999; production agent systems from ₹1,49,999.
+- [AI-Native Software Engineering](https://brynex.in/services/ai-native-software-engineering): Custom software, multi-tenant SaaS platforms, web & mobile apps, cloud & DevOps, legacy modernization. MVPs from ₹99,999; SaaS platforms from ₹2,49,999.
 - [SaaS SEO for B2B Companies](https://brynex.in/services/saas-seo): Revenue-focused SEO — BOFU keywords, programmatic SEO, and CRO that turn organic traffic into demos and pipeline.
 
 ## India
 
-- [AI Agent Development in India](https://brynex.in/in/services/ai-agents-automation): Indian-market pricing — pilots from ₹49,999, production systems from ₹1,49,999. GST invoicing.
-- [Custom Software Development in India](https://brynex.in/in/services/ai-native-software-engineering): MVPs from ₹99,999, SaaS platforms from ₹2,49,999. GST invoicing.
+- [AI Agent Development in India](https://brynex.in/services/ai-agents-automation): Indian-market pricing — pilots from ₹49,999, production systems from ₹1,49,999. GST invoicing.
+- [Custom Software Development in India](https://brynex.in/services/ai-native-software-engineering): MVPs from ₹99,999, SaaS platforms from ₹2,49,999. GST invoicing.
 - [AI Development Company in India](https://brynex.in/ai-development-company-in-india): Overview of services for the Indian market and offshore clients.
 
 ## Hiring & Engagement

@@ -1,7 +1,6 @@
 'use client';
 
 import { Fragment, useState, useEffect } from 'react';
-import Link from 'next/link';
 import { ServiceDetail, CustomSection, resolveServiceTheme } from '@/data/services';
 import { buildThemeStyle, SECTION_BG_CLASS, DENSITY_SECTION_CLASS, BUTTON_STYLE_CLASS } from '@/lib/serviceTheme';
 import SectionWrapper from './SectionWrapper';
@@ -13,10 +12,8 @@ import { trackConversion_StartProjectClick, trackConversion_ServiceView } from '
 
 interface ServicePageClientProps {
     service: ServiceDetail;
-    /** Which market variant this (static, crawlable) page renders. */
+    /** Which market copy this canonical page renders. */
     market?: 'GLOBAL' | 'IN';
-    /** URL of the other market's version of this page, rendered as a toggle link. */
-    alternateUrl?: string;
 }
 
 function SectionBadge({ label }: { label: string }) {
@@ -28,7 +25,7 @@ function SectionBadge({ label }: { label: string }) {
     );
 }
 
-export default function ServicePageClient({ service, market = 'GLOBAL', alternateUrl }: ServicePageClientProps) {
+export default function ServicePageClient({ service, market = 'GLOBAL' }: ServicePageClientProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Presentation config — falls back to the shipped look when unset.
@@ -38,8 +35,7 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
     const densityClass = DENSITY_SECTION_CLASS[theme.density];
     const primaryBtnClass = BUTTON_STYLE_CLASS[theme.buttonStyle];
 
-    // India-market overrides — resolved at build time per route variant, so
-    // both versions are fully static and independently crawlable.
+    // India-market overrides are rendered on the canonical /services/[slug] URL.
     const inV = market === 'IN' ? service.marketIN : undefined;
     const faqs = (market === 'IN' && service.marketIN?.faqs) ? service.marketIN.faqs : service.faqs;
 
@@ -333,21 +329,6 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                                 {(inV?.pricingSubheading ?? service.pricing.subheading) && (
                                     <p className="text-foreground-secondary text-lg max-w-2xl mx-auto">{inV?.pricingSubheading ?? service.pricing.subheading}</p>
                                 )}
-                                {alternateUrl && (
-                                    <div className="mt-7 inline-flex items-center rounded-full border border-border bg-background-secondary/60 p-1" role="group" aria-label="Pricing region">
-                                        {market === 'GLOBAL' ? (
-                                            <>
-                                                <span className="px-5 py-2 rounded-full text-sm font-bold bg-accent text-white shadow-button">🌎 Global · USD</span>
-                                                <Link href={alternateUrl} scroll={false} onClick={() => { document.cookie = 'bx-geo-optout=; path=/; max-age=0; samesite=lax'; }} className="px-5 py-2 rounded-full text-sm font-bold text-foreground-secondary hover:text-foreground transition-all duration-300">🇮🇳 India · INR</Link>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Link href={alternateUrl} scroll={false} onClick={() => { document.cookie = `bx-geo-optout=1; path=/; max-age=${60 * 60 * 24 * 90}; samesite=lax`; }} className="px-5 py-2 rounded-full text-sm font-bold text-foreground-secondary hover:text-foreground transition-all duration-300">🌎 Global · USD</Link>
-                                                <span className="px-5 py-2 rounded-full text-sm font-bold bg-accent text-white shadow-button">🇮🇳 India · INR</span>
-                                            </>
-                                        )}
-                                    </div>
-                                )}
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
                                 {service.pricing.tiers.map((tier, i) => (
@@ -393,7 +374,7 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                                     ))}
                                 </div>
                             )}
-                            {market === 'IN' && inV?.pricingNote && (
+                            {inV?.pricingNote && (
                                 <p className="mt-4 text-center text-foreground-muted text-xs tracking-wide">{inV.pricingNote}</p>
                             )}
                         </div>
@@ -511,7 +492,7 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
             <Breadcrumbs
                 items={[
                     { label: 'Home', href: '/' },
-                    { label: market === 'IN' ? 'India Services' : 'Services', href: market === 'IN' ? '/ai-development-company-in-india' : '/services' },
+                    { label: 'Services', href: '/services' },
                     { label: service.shortTitle ?? service.title },
                 ]}
             />

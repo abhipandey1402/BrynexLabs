@@ -3,17 +3,17 @@ import { services as staticServices, type ServiceDetail } from '@/data/services'
 import { getDbServices, getDbServiceBySlug } from './servicePageStore';
 
 function normalizeService(service: ServiceDetail): ServiceDetail {
-    if (service.slug !== 'saas-seo' || !service.pricing) return service;
+    if (!service.pricing) return service;
 
-    // Public SEO correction for legacy CMS/static copies so the global page
-    // stays USD-first while retaining the India price for future IN variants.
+    // Canonical service pages now sell into India first. Keep legacy CMS/static
+    // records from leaking older USD-first prices onto public pages.
     return {
         ...service,
         pricing: {
             ...service.pricing,
             tiers: service.pricing.tiers.map((tier) => ({
                 ...tier,
-                price: tier.name === 'Growth Retainer' ? '$1,500+' : tier.price,
+                price: tier.priceIN ?? (tier.name === 'Growth Retainer' ? '₹50K' : tier.price),
                 priceIN: tier.name === 'Growth Retainer' ? '₹50K' : tier.priceIN,
             })),
         },

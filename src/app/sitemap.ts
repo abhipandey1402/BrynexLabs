@@ -59,16 +59,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }));
 
-  // India-market variants (hreflang en-IN pairs of the global service pages).
-  const indiaServiceMappings = services
-    .filter((service) => service.marketIN)
-    .map((service) => ({
-      url: `${baseUrl}/in/services/${service.slug}`,
-      lastModified: new Date('2026-07-05'),
-      changeFrequency: 'monthly' as const,
-      priority: 0.9,
-    }));
-
   const caseStudyMappings = caseStudies.map((study) => ({
     url: `${baseUrl}/case-studies/${study.slug}`,
     lastModified: new Date('2026-06-16'),
@@ -84,5 +74,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticMappings, ...landingMappings, ...serviceMappings, ...indiaServiceMappings, ...caseStudyMappings, ...blogMappings];
+  return [...staticMappings, ...landingMappings, ...serviceMappings, ...caseStudyMappings, ...blogMappings];
 }
