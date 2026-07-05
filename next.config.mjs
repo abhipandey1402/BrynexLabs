@@ -10,11 +10,20 @@ const nextConfig = {
             'application-modernization',
         ];
 
-        return retiredServiceSlugs.map((slug) => ({
+        const retiredServiceRedirects = retiredServiceSlugs.map((slug) => ({
             source: `/services/${slug}`,
             destination: '/services/ai-native-software-engineering',
             permanent: true,
         }));
+
+        return [
+            {
+                source: '/in/services/:slug',
+                destination: '/services/:slug',
+                permanent: true,
+            },
+            ...retiredServiceRedirects,
+        ];
     },
 };
 

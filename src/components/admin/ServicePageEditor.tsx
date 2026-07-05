@@ -553,7 +553,7 @@ export default function ServicePageEditor({ mode, initialService, hasOverride }:
             {tab === 'india' && (
                 <div className="space-y-4 max-w-3xl">
                     <div className="rounded-xl border border-border bg-background-secondary/30 px-5 py-4 text-sm text-foreground-secondary">
-                        These optional overrides power the crawlable <span className="font-bold text-foreground">/in/services/{form.slug || 'your-slug'}</span> page. Leave a field blank to fall back to the global content. Fill any field to enable the India variant.
+                        These optional overrides power the canonical <span className="font-bold text-foreground">/services/{form.slug || 'your-slug'}</span> page for the India-first market. Leave a field blank to fall back to the base content.
                     </div>
                     <Card title="India SEO">
                         <Field label="SEO Title" value={form.marketIN.seoTitle} onChange={(v) => setIN({ seoTitle: v })} placeholder="India-specific search title" />

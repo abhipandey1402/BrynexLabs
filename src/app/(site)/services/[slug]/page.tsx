@@ -19,29 +19,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         };
     }
 
+    const seo = service.marketIN?.seo ?? service.seo;
+
     return {
-        title: service.seo.title,
-        description: service.seo.metaDescription,
+        title: seo.title,
+        description: seo.metaDescription,
         alternates: {
             canonical: `/services/${service.slug}`,
-            // hreflang: Google serves the en-IN version to Indian searchers
-            // and this version everywhere else (visible in GSC).
-            languages: service.marketIN ? {
-                'en-IN': `/in/services/${service.slug}`,
-                'en-US': `/services/${service.slug}`,
-                'x-default': `/services/${service.slug}`,
-            } : undefined,
         },
         openGraph: {
-            title: service.seo.title,
-            description: service.seo.metaDescription,
+            title: seo.title,
+            description: seo.metaDescription,
             url: `/services/${service.slug}`,
             type: 'website',
         },
         twitter: {
             card: 'summary_large_image',
-            title: service.seo.title,
-            description: service.seo.metaDescription,
+            title: seo.title,
+            description: seo.metaDescription,
         },
     };
 }
@@ -51,12 +46,40 @@ export async function generateStaticParams() {
     return slugs.map((slug) => ({ slug }));
 }
 
+/** "₹1,49,999" -> "149999", "₹50K" -> "50000" for schema.org Offer price. */
+function numericInrPrice(price: string): string | null {
+    const upper = price.toUpperCase();
+    const numeric = upper.replace(/[^0-9.]/g, '');
+    if (!numeric) return null;
+
+    const value = Number(numeric);
+    if (!Number.isFinite(value)) return null;
+
+    return String(Math.round(upper.includes('K') ? value * 1000 : value));
+}
+
 export default async function ServicePage({ params }: PageProps) {
     const service = await getServiceBySlug(params.slug);
 
     if (!service) {
         notFound();
     }
+
+    const faqs = service.marketIN?.faqs ?? service.faqs;
+    const offers = (service.pricing?.tiers ?? [])
+        .map((tier) => {
+            const price = numericInrPrice(tier.priceIN ?? tier.price);
+            if (!price) return null;
+
+            return {
+                "@type": "Offer",
+                "name": tier.name,
+                "price": price,
+                "priceCurrency": "INR",
+                "url": `https://brynex.in/services/${service.slug}`,
+            };
+        })
+        .filter((offer): offer is { "@type": "Offer"; name: string; price: string; priceCurrency: string; url: string } => Boolean(offer));
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -66,30 +89,26 @@ export default async function ServicePage({ params }: PageProps) {
                 "@id": `https://brynex.in/services/${service.slug}#service`,
                 "name": service.title,
                 "serviceType": service.title,
-                "description": service.description,
+                "description": service.marketIN?.seo?.metaDescription ?? service.description,
                 "provider": {
                     "@type": "Organization",
                     "@id": "https://brynex.in/#organization",
                     "name": "Brynex Labs",
                     "url": "https://brynex.in"
                 },
-                "areaServed": [
-                    { "@type": "Country", "name": "United States" },
-                    { "@type": "Country", "name": "India" },
-                    { "@type": "Country", "name": "United Kingdom" },
-                    { "@type": "Country", "name": "Australia" }
-                ],
-                "url": `https://brynex.in/services/${service.slug}`
+                "areaServed": { "@type": "Country", "name": "India" },
+                "url": `https://brynex.in/services/${service.slug}`,
+                ...(offers.length > 0 ? { "offers": offers } : {})
             },
             getBreadcrumbJsonLd([
                 { name: 'Home', href: '/' },
                 { name: 'Services', href: '/services' },
                 { name: service.title, href: `/services/${service.slug}` },
             ]),
-            ...(service.faqs.length > 0 ? [{
+            ...(faqs.length > 0 ? [{
                 "@type": "FAQPage",
                 "@id": `${absoluteUrl(`/services/${service.slug}`)}#faq`,
-                "mainEntity": service.faqs.map((faq) => ({
+                "mainEntity": faqs.map((faq) => ({
                     "@type": "Question",
                     "name": faq.question,
                     "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
@@ -106,8 +125,7 @@ export default async function ServicePage({ params }: PageProps) {
             />
             <ServicePageClient
                 service={service}
-                market="GLOBAL"
-                alternateUrl={service.marketIN ? `/in/services/${service.slug}` : undefined}
+                market="IN"
             />
         </>
     );

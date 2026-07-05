@@ -49,7 +49,7 @@ export function deriveCountry(headerCountry: string, phone?: string, timezone?: 
     return undefined;
 }
 
-const HIGH_INTENT_PATHS = ['/services/', '/hire-ai-developers', '/ai-development-company-in-india', '/contact', '/in/services/'];
+const HIGH_INTENT_PATHS = ['/services/', '/hire-ai-developers', '/ai-development-company-in-india', '/contact'];
 const TARGET_MARKETS = new Set(['IN', 'US', 'GB', 'AU', 'CA', 'AE', 'SG']);
 
 export interface ScoreInput {
