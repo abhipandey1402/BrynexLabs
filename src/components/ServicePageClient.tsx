@@ -8,6 +8,7 @@ import SectionWrapper from './SectionWrapper';
 import Button from './Button';
 import ContactModal from './ContactModal';
 import TechMarquee from './TechMarquee';
+import Breadcrumbs from './Breadcrumbs';
 import { trackConversion_StartProjectClick, trackConversion_ServiceView } from '@/lib/tracking';
 
 interface ServicePageClientProps {
@@ -64,6 +65,9 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
         </>
     );
     const heroHook = inV?.hook ?? service.hook ?? service.description;
+    const answerSummary = market === 'IN' && service.marketIN?.hook
+        ? service.marketIN.hook
+        : service.description;
 
     /** Surface tint + density padding for a body section. */
     const sec = (key: string) => {
@@ -194,7 +198,7 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                         <div className="max-w-4xl mx-auto">
                             <div className="text-center mb-12">
                                 <SectionBadge label="The Solution" />
-                                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">How We Solve It</h2>
+                                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">How do we solve it?</h2>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 {service.solutions.map((solution, i) => (
@@ -279,7 +283,7 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                     <SectionWrapper className={sec('targetAudience')}>
                         <div className="text-center mb-12">
                             <SectionBadge label="Ideal Client" />
-                            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Who This Is For</h2>
+                            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Who is this service for?</h2>
                             <p className="text-foreground-secondary text-lg">We exclusively partner where we can guarantee massive ROI.</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -437,7 +441,7 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                     <SectionWrapper className={sec('techStack')}>
                         <div className="text-center mb-12">
                             <SectionBadge label="Tools & Stack" />
-                            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">The Tech Stack</h2>
+                            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Which stack do we use?</h2>
                             <p className="text-foreground-secondary max-w-2xl mx-auto">Modern tools for robust, scalable results.</p>
                         </div>
                         <TechMarquee items={service.techStack} />
@@ -480,7 +484,7 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                         <div className="max-w-4xl mx-auto">
                             <div className="text-center mb-12">
                                 <SectionBadge label="FAQ" />
-                                <h2 className="text-3xl md:text-4xl font-bold text-foreground">Frequently Asked Questions</h2>
+                            <h2 className="text-3xl md:text-4xl font-bold text-foreground">What do buyers ask before starting?</h2>
                             </div>
                             <div className="space-y-5">
                                 {faqs.map((faq, i) => (
@@ -504,6 +508,13 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
     return (
         <div className="pt-24 pb-16" style={themeStyle}>
             <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <Breadcrumbs
+                items={[
+                    { label: 'Home', href: '/' },
+                    { label: market === 'IN' ? 'India Services' : 'Services', href: market === 'IN' ? '/ai-development-company-in-india' : '/services' },
+                    { label: service.shortTitle ?? service.title },
+                ]}
+            />
 
             {/* ===== Hero ===== */}
             {theme.heroLayout === 'split' ? (
@@ -516,6 +527,10 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                             {service.badge && <SectionBadge label={service.badge} />}
                             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 tracking-tight leading-[1.1] animate-fade-in-up">{heroTitle}</h1>
                             <p className="text-lg md:text-xl text-foreground-secondary leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.15s' }}>{heroHook}</p>
+                            <div className="mt-8 rounded-2xl border border-accent/25 bg-accent/5 p-5 animate-fade-in-up" style={{ animationDelay: '0.22s' }}>
+                                <p className="mb-2 text-[11px] font-black uppercase tracking-[0.2em] text-accent">Direct answer</p>
+                                <p className="text-sm md:text-base leading-relaxed text-foreground-secondary">{answerSummary}</p>
+                            </div>
                             <div className="flex flex-col sm:flex-row items-start gap-4 mt-10 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                                 <Button onClick={() => openModal('Hero')} variant="primary" size="lg" className={primaryBtnClass}>
                                     {service.customCta?.buttonText ?? 'Start a project'}
@@ -541,6 +556,10 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                         {service.badge && <SectionBadge label={service.badge} />}
                         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-5 tracking-tight leading-[1.1] animate-fade-in-up">{heroTitle}</h1>
                         <p className="text-base md:text-lg text-foreground-secondary leading-relaxed max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.15s' }}>{heroHook}</p>
+                        <div className="mt-7 rounded-2xl border border-accent/25 bg-accent/5 p-5 text-left animate-fade-in-up" style={{ animationDelay: '0.22s' }}>
+                            <p className="mb-2 text-[11px] font-black uppercase tracking-[0.2em] text-accent">Direct answer</p>
+                            <p className="text-sm md:text-base leading-relaxed text-foreground-secondary">{answerSummary}</p>
+                        </div>
                         <div className="flex items-center justify-center gap-4 mt-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                             <Button onClick={() => openModal('Hero')} variant="primary" size="md" className={primaryBtnClass}>
                                 {service.customCta?.buttonText ?? 'Start a project'}
@@ -559,6 +578,10 @@ export default function ServicePageClient({ service, market = 'GLOBAL', alternat
                         {service.badge && <SectionBadge label={service.badge} />}
                         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-8 tracking-tight leading-[1.1] animate-fade-in-up">{heroTitle}</h1>
                         <p className="text-lg md:text-xl text-foreground-secondary leading-relaxed max-w-3xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.15s' }}>{heroHook}</p>
+                        <div className="mt-8 mx-auto max-w-3xl rounded-2xl border border-accent/25 bg-accent/5 p-5 text-left animate-fade-in-up" style={{ animationDelay: '0.22s' }}>
+                            <p className="mb-2 text-[11px] font-black uppercase tracking-[0.2em] text-accent">Direct answer</p>
+                            <p className="text-sm md:text-base leading-relaxed text-foreground-secondary">{answerSummary}</p>
+                        </div>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-10 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                             <Button onClick={() => openModal('Hero')} variant="primary" size="lg" className={primaryBtnClass}>
                                 {service.customCta?.buttonText ?? 'Start a project'}

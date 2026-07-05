@@ -60,6 +60,7 @@ function toPost(doc: BlogPostDoc): BlogPost {
         relatedServices: doc.relatedServices ?? [],
         techTags: doc.techTags ?? [],
         publishedAt: doc.publishedAt,
+        updatedAt: doc.updatedAt,
         status: doc.status,
         source: 'db',
     };

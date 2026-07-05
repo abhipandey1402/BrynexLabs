@@ -2,6 +2,24 @@ import 'server-only';
 import { services as staticServices, type ServiceDetail } from '@/data/services';
 import { getDbServices, getDbServiceBySlug } from './servicePageStore';
 
+function normalizeService(service: ServiceDetail): ServiceDetail {
+    if (service.slug !== 'saas-seo' || !service.pricing) return service;
+
+    // Public SEO correction for legacy CMS/static copies so the global page
+    // stays USD-first while retaining the India price for future IN variants.
+    return {
+        ...service,
+        pricing: {
+            ...service.pricing,
+            tiers: service.pricing.tiers.map((tier) => ({
+                ...tier,
+                price: tier.name === 'Growth Retainer' ? '$1,500+' : tier.price,
+                priceIN: tier.name === 'Growth Retainer' ? '₹50K' : tier.priceIN,
+            })),
+        },
+    };
+}
+
 /**
  * The full set of service slugs the site can render — the union of
  * code-defined services and any CMS-only pages. Used by generateStaticParams.
@@ -27,11 +45,12 @@ export async function getAllServiceSlugs(): Promise<string[]> {
 export async function getServiceBySlug(slug: string): Promise<ServiceDetail | undefined> {
     try {
         const dbService = await getDbServiceBySlug(slug);
-        if (dbService) return dbService;
+        if (dbService) return normalizeService(dbService);
     } catch (err) {
         console.error('[services] Failed to load service from MongoDB:', err);
     }
-    return staticServices.find((s) => s.slug === slug);
+    const staticService = staticServices.find((s) => s.slug === slug);
+    return staticService ? normalizeService(staticService) : undefined;
 }
 
 /** India-market variant resolver — only services that define marketIN qualify. */

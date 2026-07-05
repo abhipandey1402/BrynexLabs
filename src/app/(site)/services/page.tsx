@@ -11,7 +11,12 @@ export const metadata: Metadata = {
         title: 'AI Development, Custom Software & SaaS SEO Services | Brynex Labs',
         description: 'AI agent development, custom software & SaaS engineering, and revenue-focused SaaS SEO — for startups and enterprises in the USA & India.',
         url: '/services'
-    }
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'AI Development, Custom Software & SaaS SEO Services | Brynex Labs',
+        description: 'Explore Brynex Labs services for AI agents, custom software, SaaS platforms, and SaaS SEO across the USA and India.',
+    },
 };
 
 export default function ServicesIndex() {

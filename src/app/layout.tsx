@@ -20,16 +20,6 @@ export const metadata: Metadata = {
   description:
     'Brynex Labs is a software company building AI agents, automation, custom software & revenue-driving SaaS SEO for startups & enterprises in the USA & India.',
   applicationName: 'Brynex Labs',
-  keywords: [
-    'AI agent development company',
-    'AI development company',
-    'custom software development company',
-    'SaaS development company',
-    'AI automation agency',
-    'SaaS SEO agency',
-    'software development company India',
-    'hire AI developers',
-  ],
   openGraph: {
     title: 'Software Company for AI Agents, Automation & SaaS SEO | Brynex Labs',
     description:
