@@ -2,6 +2,26 @@ import { Metadata } from 'next';
 import SectionWrapper from '@/components/SectionWrapper';
 import ServiceCard from '@/components/ServiceCard';
 import { services } from '@/data/services';
+import { getItemListJsonLd, getWebPageJsonLd } from '@/lib/seo';
+
+const servicesJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+        getWebPageJsonLd({
+            type: 'CollectionPage',
+            name: 'AI Development, Custom Software & SaaS SEO Services',
+            description:
+                'Brynex Labs services: AI agents & automation, AI-native custom software & SaaS engineering, and revenue-focused SaaS SEO for startups and enterprises.',
+            path: '/services',
+        }),
+        getItemListJsonLd(
+            services.map((service) => ({
+                name: service.shortTitle ?? service.title,
+                href: `/services/${service.slug}`,
+            })),
+        ),
+    ],
+};
 
 export const metadata: Metadata = {
     title: 'AI Development, Custom Software & SaaS SEO Services | Brynex Labs',
@@ -22,6 +42,10 @@ export const metadata: Metadata = {
 export default function ServicesIndex() {
     return (
         <div className="pt-24 pb-16">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesJsonLd) }}
+            />
             <SectionWrapper>
                 <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 tracking-tight">

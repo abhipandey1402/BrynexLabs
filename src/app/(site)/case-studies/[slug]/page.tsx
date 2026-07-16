@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { caseStudies } from '@/data/case-studies';
 import CaseStudyClient from '@/components/CaseStudyClient';
+import { getBreadcrumbJsonLd, getCaseStudyArticleJsonLd, getCaseStudyImageUrl } from '@/lib/seo';
 
 interface PageProps {
     params: {
@@ -27,6 +28,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             description: project.seo.metaDescription,
             url: `/case-studies/${project.slug}`,
             type: 'article',
+            images: [{ url: getCaseStudyImageUrl(project.slug), width: 1200, height: 630, alt: project.title }],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: project.seo.title,
+            description: project.seo.metaDescription,
+            images: [getCaseStudyImageUrl(project.slug)],
         },
     };
 }
@@ -46,26 +54,14 @@ export default function CaseStudyPage({ params }: PageProps) {
 
     const jsonLd = {
         "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": project.title,
-        "description": project.summary,
-        "author": {
-            "@type": "Organization",
-            "name": "Brynex Labs",
-            "url": "https://brynex.in"
-        },
-        "publisher": {
-            "@type": "Organization",
-            "name": "Brynex Labs",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "https://brynex.in/apple-icon"
-            }
-        },
-        "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": `https://brynex.in/case-studies/${project.slug}`
-        }
+        "@graph": [
+            getCaseStudyArticleJsonLd(project),
+            getBreadcrumbJsonLd([
+                { name: 'Home', href: '/' },
+                { name: 'Case Studies', href: '/case-studies' },
+                { name: project.title, href: `/case-studies/${project.slug}` },
+            ]),
+        ],
     };
 
     return (

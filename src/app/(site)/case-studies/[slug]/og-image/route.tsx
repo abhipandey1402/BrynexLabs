@@ -1,15 +1,17 @@
 import { ImageResponse } from 'next/og';
-import { getPostBySlug } from '@/lib/blogService';
+import { caseStudies } from '@/data/case-studies';
 
-export const alt = 'Brynex Labs Engineering Blog';
-export const size = { width: 1200, height: 630 };
-export const contentType = 'image/png';
+// Plain route handler served at the stable URL /case-studies/<slug>/og-image,
+// referenced by og:image and Article.image. (See the blog og-image route for why
+// the opengraph-image file convention's hashed URL can't be used here.)
+export const dynamic = 'force-dynamic';
 
-export default async function OpenGraphImage({ params }: { params: { slug: string } }) {
-    const post = await getPostBySlug(params.slug);
-    const title = post?.title ?? 'Engineering Insights';
-    const category = post?.category ?? 'Blog';
-    const readTime = post?.readTime ?? '';
+const SIZE = { width: 1200, height: 630 };
+
+export function GET(_req: Request, { params }: { params: { slug: string } }) {
+    const study = caseStudies.find((s) => s.slug === params.slug);
+    const title = study?.title ?? 'Case Study';
+    const client = study?.clientName ?? 'Brynex Labs';
 
     return new ImageResponse(
         (
@@ -51,9 +53,9 @@ export default async function OpenGraphImage({ params }: { params: { slug: strin
                             letterSpacing: 3,
                         }}
                     >
-                        {category}
+                        Case Study
                     </span>
-                    {readTime && <span style={{ fontSize: 24, color: '#737373' }}>{readTime}</span>}
+                    <span style={{ fontSize: 24, color: '#a3a3a3' }}>{client}</span>
                 </div>
                 <div
                     style={{
@@ -62,7 +64,7 @@ export default async function OpenGraphImage({ params }: { params: { slug: strin
                         color: '#ffffff',
                         letterSpacing: -2,
                         lineHeight: 1.15,
-                        maxWidth: 1000,
+                        maxWidth: 1040,
                         display: 'flex',
                     }}
                 >
@@ -73,7 +75,7 @@ export default async function OpenGraphImage({ params }: { params: { slug: strin
                         <span style={{ fontSize: 40, fontWeight: 800, color: '#ffffff', letterSpacing: -1.5 }}>BRYNEX</span>
                         <span style={{ fontSize: 18, fontWeight: 700, color: '#c2410c', letterSpacing: 6, marginLeft: 12 }}>LABS</span>
                     </div>
-                    <span style={{ fontSize: 24, color: '#a3a3a3' }}>brynex.in/blog</span>
+                    <span style={{ fontSize: 24, color: '#a3a3a3' }}>brynex.in/case-studies</span>
                 </div>
                 <div
                     style={{
@@ -88,6 +90,6 @@ export default async function OpenGraphImage({ params }: { params: { slug: strin
                 />
             </div>
         ),
-        size,
+        SIZE,
     );
 }
