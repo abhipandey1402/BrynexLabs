@@ -4,9 +4,9 @@
  * call to your Super Admin Dashboard's REST/GraphQL API.
  */
 
-export type BlogCategory = 'AI' | 'SaaS' | 'Cloud' | 'DevOps' | 'Engineering';
+export type BlogCategory = 'AI' | 'SaaS' | 'Cloud' | 'DevOps' | 'Engineering' | 'SEO';
 
-export const BLOG_CATEGORIES: BlogCategory[] = ['AI', 'SaaS', 'Cloud', 'DevOps', 'Engineering'];
+export const BLOG_CATEGORIES: BlogCategory[] = ['AI', 'SaaS', 'Cloud', 'DevOps', 'Engineering', 'SEO'];
 
 export type BlogPostStatus = 'draft' | 'published';
 

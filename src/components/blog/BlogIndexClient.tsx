@@ -1,20 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BlogPost, BlogCategory } from '@/data/blog';
 import BlogCard from './BlogCard';
 
-const CATEGORIES: ('All' | BlogCategory)[] = ['All', 'AI', 'SaaS', 'Cloud', 'DevOps', 'Engineering'];
+const CATEGORIES: ('All' | BlogCategory)[] = ['All', 'AI', 'SaaS', 'Cloud', 'DevOps', 'Engineering', 'SEO'];
 
 /**
  * Client-side category filtering so switching topics is instant and animated —
  * no server round-trip, no scroll jump, no full-page re-render. The URL is kept
  * in sync via replaceState so filtered views stay shareable.
  */
-export default function BlogIndexClient({ posts, initialCategory }: { posts: BlogPost[]; initialCategory?: BlogCategory }) {
-    const [category, setCategory] = useState<'All' | BlogCategory>(
-        initialCategory && CATEGORIES.includes(initialCategory) ? initialCategory : 'All',
-    );
+export default function BlogIndexClient({ posts }: { posts: BlogPost[] }) {
+    const [category, setCategory] = useState<'All' | BlogCategory>('All');
+
+    // Initialize from the URL on mount so shared /blog?category=… links still
+    // work, without the server page having to read searchParams (which would
+    // force dynamic rendering and disable edge caching).
+    useEffect(() => {
+        const param = new URLSearchParams(window.location.search).get('category');
+        if (param && CATEGORIES.includes(param as 'All' | BlogCategory)) {
+            setCategory(param as 'All' | BlogCategory);
+        }
+    }, []);
 
     const select = (cat: 'All' | BlogCategory) => {
         setCategory(cat);

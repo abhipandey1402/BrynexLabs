@@ -1,10 +1,12 @@
-import { BlogCategory } from '@/data/blog';
 import { getAllPosts } from '@/lib/blogService';
 import BlogIndexClient from '@/components/blog/BlogIndexClient';
 import SectionWrapper from '@/components/SectionWrapper';
 import { Metadata } from 'next';
 
-// Revalidate periodically; the admin CMS also revalidates on-demand after every save.
+// Revalidate periodically; the admin CMS also revalidates on-demand after every
+// save. Category filtering is handled entirely client-side (BlogIndexClient) so
+// this page stays statically cacheable at the edge instead of being forced
+// dynamic by reading searchParams — the fix for /blog's slow, uncached response.
 export const revalidate = 300;
 
 export const metadata: Metadata = {
@@ -24,9 +26,8 @@ export const metadata: Metadata = {
     },
 };
 
-export default async function BlogIndex({ searchParams }: { searchParams: { category?: string } }) {
+export default async function BlogIndex() {
     const allPosts = await getAllPosts();
-    const currentCategory = searchParams.category as BlogCategory | undefined;
 
     return (
         <SectionWrapper className="pt-32 pb-24">
@@ -39,7 +40,7 @@ export default async function BlogIndex({ searchParams }: { searchParams: { cate
                 </p>
             </div>
 
-            <BlogIndexClient posts={allPosts} initialCategory={currentCategory} />
+            <BlogIndexClient posts={allPosts} />
         </SectionWrapper>
     );
 }

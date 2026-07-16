@@ -137,58 +137,70 @@ body {
 }
 
 /* ===== Section Animations ===== */
+/* Content is VISIBLE BY DEFAULT so no-JS agents, headless crawlers, and social
+   scrapers always receive fully-rendered content. The reveal-on-scroll effect is
+   layered on only when JS is present (html.js is set by an early inline script)
+   AND the user hasn't requested reduced motion. SectionWrapper adds .is-visible
+   via IntersectionObserver, with a fallback that reveals if IO is unsupported. */
 .section-animate {
-  opacity: 0;
-  transform: translateY(20px);
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
-.section-animate.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ===== Stagger Children ===== */
 .stagger-children>* {
-  opacity: 0;
-  transform: translateY(16px);
   transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
 
-.stagger-children.is-visible>*:nth-child(1) {
-  transition-delay: 0.05s;
-  opacity: 1;
-  transform: translateY(0);
-}
+@media (prefers-reduced-motion: no-preference) {
+  html.js .section-animate {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 
-.stagger-children.is-visible>*:nth-child(2) {
-  transition-delay: 0.1s;
-  opacity: 1;
-  transform: translateY(0);
-}
+  html.js .section-animate.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-.stagger-children.is-visible>*:nth-child(3) {
-  transition-delay: 0.15s;
-  opacity: 1;
-  transform: translateY(0);
-}
+  html.js .stagger-children>* {
+    opacity: 0;
+    transform: translateY(16px);
+  }
 
-.stagger-children.is-visible>*:nth-child(4) {
-  transition-delay: 0.2s;
-  opacity: 1;
-  transform: translateY(0);
-}
+  html.js .stagger-children.is-visible>*:nth-child(1) {
+    transition-delay: 0.05s;
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-.stagger-children.is-visible>*:nth-child(5) {
-  transition-delay: 0.25s;
-  opacity: 1;
-  transform: translateY(0);
-}
+  html.js .stagger-children.is-visible>*:nth-child(2) {
+    transition-delay: 0.1s;
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-.stagger-children.is-visible>*:nth-child(6) {
-  transition-delay: 0.3s;
-  opacity: 1;
-  transform: translateY(0);
+  html.js .stagger-children.is-visible>*:nth-child(3) {
+    transition-delay: 0.15s;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  html.js .stagger-children.is-visible>*:nth-child(4) {
+    transition-delay: 0.2s;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  html.js .stagger-children.is-visible>*:nth-child(5) {
+    transition-delay: 0.25s;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  html.js .stagger-children.is-visible>*:nth-child(6) {
+    transition-delay: 0.3s;
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ===== Reduced Motion ===== */

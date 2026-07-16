@@ -1,6 +1,35 @@
 import { Metadata } from 'next';
 import SectionWrapper from '@/components/SectionWrapper';
 import ContactForm from '@/components/ContactForm';
+import { getBreadcrumbJsonLd, getWebPageJsonLd, organizationRef, SITE_EMAIL } from '@/lib/seo';
+
+const contactJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+        getWebPageJsonLd({
+            type: 'ContactPage',
+            name: 'Contact Brynex Labs',
+            description:
+                'Get a free consultation for AI agent development, custom software, or SaaS SEO. Brynex Labs replies within 6 business hours.',
+            path: '/contact',
+        }),
+        {
+            ...organizationRef(),
+            '@type': ['Organization', 'ProfessionalService'],
+            contactPoint: {
+                '@type': 'ContactPoint',
+                contactType: 'sales',
+                email: SITE_EMAIL,
+                areaServed: ['US', 'IN', 'GB', 'AU', 'CA'],
+                availableLanguage: ['English', 'Hindi'],
+            },
+        },
+        getBreadcrumbJsonLd([
+            { name: 'Home', href: '/' },
+            { name: 'Contact', href: '/contact' },
+        ]),
+    ],
+};
 
 export const metadata: Metadata = {
     title: 'Contact Brynex Labs | Hire AI & Software Development Experts',
@@ -16,6 +45,10 @@ export const metadata: Metadata = {
 export default function ContactPage() {
     return (
         <div className="pt-32 pb-16">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(contactJsonLd) }}
+            />
             <SectionWrapper>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
                     {/* Content Column */}

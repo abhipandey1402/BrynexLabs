@@ -5,9 +5,9 @@ interface BreadcrumbItem {
     href?: string;
 }
 
-export default function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
+export default function Breadcrumbs({ items, className }: { items: BreadcrumbItem[]; className?: string }) {
     return (
-        <nav aria-label="Breadcrumb" className="mx-auto max-w-container px-6 md:px-8">
+        <nav aria-label="Breadcrumb" className={className ?? 'mx-auto max-w-container px-6 md:px-8'}>
             <ol className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-foreground-muted">
                 {items.map((item, index) => {
                     const isLast = index === items.length - 1;

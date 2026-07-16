@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { services } from '@/data/services';
 import { caseStudies } from '@/data/case-studies';
+import { getAllAuthorSlugs } from '@/data/authors';
 import { getAllPosts } from '@/lib/blogService';
 
 // Computed per request so CMS-published articles appear immediately for crawlers.
@@ -61,9 +62,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const caseStudyMappings = caseStudies.map((study) => ({
     url: `${baseUrl}/case-studies/${study.slug}`,
-    lastModified: new Date('2026-06-16'),
+    lastModified: new Date(study.updatedAt ?? study.publishedAt ?? '2026-06-16'),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
+  }));
+
+  const authorMappings = getAllAuthorSlugs().map((slug) => ({
+    url: `${baseUrl}/authors/${slug}`,
+    lastModified: new Date('2026-07-16'),
+    changeFrequency: 'monthly' as const,
+    priority: 0.5,
   }));
 
   const posts = await getAllPosts();
@@ -74,5 +82,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticMappings, ...landingMappings, ...serviceMappings, ...caseStudyMappings, ...blogMappings];
+  return [...staticMappings, ...landingMappings, ...serviceMappings, ...caseStudyMappings, ...authorMappings, ...blogMappings];
 }

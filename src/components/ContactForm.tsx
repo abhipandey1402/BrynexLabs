@@ -1,10 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { api } from '@/lib/api';
 import { getAttribution, getEngagement } from '@/lib/attribution';
-import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
+
+// Load the country/flag picker client-side only, so its large country dataset
+// and flag assets don't bloat the initial payload or INP of the conversion page.
+const PhoneInput = dynamic(() => import('react-international-phone').then((mod) => mod.PhoneInput), {
+    ssr: false,
+    loading: () => (
+        <input
+            type="tel"
+            disabled
+            placeholder="Loading…"
+            className="w-full px-4 py-2.5 rounded-lg bg-background-secondary border border-border text-foreground-muted"
+        />
+    ),
+});
 
 interface ContactFormProps {
     onSuccess?: () => void;
@@ -104,7 +118,7 @@ export default function ContactForm({ onSuccess, className = '', isModal = false
                     id="name"
                     required
                     className="w-full px-4 py-2.5 rounded-lg bg-background-secondary border border-border focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all text-foreground placeholder:text-foreground-muted"
-                    placeholder="John Doe"
+                    placeholder="Your full name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />

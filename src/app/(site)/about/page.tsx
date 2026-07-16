@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import SectionWrapper from '@/components/SectionWrapper';
 import Link from 'next/link';
+import { authors } from '@/data/authors';
+import { absoluteUrl, getBreadcrumbJsonLd, getPersonJsonLd, getWebPageJsonLd, organizationRef } from '@/lib/seo';
 
 export const metadata: Metadata = {
     title: 'About Brynex Labs | AI & Software Development Company in India',
@@ -59,14 +61,42 @@ const values = [
 
 const stats = [
     { label: 'Avg. Experience', value: '4+ Years' },
-    { label: 'Project Success', value: '100%' },
-    { label: 'Senior Engineers', value: '10+' },
-    { label: 'Global Clients', value: '25+' },
+    { label: 'On-Time Delivery', value: '95%' },
+    { label: 'Senior Engineers', value: '5+' },
+    { label: 'Clients Worldwide', value: '5+' },
 ];
+
+const aboutJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+        getWebPageJsonLd({
+            type: 'AboutPage',
+            name: 'About Brynex Labs',
+            description:
+                'Brynex Labs is a senior-led AI and software development company based in India, serving startups and enterprises across the USA, UK, Australia, and India.',
+            path: '/about',
+        }),
+        {
+            ...organizationRef(),
+            '@type': ['Organization', 'ProfessionalService'],
+            foundingDate: '2023',
+            employee: authors.map((a) => ({ '@id': `${absoluteUrl(`/authors/${a.slug}`)}#person` })),
+        },
+        ...authors.map((a) => getPersonJsonLd(a)),
+        getBreadcrumbJsonLd([
+            { name: 'Home', href: '/' },
+            { name: 'About', href: '/about' },
+        ]),
+    ],
+};
 
 export default function AboutPage() {
     return (
         <div className="pt-32 pb-24 overflow-hidden">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
+            />
             <SectionWrapper>
                 <div className="max-w-6xl mx-auto">
                     {/* Hero Section */}
@@ -194,6 +224,32 @@ export default function AboutPage() {
                                     <span className="text-5xl font-black italic tracking-tighter">B·L</span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Team — named humans for E-E-A-T */}
+                    <div className="mb-32">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl font-bold text-foreground mb-4 tracking-tight">The People Behind Brynex</h2>
+                            <p className="text-foreground-secondary text-lg max-w-2xl mx-auto">A senior-led collective — the people who scope your project are the ones who ship it.</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                            {authors.map((person) => (
+                                <Link
+                                    key={person.slug}
+                                    href={`/authors/${person.slug}`}
+                                    className="group flex items-start gap-5 p-8 rounded-3xl bg-background-secondary border border-border hover:border-accent/40 transition-all duration-300"
+                                >
+                                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-accent-gradient text-xl font-black text-white" aria-hidden="true">
+                                        {person.name.split(' ').map((n) => n[0]).join('')}
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-bold text-foreground group-hover:text-accent transition-colors">{person.name}</h3>
+                                        <p className="text-sm font-semibold text-accent mb-3">{person.jobTitle}</p>
+                                        <p className="text-sm text-foreground-secondary leading-relaxed">{person.bio}</p>
+                                    </div>
+                                </Link>
+                            ))}
                         </div>
                     </div>
 
