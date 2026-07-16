@@ -27,6 +27,13 @@ export default function SectionWrapper({
         const el = sectionRef.current;
         if (!el) return;
 
+        // Failsafe: if IntersectionObserver is unavailable (old/headless agents),
+        // reveal immediately so content is never left in the hidden state.
+        if (typeof IntersectionObserver === 'undefined') {
+            el.classList.add('is-visible');
+            return;
+        }
+
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {

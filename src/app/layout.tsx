@@ -66,6 +66,11 @@ export default function RootLayout({
       className={`${inter.className} bg-background text-foreground antialiased selection:bg-accent selection:text-white transition-colors duration-300`}
       suppressHydrationWarning
     >
+        {/* Flag JS availability before paint so scroll-reveal only hides content
+            when it can guarantee a reveal. No-JS agents/crawlers keep it visible. */}
+        <script
+          dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
