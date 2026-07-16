@@ -27,6 +27,15 @@ const LLMS_TXT = `# Brynex Labs
 - [Case Studies](https://brynex.in/case-studies): Real project outcomes, including 1M+ MAU SaaS scaling and healthcare data platforms.
 - [Blog](https://brynex.in/blog): Guides on AI agents, RAG, SaaS architecture, cloud engineering, and SaaS SEO.
 - [About](https://brynex.in/about): Senior-led engineering collective based in India, working globally.
+
+## Authors
+
+- [Abhi Pandey](https://brynex.in/authors/abhi-pandey): Senior Software Engineer — AI agents, RAG, software architecture, SaaS, cloud, DevOps.
+- [Shashi Tiwari](https://brynex.in/authors/shashi-tiwari): Head of SEO — SaaS SEO, technical SEO, and generative engine optimization (GEO).
+
+## Full reference
+
+- [llms-full.txt](https://brynex.in/llms-full.txt): Expanded company, service, pricing, and FAQ reference for AI grounding.
 `;
 
 export function GET() {
