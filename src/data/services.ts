@@ -609,8 +609,8 @@ export const services: ServiceDetail[] = [
         },
         marketIN: {
             seo: {
-                title: 'Custom Software Development Company in India | MVP from ₹99,999',
-                metaDescription: 'Custom software & SaaS development in India — MVPs from ₹99,999, multi-tenant SaaS from ₹2,49,999. Senior engineers, fixed-scope quotes, GST invoicing.',
+                title: 'Custom Software Development Company in India | AI-Native',
+                metaDescription: 'AI-native custom software & SaaS development in India — MVPs from ₹99,999, multi-tenant SaaS from ₹2,49,999. Senior engineers, fixed-scope quotes, GST invoicing.',
             },
             hook: 'Your product, engineered for scale. SaaS platforms, web & mobile apps, and cloud infrastructure for Indian startups and businesses — senior engineers, global quality, Indian-market pricing.',
             pricingSubheading: 'Honest Indian-market pricing — fixed scope, weekly demos, GST invoice included:',

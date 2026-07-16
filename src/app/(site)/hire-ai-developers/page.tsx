@@ -26,7 +26,7 @@ const skills = [
 const engagementModels = [
     { title: 'Dedicated AI Developer', description: 'A senior AI engineer working exclusively on your product, integrated into your team, tools, and standups — delivered under our existing AI engineering services.', detail: 'From $3,000/month' },
     { title: 'Dedicated AI Team', description: 'A cross-functional pod — AI engineer, full-stack developer, and tech lead — for end-to-end delivery of our agentic AI and software engineering services.', detail: 'Custom quote' },
-    { title: 'Fixed-Scope AI Project', description: 'A clearly scoped agent, RAG pipeline, or AI feature delivered at a fixed price with milestones through our Agentic AI & Intelligent Automation service.', detail: 'From $4,999' },
+    { title: 'Fixed-Scope AI Project', description: 'A clearly scoped agent, RAG pipeline, or AI feature delivered at a fixed price with milestones through our Agentic AI & Intelligent Automation service.', detail: 'From ₹49,999' },
 ];
 
 const faqs = [

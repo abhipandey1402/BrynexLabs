@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import SectionWrapper from '@/components/SectionWrapper';
+import { getBreadcrumbJsonLd, getWebPageJsonLd, organizationRef } from '@/lib/seo';
 
 export const metadata: Metadata = {
     title: 'AI Development Company in India | Brynex Labs',
@@ -22,16 +23,16 @@ const offerings = [
 ];
 
 const reasons = [
-    { title: '40–60% Lower Cost, Same Quality', description: 'Senior AI engineers in India deliver at $25–$45/hour versus $120–$250/hour in the US — with identical tooling, code review standards, and production rigor.' },
-    { title: 'Senior-Led Engineering Collective', description: '10+ senior engineers with 4+ years average experience. No juniors learning on your budget, no bloated management layers between you and your team.' },
+    { title: '40–60% Lower Cost, Same Quality', description: 'Senior AI engineers in India deliver at 40–60% below comparable US agency rates — with identical tooling, code review standards, and production rigor.' },
+    { title: 'Senior-Led Engineering Collective', description: '5+ senior engineers with 4+ years average experience. No juniors learning on your budget, no bloated management layers between you and your team.' },
     { title: 'US & Global Timezone Coverage', description: 'Guaranteed overlap with US Eastern and Pacific hours, async-first daily updates, and US-style contracts with NDA and full IP transfer.' },
     { title: 'Production AI, Not Demos', description: 'Evaluation suites, guardrails, observability, and cost optimization are part of every AI build — so what we ship keeps working after launch.' },
 ];
 
 const faqs = [
     { q: 'Why hire an AI development company in India?', a: 'India hosts nearly 60% of global IT outsourcing with a 5.9-million-strong tech workforce. Companies in the USA and Europe typically save 40–60% on engineering costs while accessing senior AI talent experienced with LangChain, RAG, and production LLM systems.' },
-    { q: 'How much does AI development cost in India?', a: 'With Brynex Labs, a focused AI agent pilot starts at $4,999, production agent systems at $12,999, and a production-ready MVP at $9,999. Dedicated senior AI engineers start near $3,000/month — roughly half of comparable US rates.' },
-    { q: 'Do you work with clients in the USA, UK, and Australia?', a: 'Yes — most of our clients are international. We provide guaranteed timezone overlap, USD invoicing, US-style contracts with NDA, and full intellectual property transfer on every engagement.' },
+    { q: 'How much does AI development cost in India?', a: 'With Brynex Labs, a focused AI agent pilot starts at ₹49,999, production agent systems at ₹1,49,999, and a production-ready MVP at ₹99,999 — GST extra, milestone-billed in INR. For international clients who prefer a dedicated engineer, staff-augmentation starts near $3,000/month.' },
+    { q: 'Do you work with clients in the USA, UK, and Australia?', a: 'Yes — most of our clients are international. We provide guaranteed timezone overlap, GST-compliant INR invoicing for India and USD invoicing for international clients, US-style contracts with NDA, and full intellectual property transfer on every engagement.' },
     { q: 'Which AI technologies do you specialize in?', a: 'LangChain, LangGraph, CrewAI, and LlamaIndex for orchestration; OpenAI GPT, Anthropic Claude, and Gemini plus self-hosted open-source models; Pinecone, Qdrant, and pgvector for RAG; LangSmith for evaluation and observability.' },
     { q: 'How do we start a project with Brynex Labs?', a: 'Book a free consultation. Within 48–72 hours we run a discovery call, map your use case and ROI, and send a fixed-scope proposal — you only commit once the scope and price are clear.' },
 ];
@@ -39,28 +40,30 @@ const faqs = [
 const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
+        getWebPageJsonLd({
+            name: 'AI Development Company in India',
+            description: 'A top AI development company in India building AI agents, LLM apps, RAG systems & custom software for clients in the USA, UK, Australia & India.',
+            path: '/ai-development-company-in-india',
+        }),
         {
-            "@type": ["Organization", "ProfessionalService"],
-            "name": "Brynex Labs",
-            "@id": "https://brynex.in/#organization",
+            "@type": "Service",
+            "@id": "https://brynex.in/ai-development-company-in-india#service",
+            "name": "AI Development Company in India",
+            "serviceType": "AI agent development, LLM applications, RAG systems, and custom software",
             "description": "AI development company in India building AI agents, LLM applications, RAG systems, and custom software for clients in the USA, UK, Australia, and India.",
-            "url": "https://brynex.in",
-            "email": "hello@brynex.in",
-            "address": { "@type": "PostalAddress", "addressCountry": "IN" },
+            "provider": organizationRef(),
             "areaServed": [
                 { "@type": "Country", "name": "United States" },
                 { "@type": "Country", "name": "India" },
                 { "@type": "Country", "name": "United Kingdom" },
                 { "@type": "Country", "name": "Australia" }
-            ]
+            ],
+            "url": "https://brynex.in/ai-development-company-in-india"
         },
-        {
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://brynex.in" },
-                { "@type": "ListItem", "position": 2, "name": "AI Development Company in India", "item": "https://brynex.in/ai-development-company-in-india" }
-            ]
-        },
+        getBreadcrumbJsonLd([
+            { name: 'Home', href: '/' },
+            { name: 'AI Development Company in India', href: '/ai-development-company-in-india' },
+        ]),
         {
             "@type": "FAQPage",
             "mainEntity": faqs.map((faq) => ({
