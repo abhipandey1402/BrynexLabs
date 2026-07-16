@@ -17,6 +17,10 @@ export interface CaseStudy {
         author: string;
         role: string;
     };
+    /** ISO date the case study was published — powers Article datePublished. */
+    publishedAt?: string;
+    /** ISO date of the last meaningful revision — powers Article dateModified. */
+    updatedAt?: string;
 }
 
 export const caseStudies: CaseStudy[] = [
@@ -48,9 +52,11 @@ export const caseStudies: CaseStudy[] = [
         ],
         testimonial: {
             quote: 'Brynex Labs didn\'t just build a tool; they engineered a critical piece of our infrastructure that saves our team hours every day.',
-            author: 'John Doe',
-            role: 'Product Lead, Echopad',
+            author: 'Product Lead',
+            role: 'Echopad',
         },
+        publishedAt: '2026-02-18',
+        updatedAt: '2026-06-16',
     },
     {
         slug: 'enterprise-saas-scalability-overhaul',
@@ -80,8 +86,10 @@ export const caseStudies: CaseStudy[] = [
         ],
         testimonial: {
             quote: 'The transition was seamless. We went from being afraid to ship code to deploying multiple times a day with complete confidence.',
-            author: 'Sarah Smith',
-            role: 'VP of Engineering, CloudScale',
+            author: 'VP of Engineering',
+            role: 'CloudScale Solutions',
         },
+        publishedAt: '2026-03-25',
+        updatedAt: '2026-06-16',
     },
 ];

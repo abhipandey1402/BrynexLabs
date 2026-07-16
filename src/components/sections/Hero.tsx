@@ -78,15 +78,15 @@ export default function Hero() {
                     
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-12">
                         <div className="flex flex-col items-center">
-                            <span className="text-xl md:text-2xl font-bold text-foreground">50+</span>
+                            <span className="text-xl md:text-2xl font-bold text-foreground">10+</span>
                             <span className="text-[13px] text-foreground-secondary mt-1 tracking-tight">Projects Delivered</span>
                         </div>
                         <div className="flex flex-col items-center border-t sm:border-t-0 sm:border-x border-border/30 py-6 sm:py-0">
-                            <span className="text-xl md:text-2xl font-bold text-foreground">98%</span>
+                            <span className="text-xl md:text-2xl font-bold text-foreground">95%</span>
                             <span className="text-[13px] text-foreground-secondary mt-1 tracking-tight">Client Retention</span>
                         </div>
                         <div className="flex flex-col items-center">
-                            <span className="text-xl md:text-2xl font-bold text-foreground">3x Faster</span>
+                            <span className="text-xl md:text-2xl font-bold text-foreground">2x Faster</span>
                             <span className="text-[13px] text-foreground-secondary mt-1 tracking-tight">Avg. Delivery Speed</span>
                         </div>
                     </div>

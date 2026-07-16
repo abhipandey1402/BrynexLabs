@@ -1,5 +1,6 @@
 import { getPostBySlug, getAllPosts } from '@/lib/blogService';
 import { services } from '@/data/services';
+import { getAuthorForCategory } from '@/data/authors';
 import { notFound } from 'next/navigation';
 import SectionWrapper from '@/components/SectionWrapper';
 import ArticleProse from '@/components/blog/ArticleProse';
@@ -22,6 +23,7 @@ export const dynamicParams = true;
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
     const post = await getPostBySlug(params.slug);
     if (!post) return {};
+    const author = getAuthorForCategory(post.category);
     return {
         title: `${post.title} | Brynex Labs`,
         description: post.seoDescription,
@@ -33,8 +35,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
             type: 'article',
             publishedTime: getPostDate(post),
             modifiedTime: getPostModifiedDate(post),
-            authors: [post.author],
-            images: [{ url: getBlogImageUrl(post), alt: post.title }],
+            authors: [author.name],
+            images: [{ url: getBlogImageUrl(post), width: 1200, height: 630, alt: post.title }],
             ...(post.techTags && post.techTags.length > 0 ? { tags: post.techTags } : {}),
         },
         twitter: {
@@ -59,6 +61,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     if (!post) {
         notFound();
     }
+
+    const author = getAuthorForCategory(post.category);
 
     const relatedServices = (post.relatedServices ?? [])
         .map((slug) => services.find((s) => s.slug === slug))
@@ -124,7 +128,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                     </h1>
 
                     <div className="flex items-center justify-center gap-4 text-foreground-secondary font-semibold text-sm md:text-base">
-                        <span className="text-foreground">{post.author}</span>
+                        <Link href={`/authors/${author.slug}`} className="text-foreground hover:text-accent transition-colors">
+                            {author.name}
+                        </Link>
                         <span className="w-1.5 h-1.5 rounded-full bg-border/80" />
                         <span>{post.date}</span>
                         {post.updatedAt && post.updatedAt !== post.publishedAt && (
@@ -162,6 +168,23 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                             </div>
                         </div>
                     )}
+
+                    {/* Author bio — named human for E-E-A-T + AI citation */}
+                    <div className="mt-16 pt-8 border-t border-border/40">
+                        <div className="flex flex-col sm:flex-row items-start gap-5 rounded-2xl border border-border bg-background-card p-6 md:p-8">
+                            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-accent-gradient text-lg font-black text-white" aria-hidden="true">
+                                {author.name.split(' ').map((n) => n[0]).join('')}
+                            </div>
+                            <div>
+                                <p className="text-xs font-black uppercase tracking-widest text-accent mb-1">Written by</p>
+                                <Link href={`/authors/${author.slug}`} className="text-lg font-extrabold text-foreground hover:text-accent transition-colors">
+                                    {author.name}
+                                </Link>
+                                <p className="text-sm font-semibold text-foreground-secondary">{author.jobTitle}</p>
+                                <p className="mt-3 text-sm leading-relaxed text-foreground-secondary">{author.bio}</p>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Related services (CMS-mapped) */}
                     {relatedServices.length > 0 && (
