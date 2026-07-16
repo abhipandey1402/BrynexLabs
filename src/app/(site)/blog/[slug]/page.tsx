@@ -107,38 +107,44 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             />
 
             {/* Header Layer */}
-            <SectionWrapper className="mb-12 border-b border-border/30 pb-16">
-                <Breadcrumbs items={breadcrumbItems} />
-                <div className="max-w-4xl mx-auto text-center animate-fade-in-up">
-                    <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-accent hover:text-accent-light transition-colors mb-10">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+            <SectionWrapper className="mb-12 border-b border-border/30 pb-12">
+                <div className="max-w-3xl mx-auto">
+                    {/* Back to Blog — top-left, primary back affordance */}
+                    <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-accent hover:text-accent-light transition-colors">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                             <path d="M19 12H5M12 19l-7-7 7-7" />
                         </svg>
                         Back to Blog
                     </Link>
 
-                    <div className="flex items-center justify-center gap-3 mb-8 text-xs font-black uppercase tracking-widest">
-                        <span className="text-accent bg-accent/10 px-4 py-1.5 rounded-full border border-accent/20">{post.category}</span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-border" />
-                        <span className="text-foreground-muted">{post.readTime}</span>
-                    </div>
+                    {/* Breadcrumb — small + muted, left-aligned under the back link */}
+                    <Breadcrumbs items={breadcrumbItems} className="mt-5" />
 
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tight mb-10 leading-[1.15]">
-                        {post.title}
-                    </h1>
+                    {/* Centered article header */}
+                    <div className="text-center mt-8 animate-fade-in-up">
+                        <div className="flex items-center justify-center gap-3 mb-6 text-xs font-black uppercase tracking-widest">
+                            <span className="text-accent bg-accent/10 px-4 py-1.5 rounded-full border border-accent/20">{post.category}</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-border" />
+                            <span className="text-foreground-muted">{post.readTime}</span>
+                        </div>
 
-                    <div className="flex items-center justify-center gap-4 text-foreground-secondary font-semibold text-sm md:text-base">
-                        <Link href={`/authors/${author.slug}`} className="text-foreground hover:text-accent transition-colors">
-                            {author.name}
-                        </Link>
-                        <span className="w-1.5 h-1.5 rounded-full bg-border/80" />
-                        <span>{post.date}</span>
-                        {post.updatedAt && post.updatedAt !== post.publishedAt && (
-                            <>
-                                <span className="w-1.5 h-1.5 rounded-full bg-border/80" />
-                                <span>Updated {new Intl.DateTimeFormat('en', { month: 'short', day: '2-digit', year: 'numeric' }).format(new Date(post.updatedAt))}</span>
-                            </>
-                        )}
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground tracking-tight mb-6 leading-[1.14]">
+                            {post.title}
+                        </h1>
+
+                        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-foreground-secondary font-semibold text-sm">
+                            <Link href={`/authors/${author.slug}`} className="text-foreground hover:text-accent transition-colors">
+                                {author.name}
+                            </Link>
+                            <span className="w-1.5 h-1.5 rounded-full bg-border/80" />
+                            <span>{post.date}</span>
+                            {post.updatedAt && post.updatedAt !== post.publishedAt && (
+                                <>
+                                    <span className="w-1.5 h-1.5 rounded-full bg-border/80" />
+                                    <span>Updated {new Intl.DateTimeFormat('en', { month: 'short', day: '2-digit', year: 'numeric' }).format(new Date(post.updatedAt))}</span>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
             </SectionWrapper>

@@ -1,5 +1,6 @@
 import 'server-only';
 import { BlogPost, blogPosts as staticPosts } from '@/data/blog';
+import { getAuthorForCategory } from '@/data/authors';
 import { getDbPosts, getDbPostBySlug } from './blogStore';
 
 function postTime(post: BlogPost): number {
@@ -8,18 +9,26 @@ function postTime(post: BlogPost): number {
 }
 
 function normalizePost(post: BlogPost): BlogPost {
-    if (post.slug !== 'ai-agents-in-business-practical-guide') return post;
+    // Canonical author by topic — overrides legacy free-text bylines
+    // ("Brynex Labs Engineering", etc.) everywhere they'd otherwise surface:
+    // the visible byline, the serialized RSC/flight payload, and schema.
+    const authorName = getAuthorForCategory(post.category).name;
+    let normalized: BlogPost = post.author === authorName ? post : { ...post, author: authorName };
 
-    // Public SEO correction for legacy CMS/static copies; the source record can
-    // still be edited later from the admin without blocking the audit fix.
-    return {
-        ...post,
-        title: post.title.replace('A Practical Guide for 2025', 'A Practical Guide for 2026'),
-        content: post.content.replace(
-            'In 2025, the enterprise demand has radically shifted',
-            'In 2026, the enterprise demand has radically shifted',
-        ),
-    };
+    if (normalized.slug === 'ai-agents-in-business-practical-guide') {
+        // Public SEO correction for legacy CMS/static copies; the source record
+        // can still be edited later from the admin without blocking the fix.
+        normalized = {
+            ...normalized,
+            title: normalized.title.replace('A Practical Guide for 2025', 'A Practical Guide for 2026'),
+            content: normalized.content.replace(
+                'In 2025, the enterprise demand has radically shifted',
+                'In 2026, the enterprise demand has radically shifted',
+            ),
+        };
+    }
+
+    return normalized;
 }
 
 /** Published posts from MongoDB merged with the code-defined posts, newest first. */

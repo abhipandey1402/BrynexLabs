@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { BlogPost } from '@/data/blog';
+import { getAuthorForCategory } from '@/data/authors';
 
 export default function BlogCard({ post }: { post: BlogPost }) {
+    const author = getAuthorForCategory(post.category);
     return (
         <Link href={`/blog/${post.slug}`} className="group block h-full">
             <div className="bg-background-card border border-border/80 hover:border-accent/50 rounded-[1.5rem] p-6 sm:p-8 h-full flex flex-col transition-all duration-300 hover:shadow-[0_20px_40px_rgba(194,65,12,0.08)] hover:-translate-y-1">
@@ -17,8 +19,13 @@ export default function BlogCard({ post }: { post: BlogPost }) {
                     {post.excerpt}
                 </p>
                 <div className="flex items-center justify-between mt-auto pt-5 border-t border-border/40">
-                    <span className="text-sm font-semibold text-foreground">{post.author}</span>
-                    <span className="text-xs font-medium text-foreground-muted">{post.date}</span>
+                    <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-gradient text-[10px] font-black text-white" aria-hidden="true">
+                            {author.name.split(' ').map((n) => n[0]).join('')}
+                        </span>
+                        <span className="truncate text-sm font-semibold text-foreground">{author.name}</span>
+                    </div>
+                    <span className="shrink-0 text-xs font-medium text-foreground-muted">{post.date}</span>
                 </div>
             </div>
         </Link>

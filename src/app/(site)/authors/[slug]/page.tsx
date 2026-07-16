@@ -69,6 +69,7 @@ export default async function AuthorPage({ params }: PageProps) {
             />
             <SectionWrapper>
                 <Breadcrumbs
+                    className="max-w-3xl mx-auto mb-10"
                     items={[
                         { label: 'Home', href: '/' },
                         { label: 'Blog', href: '/blog' },
