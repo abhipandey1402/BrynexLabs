@@ -1,128 +1,105 @@
 export default {
     slug: 'ai-agent-readiness-checklist',
-    title: 'Is Your Business Ready for AI Agents? A 12-Point Readiness Checklist',
-    excerpt: 'Most failed agent projects were doomed before a line of code was written. Score your business against 12 concrete checks — data, systems, people, and economics — and find out exactly what to fix before you build.',
-    author: 'Brynex Labs Engineering',
+    title: 'AI Agent Readiness Checklist: 12 Things Your Business Needs Before You Build',
+    excerpt: 'Your business is ready for AI agents when you have a specific high-volume workflow, clean accessible data, system APIs the agent can act through, clear decision boundaries, and a named owner. This 12-point checklist shows how to assess readiness before you spend a rupee on a build.',
+    author: 'Abhi Pandey',
     category: 'AI',
-    seoDescription: 'AI agent readiness checklist: 12 concrete checks across data, systems, people, and economics — score yourself and know exactly what to fix before building.',
-    relatedServices: ['ai-agents-automation', 'ai-native-software-engineering'],
-    techTags: ['LangChain', 'n8n', 'PostgreSQL', 'MCP', 'Python'],
+    seoDescription: 'An AI agent readiness checklist: the 12 things your business needs in place — data, systems, governance, ownership — before you build and deploy an AI agent.',
+    relatedServices: ['ai-agents-automation'],
+    techTags: ['RAG', 'LangChain', 'vector database', 'data readiness'],
     content: `
-        <p>The pressure to "do something with AI agents" is now coming from every direction — your board, your competitors' press releases, your own engineers. 34% of CEOs name AI their top strategic theme according to Gartner's 2026 CEO survey, and 88% of organizations plan budget increases for agentic capabilities. The money is moving whether you're ready or not.</p>
-        <p>Here's the uncomfortable part: most agent projects that fail were doomed before anyone wrote a prompt. The agent didn't hallucinate its way to failure — it was handed undocumented processes, systems with no APIs, no owner, and no baseline to measure against. The technology took the blame for a readiness problem.</p>
-        <p>This checklist is the assessment we wish every prospective client ran before calling us. Twelve checks across four areas: Data, Systems, People, and Economics. Score one point for every check you pass, be honest, and you'll know in twenty minutes whether to build now or fix foundations first.</p>
+        <p>Most businesses are closer to ready than they think for a narrow AI agent, and further than they think for an ambitious one. The honest test is short: do you have a specific, repetitive, high-volume workflow, the data and system access an agent needs to do it, and a named person accountable for the outcome? If the answer is yes, you can run a useful pilot in weeks. If it's no, no model or framework will rescue the project.</p>
 
-        <h2>How to Score Yourself</h2>
-        <p>For each of the 12 checks below, give yourself one point only if the "what good looks like" description is true today — not after the project you've been meaning to do. Half-credit is self-deception; round down. Pick one specific workflow you'd want to automate (a real one, like refund processing or lead qualification) and score against that workflow, not your company in the abstract.</p>
+        <p>Readiness is not a feeling. According to Gartner (2025), more than 40% of agentic AI projects will be canceled by the end of 2027 &mdash; blamed on unclear value, rising costs, and weak risk controls. Most of those are readiness failures, decided before anyone writes a line of code. This 12-point checklist is how you land in the surviving 60%.</p>
 
-        <h2>Data: Can an Agent Learn Your Business?</h2>
-        <p>Agents are only as good as the knowledge and process definitions they're grounded in. This is where most low scores come from.</p>
-        <h3>1. The process is documented — actually written down</h3>
-        <p>An agent automating a workflow needs the workflow defined: steps, decision rules, exceptions, and what "done" means. If the process lives in two senior employees' heads, you'll spend the first month of any engagement extracting it.</p>
+        <h2>Key takeaways</h2>
         <ul>
-            <li><strong>What good looks like:</strong> a current SOP or runbook a new hire could follow without asking questions, including the edge cases.</li>
-            <li><strong>Red flag:</strong> "Sarah handles those — she just knows." If Sarah's judgment can't be articulated, it can't be automated.</li>
-        </ul>
-        <h3>2. Your knowledge is accessible, not trapped</h3>
-        <p>Retrieval-augmented agents answer from your documents — policies, past tickets, product specs. That only works if the documents exist somewhere a pipeline can reach: a wiki, a drive, a ticketing system with an export, not a graveyard of email threads and screenshots.</p>
-        <ul>
-            <li><strong>What good looks like:</strong> the answers your team gives customers can be traced to a source document that's reasonably current.</li>
-            <li><strong>Red flag:</strong> three conflicting versions of the pricing policy, and nobody is sure which one is real.</li>
-        </ul>
-        <h3>3. Your structured data is clean enough to act on</h3>
-        <p>If the agent will look up orders, customers, or invoices, those records need consistent identifiers and tolerable hygiene. Perfect data isn't required — agents handle ambiguity better than scripts do — but an agent acting on records where 30% of fields are stale will confidently do the wrong thing.</p>
-        <ul>
-            <li><strong>What good looks like:</strong> one system of record per entity, and your team trusts it enough to make decisions from it.</li>
-            <li><strong>Red flag:</strong> customer data lives in four tools and reconciliation means a quarterly spreadsheet ritual.</li>
+            <li><strong>Readiness beats model choice.</strong> Gartner (2025) expects over 40% of agentic AI projects to be canceled by the end of 2027 &mdash; and most causes are readiness gaps, not technology.</li>
+            <li><strong>Governance is the common blind spot.</strong> Only about 21% of organizations have mature governance for agentic AI, per Deloitte (2026), meaning roughly four in five deploy without it.</li>
+            <li><strong>Data is the real prerequisite.</strong> An agent is only as good as the source of truth it can read; clean, accessible data is the strongest predictor of a pilot that ships.</li>
+            <li><strong>Start narrow.</strong> One specific, high-volume, rules-heavy workflow with a measurable baseline beats a broad "AI strategy."</li>
+            <li><strong>Score it first.</strong> Use the 12-point checklist and the ready/not-ready scorecard below before you commit budget.</li>
         </ul>
 
-        <h2>Systems: Can an Agent Actually Act?</h2>
-        <p>An agent that can't reach your tools is a chatbot. These three checks determine whether the "act" half of agentic automation is even possible.</p>
-        <h3>4. Your core tools expose APIs</h3>
-        <p>Agents take action by calling APIs — creating tickets, updating records, sending messages. Modern SaaS tools nearly all have them; legacy and on-premise systems often don't. Screen-scraping and browser automation exist as fallbacks, but they're brittle and should be a bridge, not a plan.</p>
-        <ul>
-            <li><strong>What good looks like:</strong> the three systems in your chosen workflow all have documented REST or GraphQL APIs, or support standard connectors (MCP servers, n8n nodes, native integrations).</li>
-            <li><strong>Red flag:</strong> the critical step happens inside a desktop application from 2009 with no API and no export.</li>
-        </ul>
-        <h3>5. Your auth model can give an agent its own identity</h3>
-        <p>An agent should act as a service account with scoped, revocable permissions — not as a borrowed copy of an admin's credentials. This is both a security requirement and an audit one: when something goes wrong, you need to know it was the agent, and you need to be able to shut it off in one place.</p>
-        <ul>
-            <li><strong>What good looks like:</strong> you can issue API keys or OAuth clients per integration, scope them to least privilege, and revoke them centrally.</li>
-            <li><strong>Red flag:</strong> shared logins in a password spreadsheet, and the plan is to give the agent one of those.</li>
-        </ul>
-        <h3>6. You have somewhere safe to test</h3>
-        <p>Agents in development will do unexpected things — that's what development is for. They need a sandbox: a staging environment, test accounts, or at minimum a dry-run mode where actions are logged instead of executed. Teams without one either test in production (dangerous) or never grant write access (useless).</p>
-        <ul>
-            <li><strong>What good looks like:</strong> a staging instance or sandbox tenant for each system the agent touches, with realistic test data.</li>
-            <li><strong>Red flag:</strong> "we only have production." That's solvable, but it must be solved before an agent gets write permissions.</li>
-        </ul>
+        <h2>Is your business ready for AI agents?</h2>
+        <p>You are ready for an AI agent when three things are true at once: you have a clearly defined task worth automating, the agent can reach the data and systems that task depends on, and one person owns the result. Everything else is detail you can fix during a pilot.</p>
+
+        <p>Adoption is broad but shallow, which tells you readiness is uneven across the market. McKinsey's State of AI 2025 found 62% of organizations are experimenting with AI agents while only 23% are scaling them. The gap between those two numbers is almost entirely readiness &mdash; data, integration, governance, and ownership &mdash; not a shortage of capable models.</p>
+
+        <p>A quick self-test: pick one workflow and ask whether you could write down, in plain language, the exact inputs, the steps, the systems involved, and what a good outcome looks like. If you can't describe it clearly enough for a new hire to follow, an agent can't do it either. Vagueness in the brief becomes unpredictability in production.</p>
+
+        <p>Notice what's not on that list. You don't need a dedicated AI team, a data-science function, or a large budget to be ready for a first agent. Readiness is about the shape of the problem, not the size of the company. A ten-person firm with one clean, well-documented workflow is more ready than an enterprise sitting on a hundred half-defined ones. The mistake we see most often is treating readiness as a maturity milestone to reach someday, when it's really a property of the specific task in front of you.</p>
+
+        <h2>What do you need in place before deploying an AI agent?</h2>
+        <p>Before deployment you need six things: a scoped use case, accessible data, system and API access, clear decision boundaries, a guardrails-and-evaluation plan, and governance. Those six are the difference between a demo that impresses in a meeting and something you actually trust to run unattended.</p>
+
+        <p>The most under-resourced of the six is governance. Deloitte (2026) reports that only around 21% of organizations have mature governance for agentic AI, which means roughly four in five are shipping agents without clear rules for data handling, escalation, and audit trails. That is exactly the "weak risk controls" Gartner ties to cancellations &mdash; the gap is rarely the model, and almost always the operating discipline around it.</p>
+
+        <p>Access is the other quiet blocker, and it's easy to miss in a slick demo. An agent that can read your data but can't act on it is just a faster search box, not an agent. Before you scope the work, confirm that the systems the task touches expose APIs or integration hooks, and that someone with the authority to do so can approve the credentials to use them. In practice, this single check rescues more stalled projects than any model upgrade or round of prompt-tuning ever will.</p>
+
+        <p>You don't need all six at enterprise grade for a first pilot. You need them at pilot grade: a small, well-understood task, read access to real data, a sandbox the agent can act in safely, and a human reviewing outputs. If you want the full cost picture of that pilot before you commit, our guide on <a href="/blog/how-much-do-ai-agents-cost-2026">how much AI agents cost in 2026</a> breaks down both build and monthly run costs.</p>
+
         [CTA]
-        <h2>People: Will Anyone Own It?</h2>
-        <p>Agents are software that behaves probabilistically, which means they need ongoing human ownership more than traditional automation does — not less.</p>
-        <h3>7. One named internal owner</h3>
-        <p>Not a committee, not "the ops team" — a person whose job includes the agent's performance. They review transcripts weekly, triage failures, decide when the agent's scope expands, and act as the bridge between the business and whoever built it.</p>
-        <ul>
-            <li><strong>What good looks like:</strong> you can name the owner right now, they have hours allocated, and they're enthusiastic rather than assigned.</li>
-            <li><strong>Red flag:</strong> "we'll figure out ownership after launch." Unowned agents degrade quietly until an incident makes them owned.</li>
-        </ul>
-        <h3>8. The team it affects is bought in</h3>
-        <p>The people who run the workflow today are your best source of edge cases and your fastest path to failure if they see the agent as a replacement threat. Position it honestly: the agent takes the repetitive 60%, humans keep the judgment calls, and the team helps define which is which.</p>
-        <ul>
-            <li><strong>What good looks like:</strong> frontline staff have been told what's being automated and why, and at least one of them is actively contributing edge cases.</li>
-            <li><strong>Red flag:</strong> the project is a secret from the team it affects, or framed internally as headcount reduction.</li>
-        </ul>
-        <h3>9. Defined escalation paths</h3>
-        <p>Every production agent needs a clear answer to "what happens when it's unsure?" — a confidence threshold, a human queue, and a response-time expectation for that queue. Escalation isn't an admission of weakness; it's the mechanism that lets you launch at 80% coverage instead of waiting forever for 100%.</p>
-        <ul>
-            <li><strong>What good looks like:</strong> you can describe which cases go to humans, who receives them, and how fast they'll respond.</li>
-            <li><strong>Red flag:</strong> the implicit plan is "the agent should just handle everything."</li>
-        </ul>
 
-        <h2>Economics: Will It Pay?</h2>
-        <p>61% of CFOs say AI agents are changing how they evaluate tech ROI, per Deloitte. That's good news if you have numbers — and a fast "no" if you don't.</p>
-        <h3>10. A workflow with real, measurable volume</h3>
-        <p>Agents earn their keep on repetition. A task done 40 times a day is a candidate; a task done 4 times a month is a hobby. Take a hypothetical 12-person support team handling 8,000 tickets a month at roughly 8 minutes each — automating even 40% of those well is over 425 hours back every month, which is real money. The verified-ROI deployments cluster in exactly these high-volume lanes: customer service automation, contract review, supply chain orchestration, fraud detection.</p>
-        <ul>
-            <li><strong>What good looks like:</strong> your chosen workflow runs hundreds of times a month, and you know the number.</li>
-            <li><strong>Red flag:</strong> the candidate workflow was chosen because it's impressive, not because it's frequent.</li>
-        </ul>
-        <h3>11. Baseline metrics you already track</h3>
-        <p>You can't prove an agent saved 30% of handle time if you never measured handle time. The baseline must exist before launch: volume, time per item, error or rework rate, cost per item. Average reported ROI on agentic deployments runs around 171% per Landbase research — but the organizations reporting it can do so only because they measured the before.</p>
-        <ul>
-            <li><strong>What good looks like:</strong> you can state today's cost-per-ticket or hours-per-contract from a dashboard, not a guess.</li>
-            <li><strong>Red flag:</strong> the business case is built entirely on vibes and a vendor's calculator.</li>
-        </ul>
-        <h3>12. Budget for iteration, not just the build</h3>
-        <p>Agents are not fire-and-forget software. The first month in production surfaces edge cases no spec anticipated, and the teams seeing the strongest returns — 66% of adopters report measurable productivity gains, and 62% expect ROI above 100% — get there through post-launch tuning. A realistic budget reserves 25-40% of the build cost for the first quarter of iteration, plus ongoing inference costs.</p>
-        <ul>
-            <li><strong>What good looks like:</strong> the budget line says "build and improve," with monitoring and model costs forecast past launch.</li>
-            <li><strong>Red flag:</strong> the project is funded like a one-time website build, ending the day it ships.</li>
-        </ul>
+        <h2>The Brynex 12-point AI agent readiness checklist</h2>
+        <p>This is the checklist we run before quoting any agent build. Score each point yes, partial, or no. Every item maps directly to a reason projects survive or get canceled, so treat a run of "no" answers as a signal to prepare, not to push ahead.</p>
 
-        <h2>Your Score: What It Means</h2>
+        <ol>
+            <li><strong>A specific, named workflow.</strong> Not "use AI in support" but "draft first-response replies to billing questions in the ticket queue." Narrow scope is the single biggest predictor of success; broad mandates are where budgets quietly disappear.</li>
+            <li><strong>A measurable baseline.</strong> Know today's numbers before you start: volume per week, minutes per task, cost per resolution, current error rate. Without a baseline you can't prove value, and unproven value is the top reason Gartner (2025) cites for cancellations.</li>
+            <li><strong>A queryable source of truth.</strong> The data the task depends on lives in a system the agent can read reliably &mdash; a database, CRM, or ticketing tool &mdash; not in someone's memory or a folder of PDFs no one maintains.</li>
+            <li><strong>A grounding knowledge base.</strong> For anything answer-shaped, the agent needs curated, current documents to retrieve from. That is what a retrieval-augmented generation (RAG) layer feeds on; see our <a href="/blog/rag-pipeline-business-knowledge-guide">guide to building a RAG pipeline on your company knowledge</a>.</li>
+            <li><strong>System and API access.</strong> If the agent must do something &mdash; update a record, send a message, issue a refund &mdash; those systems need APIs or integration points, and someone has to approve the credentials. Read-only is easy; write access needs explicit sign-off.</li>
+            <li><strong>Clear decision boundaries.</strong> Write down what the agent may do on its own versus what it must escalate. A workable default: automate reversible, low-cost actions, and require human approval for anything expensive or hard to undo.</li>
+            <li><strong>A human-in-the-loop path.</strong> Every agent needs a clean handoff to a person for the cases it shouldn't handle alone. Define the trigger, the queue it lands in, and the response time the human owes it.</li>
+            <li><strong>A guardrails and evaluation plan.</strong> Decide up front how you'll test the agent before launch and monitor it after &mdash; accuracy checks, refusal rules, logging. Quality is the number-one barrier to production agents (LangChain, 2025), so this is not optional. Our note on <a href="/blog/ai-agent-guardrails-evals-production">guardrails and evals in production</a> covers the mechanics.</li>
+            <li><strong>A named owner.</strong> One accountable human, not a committee. They own the metrics, approve any change to the agent's boundaries, and decide when to expand or stop.</li>
+            <li><strong>Governance and compliance.</strong> Rules for PII, data residency, retention, and an audit log of what the agent did and why. Deloitte (2026) found only about 21% of organizations have this maturity, so getting it right is a genuine advantage, not just box-ticking.</li>
+            <li><strong>Budget aligned to scope.</strong> A pilot budget kept separate from the ongoing run cost, with realistic expectations for both. Pilots at Brynex Labs start at ₹49,999; the point of a pilot is to buy evidence cheaply before committing to a larger build.</li>
+            <li><strong>Success criteria and a kill switch.</strong> Agree in advance what "working" means in numbers, and the threshold at which you pause or stop. A pre-agreed kill switch is what separates a disciplined pilot from a project that drifts for a year with no one willing to call it.</li>
+        </ol>
+
+        <h2>What data do you need to build an AI agent?</h2>
+        <p>You need three data assets: a reliable system of record the agent can read, a curated knowledge base to ground its answers, and enough examples of the task done well to evaluate it against. Volume matters far less than cleanliness and access.</p>
+
+        <p>The system of record is the structured data behind the task &mdash; customers, orders, tickets, transactions. The knowledge base is the unstructured content the agent reasons over: policies, SOPs, product docs, past resolutions. The evaluation set is a few dozen real cases with known-good outcomes you can score the agent against, so "good enough to ship" is a measured decision rather than a hunch.</p>
+
+        <p>In the pilots we run at Brynex Labs, the biggest predictor of a stalled project isn't the model or the framework &mdash; it's the absence of a clean, queryable source of truth. Teams with tidy data ship in weeks. Teams without it spend the first month just working out where their data actually lives and which copy is the correct one.</p>
+
+        <p>You do not need a data lake or a year of cleanup before you begin. You need the specific slice the chosen workflow touches to be accurate, accessible, and current. Fix that slice, ship the pilot, and widen the data footprint later once the value is proven.</p>
+
+        <h2>How do you assess AI agent readiness?</h2>
+        <p>Assess readiness by scoring each checklist point and checking it against the "not ready" signals below. If any single row lands firmly in the not-ready column, fix that first &mdash; a strong score everywhere else won't compensate for one broken dimension.</p>
+
         <table>
             <thead>
-                <tr><th>Score</th><th>Verdict</th><th>What to do</th></tr>
+                <tr><th>Dimension</th><th>Ready looks like</th><th>Not ready looks like</th></tr>
             </thead>
             <tbody>
-                <tr><td>0-4</td><td>Fix foundations first</td><td>An agent project now would stall in discovery. Spend 4-8 weeks on process documentation and API access before spending anything on AI.</td></tr>
-                <tr><td>5-8</td><td>Start with one pilot workflow</td><td>You're ready for a scoped pilot on your strongest workflow — one agent, narrow scope, human review on every action — while you close the remaining gaps in parallel.</td></tr>
-                <tr><td>9-12</td><td>Ready for production agents</td><td>Your constraint is prioritization, not readiness. Pick the highest-volume workflow, set baselines, and build toward autonomous operation with escalation paths.</td></tr>
+                <tr><td>Use case</td><td>One specific, high-volume, rules-heavy task</td><td>"Add AI everywhere" with no single owner task</td></tr>
+                <tr><td>Data</td><td>Clean, accessible system of record plus current docs</td><td>Data siloed, stale, or trapped in people's heads</td></tr>
+                <tr><td>Systems</td><td>APIs exist and credentials can be approved</td><td>No integration points; manual-only systems</td></tr>
+                <tr><td>Boundaries</td><td>Autonomous vs escalate is written down</td><td>No one has decided what the agent may do alone</td></tr>
+                <tr><td>Governance</td><td>PII, retention, and audit logging defined</td><td>No policy and no record of agent actions</td></tr>
+                <tr><td>Ownership</td><td>One accountable person with success metrics</td><td>A committee, or no owner at all</td></tr>
             </tbody>
         </table>
-        <p>One caution for high scorers: 9-12 means ready, not finished. Production agents still need evaluation suites, guardrails, and observability — readiness gets you to the starting line in good shape, not across the finish.</p>
 
-        <h2>Scored Low? Fix These Two Things First</h2>
-        <p>Low scores cluster on the same two checks almost every time, and they happen to be the two cheapest to fix.</p>
-        <p><strong>First, process documentation (check 1).</strong> Have the person who runs the workflow record themselves doing it for a week — screen recordings plus a running commentary of decisions. Turn that into a draft SOP, then have a second person follow it and note where they got stuck. Two weeks, near-zero cost, and it pays off even if you never build an agent.</p>
-        <p><strong>Second, API access (check 4).</strong> Inventory the systems in your target workflow and check each one's API documentation, plan tier (APIs are often gated behind higher tiers), and rate limits. Where a system has no API, decide now: upgrade, replace, or bridge it with an automation layer like n8n. This is procurement and configuration work, not engineering — but it gates everything downstream.</p>
-        <p>Notice that neither fix requires AI expertise, a data science hire, or a platform decision. Readiness is mostly unglamorous operational hygiene — which is exactly why teams that have it move so much faster than teams that skipped it.</p>
-        <blockquote>
-            <p>Agent projects don't fail because the AI isn't good enough. They fail because the business wasn't ready — and readiness is checkable in an afternoon and fixable in a quarter.</p>
-        </blockquote>
+        <p>A simple scoring rule we use: count each yes as 1, partial as 0.5, and no as 0 across the 12 points. Nine or above and you're ready for a scoped pilot. Six to eight and you have targeted prep to do first. Below six, start with data and governance rather than a build &mdash; otherwise you'd be paying an engineering team to discover gaps you could have found on a whiteboard.</p>
+
         [CTA]
-        <h2>From Checklist to First Agent</h2>
-        <p>If you scored 5 or above, your gaps map directly onto what a competent first engagement does anyway. At Brynex Labs, every <a href="/services/ai-agents-automation">agentic AI engagement</a> starts with use-case and ROI mapping — which forces checks 10 and 11 — followed by a data and retrieval foundation phase that resolves checks 1-3, and an agent design phase that formalizes escalation paths and sandboxed testing. A good partner doesn't demand a perfect score; they sequence the first phase to close your specific gaps while the build progresses. If the gaps are deeper on the systems side — missing APIs, legacy tools that need modernizing first — that's an <a href="/services/ai-native-software-engineering">engineering problem with a known playbook</a>, not a dead end.</p>
-        <p>Your next step is simple: pick your one workflow, run the 12 checks with the people who actually do the work, and write the score down. If it's 5+, bring that scored checklist to a conversation with us — it's the single most useful document you can show up with, and it turns a generic discovery call into a concrete plan with a number attached.</p>
+
+        <h3>Which readiness gap should you fix first?</h3>
+        <p>Fix data access first, then decision boundaries, then governance. Data is the longest pole in the tent &mdash; you cannot ship without it, and cleaning it takes real calendar time. Boundaries and governance are comparatively cheap to define and prevent the expensive mistakes. If your real gap is that the workflow itself is fuzzy, the cheapest fix is to sharpen the brief until a new hire could follow it, then re-score.</p>
+
+        <h2>What are the prerequisites for a successful AI agent project?</h2>
+        <p>The prerequisites are the same twelve points, but three carry disproportionate weight: a narrow use case, clean data access, and an accountable owner. Get those three right and the rest are manageable. Get any of them wrong and no amount of engineering compensates.</p>
+
+        <p>There's also a maturity prerequisite that doesn't fit neatly on a checklist: a willingness to run a small pilot, measure it honestly, and stop it if it doesn't work. The teams that succeed treat their first agent as an experiment with a fixed budget and a deadline, not a platform bet. It's also why an experienced partner helps &mdash; an <a href="/ai-development-company-in-india">AI development company in India</a> that has shipped agents before will spot the missing prerequisite in a scoping call rather than three months into a build.</p>
+
+        <h2>Where to start</h2>
+        <p>Readiness comes down to one question asked twelve times: is this specific enough, and can the agent reach what it needs? Score the checklist honestly, fix the one or two rows that fail, and run a small, measurable pilot instead of a broad program. That single discipline is what keeps you out of Gartner's 40% and closer to the 80% of organizations that Anthropic (2026) reports are seeing measurable ROI from agents.</p>
+
+        <p>If you'd like a second opinion, we run a short readiness review that scores your workflow against this checklist and tells you honestly whether to build now or prepare first. You can <a href="/contact">book a readiness assessment</a> to walk through it.</p>
     `,
 };

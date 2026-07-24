@@ -57,6 +57,12 @@ const nextConfig = {
             permanent: true,
         }));
 
+        // Retired placeholder case studies replaced by real client work.
+        const retiredCaseStudyRedirects = [
+            { source: '/case-studies/echopad-medical-data-management', destination: '/case-studies/regortalent-ai-recruitment-platform' },
+            { source: '/case-studies/enterprise-saas-scalability-overhaul', destination: '/case-studies/exampapers-ai-exam-prep-platform' },
+        ].map(({ source, destination }) => ({ source, destination, permanent: true }));
+
         return [
             {
                 source: '/in/services/:slug',
@@ -67,6 +73,7 @@ const nextConfig = {
             { source: '/privacy-policy', destination: '/privacy', permanent: true },
             { source: '/terms-of-service', destination: '/terms', permanent: true },
             ...retiredServiceRedirects,
+            ...retiredCaseStudyRedirects,
         ];
     },
 };
