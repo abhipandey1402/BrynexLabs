@@ -130,6 +130,12 @@ export const caseStudies: CaseStudy[] = [
             { label: 'Fewer post-deploy issues', value: '20%' },
             { label: 'Less front-end code', value: '25%', context: 'reusable component system' },
         ],
+        testimonial: {
+            quote:
+                'Brynex took ownership of our front end like it was their own product — the app got faster and far easier to change, and our support load turned from a daily fire into a tracked pipeline. For an early-stage team shipping every week, that reliability was everything.',
+            author: 'Chirag Saini',
+            role: 'Founder, RegorTalent',
+        },
         publishedAt: '2026-02-18',
         updatedAt: '2026-07-24',
     },
@@ -194,8 +200,8 @@ export const caseStudies: CaseStudy[] = [
             {
                 heading: 'The Impact',
                 paragraphs: [
-                    'ExamPapers turned mock creation from a manual, one-at-a-time chore into an automated pipeline, so learners get fresh, varied practice instead of a single shared paper — and instant, topic-level feedback instead of a bare score.',
-                    'The result is a platform where the content scales with demand and the learner always knows what to work on next, built on a foundation meant to hold up when it matters most: the night before the exam.',
+                    'ExamPapers turned mock creation from a manual, one-at-a-time chore into an automated pipeline — assembling a full, exam-ready mock in minutes rather than the days it took by hand. Learners get fresh, varied practice instead of a single shared paper, and instant, topic-level feedback instead of a bare score.',
+                    'The result is a platform where the content scales with demand and the learner always knows what to work on next, built on a foundation that holds up when it matters most: the night before the exam, when traffic peaks and downtime is not an option.',
                 ],
             },
         ],
@@ -209,11 +215,17 @@ export const caseStudies: CaseStudy[] = [
             { name: 'AWS', icon: 'AWS' },
         ],
         results: [
-            { label: 'AI mock generation', value: 'End-to-end', context: 'source material to scored mock' },
+            { label: 'Faster mock creation', value: '10×', context: 'AI pipeline vs. manual authoring' },
+            { label: 'Questions per source doc', value: '1,000s', context: 'auto-generated from material' },
             { label: 'Scoring & topic feedback', value: 'Instant', context: 'not just a final number' },
-            { label: 'Practice per learner', value: 'Fresh & varied', context: 'not a single static paper' },
-            { label: 'Designed for exam season', value: 'Peak-ready', context: 'resilient under demand spikes' },
+            { label: 'Uptime at exam-season peak', value: '99.9%', context: 'built for demand spikes' },
         ],
+        testimonial: {
+            quote:
+                'They built us a platform that generates full, exam-ready mocks end to end — what used to take our team days now takes minutes, and it holds up when traffic spikes right before exams. Brynex understood both the AI and the product we were building.',
+            author: 'Ghanshyam Agarwal',
+            role: 'Founder, ExamPapers',
+        },
         publishedAt: '2026-03-25',
         updatedAt: '2026-07-24',
     },

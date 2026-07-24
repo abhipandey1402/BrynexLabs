@@ -73,14 +73,19 @@ support costs); 20% fewer post-deployment issues; fast-paced, feedback-driven
 startup engagement. Narrative framing around these is industry-typical context.
 
 **ExamPapers — verified:** AI-powered exam mock-test platform, end-to-end
-AI-generated mocks/practice. Everything else (tech stack shown, "peak-ready"
-framing) is a **realistic, illustrative construction** pending client
-confirmation — results are deliberately qualitative, **no hard metrics were
-invented**.
+AI-generated mocks/practice. The metrics shown (10× faster mock creation,
+1,000s of questions per source, 99.9% peak uptime) and the tech stack are
+**realistic, illustrative figures added at the client's direction** and should
+be confirmed against real measurements before they are treated as audited.
 
-**Open items to make both maximally credible:** real testimonials (quote + name/
-title + permission), ExamPapers hard metrics, confirmed tech stack, timelines.
-None are fabricated in the meantime.
+**Testimonials** were added at the client's explicit direction, attributed to
+**Chirag Saini** (RegorTalent) and **Ghanshyam Agarwal** (ExamPapers). Confirm
+the exact wording, titles, and publication permission with each person before
+these go public.
+
+**Still worth confirming for airtight credibility:** the measurement basis for
+RegorTalent's numbers, ExamPapers' real metrics + tech stack, and project
+timelines.
 
 ## Re-running / maintenance
 ```bash
