@@ -70,7 +70,16 @@ Kept honest for governance:
 Axios interceptors for auth + error handling; reusable components (~25% less
 code); Atlassian-integrated support system (30% faster resolution, 70% lower
 support costs); 20% fewer post-deployment issues; fast-paced, feedback-driven
-startup engagement. Narrative framing around these is industry-typical context.
+startup engagement. The client also confirmed RegorTalent is an **AI-powered
+interviewing + ATS product**, and directed the case study to present the
+**full end-to-end delivery** (frontend, backend/APIs, AI agents for
+screening/matching/interviewing, cloud, ATS). That broader scope, the tech
+stack beyond the verified front-end list (Node/Python/FastAPI/pgvector/
+LangChain/LLMs/AWS/Docker), and the product metrics shown (**5× faster
+screening, AI-led first-round interviews**) are **client-directed and
+illustrative** — confirm against the real build before treating as audited.
+AI framed as human-in-the-loop (recruiters decide) per hiring-compliance best
+practice.
 
 **ExamPapers — verified:** AI-powered exam mock-test platform, end-to-end
 AI-generated mocks/practice. The metrics shown (10× faster mock creation,
