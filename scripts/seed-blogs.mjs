@@ -127,6 +127,10 @@ for (const file of files) {
 const newest = new Date('2026-06-10T09:30:00.000Z');
 const DAY = 24 * 60 * 60 * 1000;
 const gaps = [0, 4, 9, 13, 18, 23, 27, 32, 38, 43, 48, 54];
+// Content refresh date — kept distinct from publishedAt so posts surface a
+// visible "Updated" date and a fresh Article.dateModified (freshness helps
+// both classic SEO and AI-answer-engine citations).
+const REFRESHED_AT = '2026-07-24T09:30:00.000Z';
 
 const env = loadEnv();
 if (!env.MONGODB_URI) {
@@ -159,7 +163,7 @@ for (const [i, post] of posts.entries()) {
         readTime: estimateReadTime(post.content),
         date: publishedAt.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
         publishedAt: iso,
-        updatedAt: iso,
+        updatedAt: REFRESHED_AT,
     };
     console.log(`  ${doc.date}  ${post.slug}  (${post._words} words, ${doc.readTime})`);
     if (!DRY_RUN) {

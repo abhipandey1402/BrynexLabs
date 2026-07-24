@@ -19,24 +19,24 @@ export default function BlogCTA() {
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
                 <div className="flex-1 text-center md:text-left">
                     <h3 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4 text-white tracking-tight leading-tight">
-                        Need expert implementation?
+                        Want to build this — the right way?
                     </h3>
                     <p className="text-neutral-400 text-base md:text-lg max-w-2xl leading-relaxed">
-                        Our specialized engineering collective can architect, scale, and physically deploy these exact infrastructures directly into your live production environment.
+                        Brynex Labs designs and ships production-grade AI agents, automation, and software for teams in India and worldwide. Book a free scoping call and we&apos;ll tell you honestly what&apos;s worth building — and what isn&apos;t yet.
                     </p>
                 </div>
-                
+
                 <div className="shrink-0 w-full md:w-auto">
-                    <Button 
+                    <Button
                         onClick={() => {
                             trackConversion_StartProjectClick('In-Blog CTA');
                             setIsModalOpen(true);
-                        }} 
-                        variant="primary" 
+                        }}
+                        variant="primary"
                         size="lg"
                         className="w-full md:w-auto !bg-accent-gradient !text-white hover:brightness-110 shadow-[0_0_30px_rgba(194,65,12,0.4)] px-8 py-4 text-base md:text-lg font-bold"
                     >
-                        Talk to an Expert
+                        Book a free scoping call
                         <svg width="18" height="18" viewBox="0 0 16 16" fill="none" className="ml-2 group-hover:translate-x-1 transition-transform">
                             <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>

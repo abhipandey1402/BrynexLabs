@@ -13,21 +13,7 @@ function normalizePost(post: BlogPost): BlogPost {
     // ("Brynex Labs Engineering", etc.) everywhere they'd otherwise surface:
     // the visible byline, the serialized RSC/flight payload, and schema.
     const authorName = getAuthorForCategory(post.category).name;
-    let normalized: BlogPost = post.author === authorName ? post : { ...post, author: authorName };
-
-    if (normalized.slug === 'ai-agents-in-business-practical-guide') {
-        // Public SEO correction for legacy CMS/static copies; the source record
-        // can still be edited later from the admin without blocking the fix.
-        normalized = {
-            ...normalized,
-            title: normalized.title.replace('A Practical Guide for 2025', 'A Practical Guide for 2026'),
-            content: normalized.content.replace(
-                'In 2025, the enterprise demand has radically shifted',
-                'In 2026, the enterprise demand has radically shifted',
-            ),
-        };
-    }
-
+    const normalized: BlogPost = post.author === authorName ? post : { ...post, author: authorName };
     return normalized;
 }
 
