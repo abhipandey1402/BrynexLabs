@@ -6,6 +6,7 @@ import SectionWrapper from './SectionWrapper';
 import Button from './Button';
 import ContactModal from './ContactModal';
 import Link from 'next/link';
+import { BrowserFrame } from './DeviceFrame';
 
 interface CaseStudyClientProps {
     project: CaseStudy;
@@ -33,15 +34,22 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
                         </p>
                     </div>
 
-                    {/* Placeholder visual (no real imagery yet) */}
-                    <div className="aspect-[21/9] w-full bg-background-secondary rounded-3xl border border-border overflow-hidden relative shadow-2xl">
-                        <div className="absolute inset-0 bg-accent-gradient opacity-10" />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-foreground-secondary/40 font-bold text-lg italic tracking-widest uppercase">
-                                {project.clientName}
-                            </span>
+                    {project.heroShot ? (
+                        /* Real product screen (demo data) */
+                        <div className="rounded-3xl border border-border bg-background-secondary/60 p-3 sm:p-6 shadow-2xl">
+                            <BrowserFrame shot={project.heroShot} address={project.heroShot.address} priority sizes="(min-width: 1024px) 64rem, 100vw" />
                         </div>
-                    </div>
+                    ) : (
+                        /* Placeholder visual (no real imagery yet) */
+                        <div className="aspect-[21/9] w-full bg-background-secondary rounded-3xl border border-border overflow-hidden relative shadow-2xl">
+                            <div className="absolute inset-0 bg-accent-gradient opacity-10" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <span className="text-foreground-secondary/40 font-bold text-lg italic tracking-widest uppercase">
+                                    {project.clientName}
+                                </span>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </SectionWrapper>
 

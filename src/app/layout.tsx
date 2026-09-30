@@ -14,16 +14,16 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://brynex.in'),
   title: {
-    default: 'Software Company for AI Agents, Automation & SaaS SEO | Brynex Labs',
+    default: 'Brynex Labs | AI & SaaS Product Studio — Makers of Clinizy Care',
     template: '%s',
   },
   description:
-    'Brynex Labs is a software company building AI agents, automation, custom software & revenue-driving SaaS SEO for startups & enterprises in the USA & India.',
+    'Brynex Labs is an AI & SaaS product studio from India. We build and run Clinizy Care, and ship AI agents, SaaS platforms & SEO for founders worldwide.',
   applicationName: 'Brynex Labs',
   openGraph: {
-    title: 'Software Company for AI Agents, Automation & SaaS SEO | Brynex Labs',
+    title: 'Brynex Labs | AI & SaaS Product Studio — Makers of Clinizy Care',
     description:
-      'Build software that pays for itself — AI agents, intelligent automation, custom software & SaaS SEO from senior engineers. Serving the USA, India & worldwide.',
+      'We build our own products, then we build yours. The team behind Clinizy Care ships AI agents, SaaS platforms and SEO for founders worldwide.',
     type: 'website',
     url: 'https://brynex.in',
     locale: 'en_US',
@@ -32,9 +32,9 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     site: '@brynexlabs',
-    title: 'Software Company for AI Agents, Automation & SaaS SEO | Brynex Labs',
+    title: 'Brynex Labs | AI & SaaS Product Studio — Makers of Clinizy Care',
     description:
-      'Build software that pays for itself — AI agents, intelligent automation, custom software & SaaS SEO from senior engineers. Serving the USA, India & worldwide.',
+      'We build our own products, then we build yours. The team behind Clinizy Care ships AI agents, SaaS platforms and SEO for founders worldwide.',
   },
   robots: {
     index: true,

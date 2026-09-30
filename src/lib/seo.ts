@@ -1,6 +1,7 @@
 import type { BlogPost } from '@/data/blog';
 import type { CaseStudy } from '@/data/case-studies';
-import { getAuthorForCategory, type Author } from '@/data/authors';
+import { getAuthorBySlug, getAuthorForCategory, type Author } from '@/data/authors';
+import { CLINIZY } from '@/data/products';
 
 export const SITE_URL = 'https://brynex.in';
 export const SITE_NAME = 'Brynex Labs';
@@ -34,6 +35,35 @@ export function organizationRef() {
     return { '@id': `${SITE_URL}/#organization` };
 }
 
+/** Stable @id of the founder's Person node (defined on /authors/abhi-pandey). */
+export const FOUNDER_PERSON_ID = `${SITE_URL}/authors/abhi-pandey#person`;
+
+/**
+ * Clinizy Care's Organization node, owned by clinizy.in. We only reference it
+ * (with enough properties to be self-describing) — clinizy.in stays canonical,
+ * and its schema already declares parentOrganization → our @id.
+ */
+function clinizyOrganizationNode() {
+    return {
+        '@type': 'Organization',
+        '@id': CLINIZY.organizationId,
+        name: CLINIZY.name,
+        url: CLINIZY.url,
+    };
+}
+
+function founderPersonNode() {
+    const founder = getAuthorBySlug('abhi-pandey');
+    return {
+        '@type': 'Person',
+        '@id': FOUNDER_PERSON_ID,
+        name: founder?.name ?? 'Abhi Pandey',
+        url: `${SITE_URL}/authors/abhi-pandey`,
+        ...(founder ? { jobTitle: founder.jobTitle } : {}),
+        ...(founder?.sameAs && founder.sameAs.length > 0 ? { sameAs: founder.sameAs } : {}),
+    };
+}
+
 export function getOrganizationJsonLd() {
     return {
         '@context': 'https://schema.org',
@@ -47,7 +77,11 @@ export function getOrganizationJsonLd() {
         email: SITE_EMAIL,
         foundingDate: SITE_FOUNDING_YEAR,
         description:
-            'Brynex Labs builds production-grade AI agents, intelligent automation, custom software, SaaS platforms, and revenue-focused SaaS SEO for startups and enterprises across the USA and India.',
+            'Brynex Labs is an AI & SaaS product studio from India. It builds and operates its own software — Clinizy Care, hospital management software for Indian clinics and nursing homes — and builds AI agents, intelligent automation, SaaS platforms and revenue-focused SEO for clients in India, the USA, the UK and Australia.',
+        slogan: 'We build our own products. Then we build yours.',
+        founder: founderPersonNode(),
+        subOrganization: clinizyOrganizationNode(),
+        brand: clinizyOrganizationNode(),
         areaServed: [
             { '@type': 'Country', name: 'United States' },
             { '@type': 'Country', name: 'India' },
@@ -75,6 +109,12 @@ export function getOrganizationJsonLd() {
             'SaaS product engineering',
             'cloud infrastructure',
             'SaaS SEO',
+            'healthcare software',
+            'hospital management software',
+            'DPDP Act compliance',
+            'multi-tenant SaaS architecture',
+            'WhatsApp Business API integration',
+            'GST billing software',
         ],
         sameAs: SITE_SOCIAL_PROFILES,
     };
@@ -146,7 +186,10 @@ export function getPersonJsonLd(author: Author) {
         url: `${SITE_URL}/authors/${author.slug}`,
         jobTitle: author.jobTitle,
         description: author.bio,
-        worksFor: organizationRef(),
+        worksFor:
+            author.alsoWorksFor && author.alsoWorksFor.length > 0
+                ? [organizationRef(), ...author.alsoWorksFor.map((org) => ({ '@type': 'Organization', ...org }))]
+                : organizationRef(),
         ...(author.sameAs && author.sameAs.length > 0 ? { sameAs: author.sameAs } : {}),
     };
 }

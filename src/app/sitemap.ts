@@ -8,18 +8,21 @@ import { getAllPosts } from '@/lib/blogService';
 export const dynamic = 'force-dynamic';
 
 const STATIC_ROUTE_LASTMOD: Record<string, string> = {
-  '': '2026-07-05',
-  '/about': '2026-07-05',
+  '': '2026-09-30',
+  '/about': '2026-09-30',
   '/services': '2026-07-05',
   '/how-we-work': '2026-06-16',
   '/careers': '2026-06-16',
   '/contact': '2026-06-16',
   '/privacy': '2026-06-16',
   '/terms': '2026-06-16',
-  '/blog': '2026-07-05',
-  '/case-studies': '2026-06-16',
+  '/blog': '2026-09-30',
+  '/case-studies': '2026-09-30',
   '/hire-ai-developers': '2026-06-16',
   '/ai-development-company-in-india': '2026-06-16',
+  '/products': '2026-09-30',
+  '/products/clinizy-care': '2026-09-30',
+  '/industries/healthcare': '2026-09-30',
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -45,7 +48,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route === '' ? 1 : 0.8,
   }));
 
-  const landingRoutes = ['/hire-ai-developers', '/ai-development-company-in-india'];
+  const landingRoutes = [
+    '/hire-ai-developers',
+    '/ai-development-company-in-india',
+    '/products',
+    '/products/clinizy-care',
+    '/industries/healthcare',
+  ];
   const landingMappings = landingRoutes.map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(STATIC_ROUTE_LASTMOD[route] ?? '2026-06-16'),
@@ -69,7 +78,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const authorMappings = getAllAuthorSlugs().map((slug) => ({
     url: `${baseUrl}/authors/${slug}`,
-    lastModified: new Date('2026-07-16'),
+    lastModified: new Date('2026-09-30'),
     changeFrequency: 'monthly' as const,
     priority: 0.5,
   }));

@@ -1,3 +1,6 @@
+import type { Screenshot } from './products';
+import { CLINIZY } from './products';
+
 /** One headline metric shown in the results grid. */
 export interface CaseStudyMetric {
     label: string;
@@ -24,6 +27,8 @@ export interface CaseStudy {
     industry: string;
     summary: string;
     heroImage?: string;
+    /** A real product screen (demo data) rendered in a browser frame instead of the placeholder visual. */
+    heroShot?: Screenshot & { address: string };
     seo: {
         title: string;
         metaDescription: string;
@@ -46,6 +51,107 @@ export interface CaseStudy {
 }
 
 export const caseStudies: CaseStudy[] = [
+    {
+        slug: 'clinizy-care',
+        title: 'Building and Running Clinizy Care: An AI-Powered, Multi-Tenant Hospital SaaS for Indian Clinics',
+        clientName: 'Clinizy Care (in-house product)',
+        industry: 'Healthcare SaaS · Our own product',
+        summary:
+            'Clinizy Care is the hospital management software Brynex Labs builds and runs for India\'s clinics, nursing homes and small hospitals. We own it end to end: eleven modules on one patient record, 24 built-in automations, WhatsApp built in, AI clinical notes in early access, and a full interface in English, Hindi and Hinglish.',
+        seo: {
+            title: 'Clinizy Care Case Study: Building Our Own Hospital SaaS | Brynex Labs',
+            metaDescription:
+                'How Brynex Labs built and runs Clinizy Care, an AI-powered, multi-tenant hospital SaaS for Indian clinics: 11 modules, 24 automations, 3 languages.',
+        },
+        snapshot: [
+            { label: 'Industry', value: 'Healthcare · clinics, nursing homes & small hospitals in India' },
+            { label: 'Relationship', value: 'In-house product: we own, build and operate it' },
+            { label: 'Scope', value: 'Product, engineering, AI, cloud, growth & SEO' },
+            { label: 'Platform', value: 'Web app in the browser; owner dashboard works on a phone' },
+        ],
+        sections: [
+            {
+                heading: 'About Clinizy Care',
+                paragraphs: [
+                    'Clinizy Care is hospital management software for clinics, nursing homes and small hospitals across India. It covers the whole patient journey, from registration and the OPD token queue to prescriptions, pharmacy, lab, IPD, GST billing and WhatsApp follow-ups, on one shared patient record.',
+                    'Unlike our other case studies, there is no client here. Clinizy Care is Brynex Labs\' own product. We designed it, built it, and run it in production, and it is where every service we sell to clients gets tested first.',
+                ],
+            },
+            {
+                heading: 'The Challenge',
+                paragraphs: [
+                    'Most small clinics in India still run on paper registers, handwritten prescriptions and a pharmacy counter that bills separately. The software on the market was largely built for big hospitals or for other countries: priced out of reach, English-only, and unaware of GST or the way an Indian front desk actually works.',
+                    'Building for this market meant hard constraints at once: a price a single-doctor clinic can start at (plans begin at ₹1,999 a month, excluding GST), an interface the front desk can use in Hindi or Hinglish, correct GST on every bill, and the reliability of one shared system that every clinic on it depends on at the same moment.',
+                ],
+            },
+            {
+                heading: 'Our Approach',
+                paragraphs: [
+                    'We treated Clinizy Care as a real business with real economics, not a demo. That shaped every architectural choice: one multi-tenant platform instead of an install per clinic, lean infrastructure in the AWS Mumbai region, and automation doing the repetitive work so a small clinic team never has to.',
+                    'We also built it AI-native. Coding agents draft and senior engineers design, review and own every change, behind thousands of automated tests. It is the same way we build for clients, proven first on our own product.',
+                ],
+            },
+            {
+                heading: 'What We Built',
+                paragraphs: ['A complete, production hospital management platform across eleven modules, plus the automation, messaging and AI around it.'],
+                bullets: [
+                    'Front desk & OPD: patient registration, appointments and walk-ins in one live token queue, streamed to reception, the consulting room and a waiting-room display that shows initials only.',
+                    'Clinical: digital prescriptions, patient records, lab orders and reports, and IPD with wards, beds, admissions, vitals and nursing medication charts.',
+                    'Pharmacy & inventory: batch- and expiry-aware stock with purchase orders, supplier management and near-expiry alerts.',
+                    'GST billing: CGST/SGST or IGST by place of supply, exempt consultations, MRP-inclusive pharmacy pricing, day-close reconciliation, UPI QR on invoices and a Tally export.',
+                    'Autopilot: 24 built-in automations, from follow-up recalls and refill reminders to critical-result escalation and discharge workflows, with per-clinic controls.',
+                    'WhatsApp: direct Meta Cloud API integration with approved English and Hindi templates, queued delivery, signed webhooks, quiet hours, opt-outs and quotas.',
+                    'AI clinical documentation: Clinizy Scribe, in early access, drafts structured notes from a doctor\'s dictation behind a guardrail agent.',
+                    'Growth engine: clinizy.in itself, with module, comparison and automation pages, a plain-language blog for clinic owners, and llms.txt for AI search.',
+                ],
+            },
+            {
+                heading: 'The Engineering Decisions Behind It',
+                paragraphs: [
+                    'Shared-collection multi-tenancy with a fail-closed guard: every clinic lives in the same database, and a tenant filter is injected into every query, count, aggregate and write. With no tenant in context, queries return nothing. An integration suite against a real database proves one clinic can never read another\'s data.',
+                    'Queues between the product and the outside world: WhatsApp, email, PDF and report jobs run through AWS queues with dead-letter queues and an idempotent worker, so a slow third party never slows down the front desk.',
+                    'Money as integers, time in IST: amounts are stored in paise end to end, and financial years, day-close and bill numbering are computed explicitly in Indian Standard Time, which removes a whole class of rounding and midnight bugs.',
+                    'Three languages with a hard gate: English, Hindi and a separately written Hinglish locale, with a translation-parity test that fails the build if any screen is missing a string.',
+                    'Access control built in: seven staff roles with one permission matrix shared by API and interface, two-factor sign-in and an audit trail of every change, built to be DPDP Act 2023 aligned.',
+                ],
+            },
+            {
+                heading: 'The Impact',
+                paragraphs: [
+                    'Clinizy Care is live at clinizy.in: eleven modules, 24 automations and a three-language interface, sold on public pricing with a 30-day free trial. For Brynex Labs it is also a working proof of everything we sell: multi-tenant SaaS engineering, AI agents with guardrails, workflow automation and SEO, all running in our own production.',
+                    'That is the practical difference for clients. When we recommend an architecture, an AI pattern or an SEO plan, we are not guessing. We have already shipped it for ourselves, and we live with the results every day.',
+                ],
+            },
+        ],
+        techStack: [
+            { name: 'React', icon: 'React' },
+            { name: 'Vite', icon: 'Vite' },
+            { name: 'Tailwind CSS', icon: 'TW' },
+            { name: 'Node.js', icon: 'Node' },
+            { name: 'Express', icon: 'Ex' },
+            { name: 'MongoDB', icon: 'Mongo' },
+            { name: 'Mongoose', icon: 'Mgs' },
+            { name: 'Zod', icon: 'Zod' },
+            { name: 'i18next', icon: 'i18n' },
+            { name: 'AWS (EC2, S3, SQS, SES)', icon: 'AWS' },
+            { name: 'Meta WhatsApp Cloud API', icon: 'WA' },
+            { name: 'Cashfree', icon: 'Pay' },
+            { name: 'Jest & Vitest', icon: 'Test' },
+            { name: 'GitHub Actions', icon: 'CI' },
+            { name: 'Sentry', icon: 'Obs' },
+        ],
+        results: [
+            { label: 'Modules', value: '11', context: 'on one shared patient record' },
+            { label: 'Built-in automations', value: '24', context: 'running on their own, 24/7' },
+            { label: 'Interface languages', value: '3', context: 'English, Hindi & Hinglish' },
+            { label: 'Platform', value: 'Web', context: 'runs in the browser, nothing to install' },
+        ],
+        ...(CLINIZY.screenshots.dashboard
+            ? { heroShot: { ...CLINIZY.screenshots.dashboard, address: 'clinizy.in/dashboard' } }
+            : {}),
+        publishedAt: '2026-09-30',
+        updatedAt: '2026-09-30',
+    },
     {
         slug: 'regortalent-ai-recruitment-platform',
         title: 'Building an AI Interviewing & ATS Platform End to End for RegorTalent',

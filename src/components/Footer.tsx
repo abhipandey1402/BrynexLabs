@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ThemeToggle } from './ThemeToggle';
 import { services } from '@/data/services';
+import { CLINIZY } from '@/data/products';
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -8,7 +9,7 @@ export default function Footer() {
     return (
         <footer className="border-t border-border bg-background" role="contentinfo">
             <div className="mx-auto max-w-container px-6 md:px-8 py-16 md:py-24">
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 md:gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 md:gap-8">
                     {/* Brand & Info */}
                     <div className="col-span-2 lg:col-span-2">
                         <Link href="/" className="inline-block group mb-6 select-none" aria-label="Brynex Labs — Home">
@@ -22,7 +23,7 @@ export default function Footer() {
                             </div>
                         </Link>
                         <p className="text-foreground-secondary text-base leading-relaxed max-w-sm mb-8">
-                            Empowering startups and enterprises with production-grade AI agents, SaaS engineering, and scalable cloud infrastructure.
+                            A product studio from India. We build and run our own software, starting with Clinizy Care, and the same senior team builds AI agents, SaaS platforms and SEO for founders worldwide.
                         </p>
                         
                         <div className="space-y-4">
@@ -56,6 +57,32 @@ export default function Footer() {
                                     </Link>
                                 </li>
                             ))}
+                        </ul>
+                    </div>
+
+                    {/* Products Column — sitewide link to our own product uses the brand name only */}
+                    <div>
+                        <h3 className="text-foreground text-sm font-bold uppercase tracking-widest mb-6 border-l-2 border-accent pl-4">Our products</h3>
+                        <ul className="space-y-4" role="list">
+                            <li>
+                                <a
+                                    href={CLINIZY.url}
+                                    target="_blank"
+                                    rel="noopener"
+                                    className="text-foreground-secondary text-sm font-semibold hover:text-foreground transition-colors duration-200"
+                                >
+                                    {CLINIZY.name}
+                                </a>
+                                <span className="block text-foreground-muted text-xs mt-1">{CLINIZY.category}</span>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/products"
+                                    className="text-foreground-secondary text-sm hover:text-foreground transition-colors duration-200"
+                                >
+                                    All products
+                                </Link>
+                            </li>
                         </ul>
                     </div>
 

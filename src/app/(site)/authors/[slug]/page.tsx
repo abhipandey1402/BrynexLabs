@@ -87,6 +87,25 @@ export default async function AuthorPage({ params }: PageProps) {
                         </h1>
                         <p className="mt-2 text-lg font-semibold text-accent">{author.jobTitle}</p>
                         <p className="mt-6 text-lg leading-relaxed text-foreground-secondary">{author.bio}</p>
+                        {author.profileLinks && author.profileLinks.length > 0 && (
+                            <ul className="mt-8 flex flex-wrap items-center justify-center gap-3" aria-label={`${author.name} elsewhere`}>
+                                {author.profileLinks.map((link) => (
+                                    <li key={link.href}>
+                                        <a
+                                            href={link.href}
+                                            target="_blank"
+                                            rel="noopener me"
+                                            className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground-secondary transition-colors hover:border-accent/50 hover:text-foreground"
+                                        >
+                                            {link.label}
+                                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                                <path d="M5 11L11 5M11 5H6M11 5V10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 </div>
 

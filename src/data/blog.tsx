@@ -8,6 +8,13 @@
  * unreachable.
  */
 
+// Engineering write-ups from building Clinizy Care — code-defined so they ship
+// with the product pages they link to and stay up if the CMS is unreachable.
+import multiTenantHms from './blog-posts/how-we-built-multi-tenant-hms-indian-clinics';
+import whatsappAtClinicScale from './blog-posts/whatsapp-business-api-clinic-scale';
+import dpdpForHealthTech from './blog-posts/dpdp-act-health-tech-builders';
+import gstBillingEngine from './blog-posts/gst-billing-engine-lessons-clinics';
+
 export type BlogCategory = 'AI' | 'SaaS' | 'Cloud' | 'DevOps' | 'Engineering' | 'SEO';
 
 export const BLOG_CATEGORIES: BlogCategory[] = ['AI', 'SaaS', 'Cloud', 'DevOps', 'Engineering', 'SEO'];
@@ -37,7 +44,10 @@ export interface BlogPost {
     source?: 'static' | 'db';
 }
 
+const clinizyEngineeringPosts: BlogPost[] = [multiTenantHms, whatsappAtClinicScale, dpdpForHealthTech, gstBillingEngine];
+
 export const blogPosts: BlogPost[] = [
+    ...clinizyEngineeringPosts,
     {
         slug: "ai-agents-in-business-practical-guide",
         title: "AI Agents in Business: A Practical Guide for 2026",

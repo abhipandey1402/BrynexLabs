@@ -311,3 +311,11 @@ body {
 .prose table th {
   background: rgba(var(--background-secondary), 0.6);
 }
+
+/* ===== AI feature showcase ===== */
+/* Referenced inline by AIFeatureShowcase: the active tab's progress bar is
+   also its auto-advance timer (animationend → next feature). */
+@keyframes bx-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}

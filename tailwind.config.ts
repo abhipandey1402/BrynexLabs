@@ -69,6 +69,12 @@ const config: Config = {
         'fade-in-down': 'fadeInDown 0.5s ease-out forwards',
         'glow-pulse': 'glowPulse 4s ease-in-out infinite',
         'marquee': 'marquee var(--marquee-duration, 40s) linear infinite',
+        // AI product visuals (always paired with motion-safe: at the call site)
+        'wave': 'wave 1.2s ease-in-out infinite',
+        'flow': 'flow 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite',
+        'fill-line': 'fillLine 3.6s ease-out infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'pop-in': 'popIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both',
       },
       keyframes: {
         marquee: {
@@ -90,6 +96,29 @@ const config: Config = {
         glowPulse: {
           '0%, 100%': { opacity: '0.5' },
           '50%': { opacity: '1' },
+        },
+        wave: {
+          '0%, 100%': { transform: 'scaleY(0.3)' },
+          '50%': { transform: 'scaleY(1)' },
+        },
+        flow: {
+          '0%': { left: '0%', opacity: '0' },
+          '15%': { opacity: '1' },
+          '85%': { opacity: '1' },
+          '100%': { left: '100%', opacity: '0' },
+        },
+        fillLine: {
+          '0%': { transform: 'scaleX(0)' },
+          '35%, 85%': { transform: 'scaleX(1)' },
+          '100%': { transform: 'scaleX(1)', opacity: '0.35' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-6px)' },
+        },
+        popIn: {
+          '0%': { opacity: '0', transform: 'translateY(8px) scale(0.98)' },
+          '100%': { opacity: '1', transform: 'none' },
         },
       },
     },
