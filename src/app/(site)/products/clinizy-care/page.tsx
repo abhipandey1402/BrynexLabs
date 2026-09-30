@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import SectionWrapper from '@/components/SectionWrapper';
+import PageHeroBackdrop from '@/components/PageHeroBackdrop';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import ClinizyLogo from '@/components/ClinizyLogo';
 import AIFeatureShowcase from '@/components/AIFeatureShowcase';
@@ -139,13 +140,13 @@ export default function ClinizyCareProductPage() {
     const green = CLINIZY.brandGreen;
 
     return (
-        <div className="pt-28 pb-8">
+        <div className="pb-8">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
             {/* Hero */}
-            <SectionWrapper className="relative overflow-hidden !pb-10">
-                <div className="pointer-events-none absolute -top-32 left-1/2 h-[520px] w-[1000px] -translate-x-1/2 bg-accent-glow opacity-80" aria-hidden="true" />
-                <div className="relative">
+            <SectionWrapper animate={false} className="relative overflow-hidden !pt-32 md:!pt-40 !pb-12">
+                <PageHeroBackdrop />
+                <div className="relative z-10">
                     <Breadcrumbs
                         className="mb-10"
                         items={[{ label: 'Home', href: '/' }, { label: 'Products', href: '/products' }, { label: 'Clinizy Care' }]}

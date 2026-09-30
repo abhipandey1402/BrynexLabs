@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import SectionWrapper from '@/components/SectionWrapper';
+import PageHeroBackdrop from '@/components/PageHeroBackdrop';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import ClinizyLogo, { CLINIZY_GREEN_TEXT } from '@/components/ClinizyLogo';
 import AIFeatureShowcase from '@/components/AIFeatureShowcase';
@@ -56,12 +57,12 @@ export default function ProductsPage() {
     const dashboard = CLINIZY.screenshots.dashboard;
 
     return (
-        <div className="pt-28 pb-8">
+        <div className="pb-8">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-            <SectionWrapper className="relative overflow-hidden !pb-8">
-                <div className="pointer-events-none absolute -top-32 left-1/2 h-[480px] w-[900px] -translate-x-1/2 bg-accent-glow opacity-80" aria-hidden="true" />
-                <div className="relative max-w-4xl">
+            <SectionWrapper animate={false} className="relative overflow-hidden !pt-32 md:!pt-40 !pb-12 md:!pb-16">
+                <PageHeroBackdrop />
+                <div className="relative z-10 max-w-4xl">
                     <Breadcrumbs className="mb-10" items={[{ label: 'Home', href: '/' }, { label: 'Products' }]} />
                     <h1 className="text-4xl font-bold leading-[1.02] tracking-tight text-foreground sm:text-5xl md:text-7xl">
                         Products we build and run
