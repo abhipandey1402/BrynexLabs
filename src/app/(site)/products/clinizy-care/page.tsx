@@ -102,8 +102,8 @@ function galleryShots(): { key: string; shot: Screenshot; caption: string; phone
         { key: 'ipd', shot: s.ipd, caption: 'IPD & bed management' },
         { key: 'lab', shot: s.lab, caption: 'Lab & diagnostics' },
         { key: 'automations', shot: s.automations, caption: 'Automations' },
-        { key: 'hindi', shot: s.hindi, caption: 'The same screen in Hindi' },
-        { key: 'mobile', shot: s.mobile, caption: 'The owner’s view on a phone', phone: true },
+        { key: 'hindi', shot: s.hindi, caption: 'The dashboard in Hindi' },
+        { key: 'mobile', shot: s.mobile, caption: 'The OPD queue in a phone browser', phone: true },
     ];
     return items.filter((i): i is { key: string; shot: Screenshot; caption: string; phone?: boolean } => Boolean(i.shot));
 }

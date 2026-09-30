@@ -109,7 +109,58 @@ export const CLINIZY = {
         documentTypes: ['SOAP note', 'H&P', 'Discharge summary', 'ER note'],
     },
     /** Real screens from the running app with fictional demo data. Filled in once captured. */
-    screenshots: {} as Partial<Record<'dashboard' | 'opd' | 'billing' | 'prescription' | 'pharmacy' | 'ipd' | 'lab' | 'automations' | 'hindi' | 'mobile', Screenshot>>,
+    // Captured 2026-09-30 from Clinizy Care v1.20.0 running locally with a
+    // fictional demo clinic ("Sunrise Clinic") and reserved, non-routable phone numbers.
+    screenshots: {
+        dashboard: {
+            src: '/products/clinizy-care/screens/dashboard.jpg',
+            alt: 'Clinizy Care owner dashboard for a demo clinic, showing 30-day revenue, OPD visits, bed occupancy and pharmacy sales with trend charts',
+            width: 1600,
+            height: 1000,
+        },
+        opd: {
+            src: '/products/clinizy-care/screens/opd-queue.jpg',
+            alt: 'Clinizy Care live OPD queue with token numbers, payment and check-in status, and a vitals panel flagging high blood pressure',
+            width: 1600,
+            height: 1000,
+        },
+        prescription: {
+            src: '/products/clinizy-care/screens/prescription.jpg',
+            alt: 'A finalized digital prescription in Clinizy Care with an ICD-10 diagnosis and medicines with dosing instructions',
+            width: 1600,
+            height: 1000,
+        },
+        pharmacy: {
+            src: '/products/clinizy-care/screens/pharmacy.jpg',
+            alt: 'Clinizy Care pharmacy inventory listing stock by batch with low-stock and near-expiry badges',
+            width: 1600,
+            height: 1000,
+        },
+        ipd: {
+            src: '/products/clinizy-care/screens/ipd-bed-map.jpg',
+            alt: 'Clinizy Care IPD bed map showing total, available and occupied beds across wards',
+            width: 1600,
+            height: 1000,
+        },
+        lab: {
+            src: '/products/clinizy-care/screens/lab-report.jpg',
+            alt: 'A verified lab report in Clinizy Care with HbA1c and lipid profile results flagged against reference ranges',
+            width: 1600,
+            height: 1000,
+        },
+        hindi: {
+            src: '/products/clinizy-care/screens/dashboard-hindi.jpg',
+            alt: 'The Clinizy Care dashboard with the interface switched to Hindi',
+            width: 1600,
+            height: 1000,
+        },
+        mobile: {
+            src: '/products/clinizy-care/screens/mobile-opd-queue.jpg',
+            alt: 'Clinizy Care OPD queue on a phone browser',
+            width: 585,
+            height: 1266,
+        },
+    } as Partial<Record<'dashboard' | 'opd' | 'billing' | 'prescription' | 'pharmacy' | 'ipd' | 'lab' | 'automations' | 'hindi' | 'mobile', Screenshot>>,
 };
 
 export type AIFeatureVisual = 'notes' | 'documents' | 'guardrail' | 'recall' | 'safety' | 'stock';
