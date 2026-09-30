@@ -3,7 +3,7 @@ import Link from 'next/link';
 import SectionWrapper from '@/components/SectionWrapper';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import ClinizyLogo, { CLINIZY_GREEN_TEXT } from '@/components/ClinizyLogo';
-import AIScribeFlow from '@/components/AIScribeFlow';
+import AIFeatureShowcase from '@/components/AIFeatureShowcase';
 import StartProjectButton from '@/components/StartProjectButton';
 import { BrowserFrame } from '@/components/DeviceFrame';
 import { CLINIZY } from '@/data/products';
@@ -136,16 +136,18 @@ export default function ProductsPage() {
                 <div className="mb-10 max-w-3xl">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">AI where it saves a clinic real time</h2>
                     <p className="mt-4 text-lg leading-relaxed text-foreground-secondary">
-                        We put AI where the minutes are: documentation. Clinizy Scribe drafts clinical notes from a
-                        doctor&apos;s dictation, with a guardrail agent that refuses non-clinical input. It&apos;s in early access
-                        today, and it&apos;s the same agent-plus-guardrails pattern we build for{' '}
+                        Bol, in early access today, drafts clinical notes from a doctor&apos;s dictation, with a guardrail agent
+                        that refuses non-clinical input. Saathi, Awaz, Nazar, Buddhi and Setu are next on our roadmap. Each one
+                        uses the same agent-plus-guardrails pattern we build for{' '}
                         <Link href="/services/ai-agents-automation" className="font-semibold text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent">
                             clients who need AI agents in production
                         </Link>
                         .
                     </p>
                 </div>
-                <AIScribeFlow />
+                <div className="rounded-3xl border border-border bg-background-card p-5 sm:p-8">
+                    <AIFeatureShowcase />
+                </div>
             </SectionWrapper>
 
             <SectionWrapper ariaLabel="Why we build our own products">

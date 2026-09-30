@@ -13,6 +13,7 @@ const LLMS_FULL_TXT = `# Brynex Labs — Full Reference
 - How we built Clinizy Care (builder's story, architecture, lessons learned): https://brynex.in/products/clinizy-care
 - Clinizy Care case study: https://brynex.in/case-studies/clinizy-care
 - Product details, features and pricing are maintained on clinizy.in, which is the canonical source for the product.
+- AI in Clinizy Care: Bol (AI clinical notes from dictation) is in early access. Saathi (WhatsApp front desk), Awaz (reminder calls), Nazar (daily owner brief), Buddhi (pharmacy forecasting) and Setu (ask-your-clinic analytics in Hindi) are on the roadmap and not yet available. 24 workflow automations (Autopilot) are live.
 
 ## Company
 

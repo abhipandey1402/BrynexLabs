@@ -26,7 +26,10 @@ const config: Config = {
           muted: 'rgba(var(--foreground-muted), <alpha-value>)',
         },
         accent: {
-          DEFAULT: 'var(--accent)',
+          // Via the RGB triplet so opacity modifiers (bg-accent/10, border-accent/30, …)
+          // actually compile — with a bare var(--accent) Tailwind silently drops them.
+          // --accent-rgb is always set alongside --accent (see lib/serviceTheme.ts).
+          DEFAULT: 'rgba(var(--accent-rgb), <alpha-value>)',
           light: 'var(--accent-light)',
           lighter: 'var(--accent-lighter)',
           dark: 'var(--accent-dark)',

@@ -99,12 +99,13 @@ export const CLINIZY = {
         'WhatsApp for Clinics',
     ],
     /**
-     * Clinizy Scribe — AI clinical documentation. Status and wording match
-     * clinizy.in/ai-clinical-documentation ("Early access · launching soon").
-     * Never present it as generally available until clinizy.in does.
+     * Bol (बोल) — AI clinical documentation, renamed from "Clinizy Scribe".
+     * Status mirrors clinizy.in/ai-clinical-documentation ("Early access").
+     * NOTE: clinizy.in still says "Clinizy Scribe" until the rename ships there.
      */
-    scribe: {
-        name: 'Clinizy Scribe',
+    bol: {
+        name: 'Bol',
+        nameHi: 'बोल',
         status: 'Early access',
         documentTypes: ['SOAP note', 'H&P', 'Discharge summary', 'ER note'],
     },
@@ -163,85 +164,101 @@ export const CLINIZY = {
     } as Partial<Record<'dashboard' | 'opd' | 'billing' | 'prescription' | 'pharmacy' | 'ipd' | 'lab' | 'automations' | 'hindi' | 'mobile', Screenshot>>,
 };
 
-export type AIFeatureVisual = 'notes' | 'documents' | 'guardrail' | 'recall' | 'safety' | 'stock';
+export type AIFeatureId = 'bol' | 'saathi' | 'awaz' | 'nazar' | 'buddhi' | 'setu';
 
 export interface AIFeature {
-    id: AIFeatureVisual;
+    id: AIFeatureId;
+    /** Latin-script name, e.g. "Bol". */
+    name: string;
+    /** Devanagari name, e.g. "बोल". */
+    nameHi: string;
+    /** What it is, in three or four words. */
     title: string;
-    /** AI = model-driven (Clinizy Scribe). Autopilot = clinizy.in's name for its rule-based automations. */
-    kind: 'AI' | 'Autopilot';
-    /** Must match clinizy.in. Roadmap items get 'In development' — never 'Live'. */
-    status: 'Live' | 'Early access' | 'In development';
+    /**
+     * Honest availability. 'Early access' mirrors clinizy.in. 'Roadmap' means
+     * planned in the Clinizy AI Blueprint (Sep 2026) with no shipped code yet —
+     * never promote an item past 'Roadmap' until it is live on clinizy.in.
+     */
+    status: 'Early access' | 'Roadmap';
     /** One line, shown in the list. */
     summary: string;
-    /** One sentence, shown with the animated preview. */
+    /** One or two sentences, shown with the animated illustration. */
     detail: string;
 }
 
 /**
- * High-impact AI + Autopilot features in Clinizy Care, for the compact
- * animated showcase. Scribe items mirror clinizy.in/ai-clinical-documentation
- * (early access); Autopilot items are live automations on clinizy.in/automations.
+ * The AI line-up for Clinizy Care, shown in the compact animated showcase.
+ * Bol is in early access; the other five come from the Clinizy AI Blueprint
+ * (internal, 5 Sep 2026) and are labelled Roadmap until they ship.
  */
 export const AI_FEATURES: AIFeature[] = [
     {
-        id: 'notes',
+        id: 'bol',
+        name: 'Bol',
+        nameHi: 'बोल',
         title: 'AI clinical notes',
-        kind: 'AI',
         status: 'Early access',
-        summary: 'Dictation in, a structured SOAP note out.',
-        detail: 'Clinizy Scribe turns a doctor\u2019s dictation into a structured note to review, so consult time goes to the patient, not the keyboard.',
+        summary: 'Speak the consult in Hinglish; get a structured draft.',
+        detail: 'The doctor dictates the way they actually talk, and Bol drafts a structured clinical note to review, with a guardrail that rejects non-clinical input. Consult time goes to the patient, not the keyboard.',
     },
     {
-        id: 'documents',
-        title: 'Discharge summaries & more',
-        kind: 'AI',
-        status: 'Early access',
-        summary: 'Discharge summaries, H&P and ER notes.',
-        detail: 'The same engine drafts discharge summaries, H&P and ER notes in a consistent structure, ready for the doctor to check and sign.',
+        id: 'saathi',
+        name: 'Saathi',
+        nameHi: 'साथी',
+        title: 'WhatsApp front desk',
+        status: 'Roadmap',
+        summary: 'Books, reschedules and shares reports, even at 11 pm.',
+        detail: 'An AI agent on the clinic\'s own WhatsApp number that books and reschedules, shares the queue position, sends reports and payment links, and hands anything clinical to a person.',
     },
     {
-        id: 'guardrail',
-        title: 'Guardrailed AI output',
-        kind: 'AI',
-        status: 'Early access',
-        summary: 'Checks the input before anything is drafted.',
-        detail: 'A guardrail agent rejects non-clinical input and anti-hallucination checks run on every draft, so notes stay grounded in what the doctor said.',
+        id: 'awaz',
+        name: 'Awaz',
+        nameHi: 'आवाज़',
+        title: 'Reminder calls',
+        status: 'Roadmap',
+        summary: 'A short call for patients who never open WhatsApp.',
+        detail: 'A 45-second call in the patient\'s language for a due follow-up, a refill or a ready report. It takes one spoken answer (yes, no or a day) and records it.',
     },
     {
-        id: 'recall',
-        title: 'Autopilot recalls',
-        kind: 'Autopilot',
-        status: 'Live',
-        summary: 'Follow-ups, refills and no-show win-back on WhatsApp.',
-        detail: 'Follow-up recalls, refill reminders and no-show win-back messages go out on WhatsApp by themselves, in English or Hindi.',
+        id: 'nazar',
+        name: 'Nazar',
+        nameHi: 'नज़र',
+        title: 'The 8 am owner brief',
+        status: 'Roadmap',
+        summary: 'Three things to fix today, with the rupees on each.',
+        detail: 'Every morning the owner gets a WhatsApp brief: unbilled lab orders, missed follow-ups, stock about to expire. Every figure comes from a database query; the AI only ranks and explains.',
     },
     {
-        id: 'safety',
-        title: 'Clinical safety net',
-        kind: 'Autopilot',
-        status: 'Live',
-        summary: 'Critical results and vitals escalate instantly.',
-        detail: 'Critical lab results, abnormal vitals and missed doses are escalated to the right person automatically, instead of waiting in a list.',
+        id: 'buddhi',
+        name: 'Buddhi',
+        nameHi: 'बुद्धि',
+        title: 'Pharmacy forecasting',
+        status: 'Roadmap',
+        summary: 'Reorder from your own prescribing history.',
+        detail: 'Forecasts demand from what the clinic\'s doctors actually prescribe, drafts the purchase order, and plans how to clear near-expiry stock while the supplier return window is still open.',
     },
     {
-        id: 'stock',
-        title: 'Zero-waste pharmacy',
-        kind: 'Autopilot',
-        status: 'Live',
-        summary: 'Low-stock and near-expiry alerts, before they cost you.',
-        detail: 'Low-stock reorder alerts and 30/60/90-day near-expiry warnings keep the shelves stocked without writing off expired medicine.',
+        id: 'setu',
+        name: 'Setu',
+        nameHi: 'सेतु',
+        title: 'Ask your clinic',
+        status: 'Roadmap',
+        summary: 'A question in Hindi in, a chart out.',
+        detail: 'Owners ask in plain Hindi or Hinglish and get a chart back. The AI only chooses from pre-approved, clinic-scoped reports, so it can never write its own queries or see another clinic\'s data.',
     },
 ];
+
+/** Live today: a few of the 24 Autopilot automations, shown beside the AI roadmap. */
+export const AUTOPILOT_LIVE = ['Follow-up recalls', 'Refill reminders', 'Critical-result alerts', 'Near-expiry alerts'];
 
 /** "Shipped for ourselves first" — each service we sell, mapped to where it runs in Clinizy Care. */
 export const SHIPPED_FOR_OURSELVES: ShippedProof[] = [
     {
         service: 'AI agents',
         serviceHref: '/services/ai-agents-automation',
-        proof: 'AI clinical notes',
+        proof: 'Bol, AI clinical notes',
         status: 'Early access',
-        detail: 'Clinizy Scribe turns a doctor’s dictation into structured clinical notes, with a guardrail agent that checks the input before anything is drafted.',
+        detail: 'Bol turns a doctor’s Hinglish dictation into a structured clinical note, with a guardrail agent that checks the input before anything is drafted. Five more AI capabilities are on the roadmap.',
     },
     {
         service: 'SaaS engineering',

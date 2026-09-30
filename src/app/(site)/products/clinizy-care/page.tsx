@@ -3,7 +3,6 @@ import Link from 'next/link';
 import SectionWrapper from '@/components/SectionWrapper';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import ClinizyLogo from '@/components/ClinizyLogo';
-import AIScribeFlow from '@/components/AIScribeFlow';
 import AIFeatureShowcase from '@/components/AIFeatureShowcase';
 import StartProjectButton from '@/components/StartProjectButton';
 import { BrowserFrame, PhoneFrame } from '@/components/DeviceFrame';
@@ -176,12 +175,10 @@ export default function ClinizyCareProductPage() {
                             </div>
                         </div>
                         <div className="lg:col-span-6">
-                            {dashboard ? (
+                            {dashboard && (
                                 <div className="rounded-3xl p-3 sm:p-5" style={{ backgroundColor: `${green}14` }}>
                                     <BrowserFrame shot={dashboard} address="clinizy.in/dashboard" priority sizes="(min-width: 1024px) 48vw, 100vw" />
                                 </div>
-                            ) : (
-                                <AIScribeFlow />
                             )}
                         </div>
                     </div>
@@ -273,9 +270,10 @@ export default function ClinizyCareProductPage() {
                         AI where the minutes are, automation everywhere else
                     </h2>
                     <p className="text-lg leading-relaxed text-foreground-secondary lg:col-span-7">
-                        Documentation is where a doctor&apos;s day disappears, so that&apos;s where we put AI: Clinizy Scribe
-                        drafts structured notes from dictation. Around it, 24 automations handle the repetitive work on their
-                        own, from follow-up recalls and refill reminders to critical-result alerts and near-expiry warnings.
+                        Documentation is where a doctor&apos;s day disappears, so that&apos;s where we started: Bol drafts
+                        structured notes from dictation and is in early access. Saathi, Awaz, Nazar, Buddhi and Setu are next on
+                        the roadmap. Around them, 24 automations already handle the repetitive work, from follow-up recalls to
+                        critical-result alerts.
                     </p>
                 </div>
                 <div className="rounded-3xl border border-border bg-background-card p-5 sm:p-8">

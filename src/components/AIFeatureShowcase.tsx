@@ -1,20 +1,22 @@
 'use client';
 
-import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
-import { AI_FEATURES, CLINIZY, type AIFeature, type AIFeatureVisual } from '@/data/products';
+import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { AI_FEATURES, AUTOPILOT_LIVE, CLINIZY, type AIFeature, type AIFeatureId } from '@/data/products';
 import { CLINIZY_GREEN_TEXT } from './ClinizyLogo';
 
-/** How long each feature stays on screen before auto-advancing. */
-const DWELL_MS = 5200;
+/** How long each capability stays on screen before auto-advancing. */
+const DWELL_MS = 5600;
 const GREEN = CLINIZY.brandGreen;
 
 /**
- * Compact, auto-advancing showcase of Clinizy Care's AI + Autopilot features.
+ * Compact, auto-advancing showcase of the AI inside Clinizy Care
+ * (Bol, Saathi, Awaz, Nazar, Buddhi, Setu) plus the live Autopilot strip.
  * - The active tab's progress bar *is* the timer: its animationend advances
- *   the carousel, so pausing the animation (hover/focus) pauses the carousel.
+ *   the carousel, so pausing the animation (hover/focus/Pause) pauses it.
  * - Reduced motion: no progress animation, so no auto-advance; users click.
- * - WAI-ARIA tabs: arrow keys / Home / End move between features.
- * Previews are illustrations of how each feature works, not screenshots.
+ * - WAI-ARIA tabs: arrow keys / Home / End move between capabilities.
+ * Previews are illustrations of how each capability works, not screenshots,
+ * and every item carries its real status (Early access / Roadmap).
  */
 export default function AIFeatureShowcase({ className = '' }: { className?: string }) {
     const [active, setActive] = useState(0);
@@ -25,6 +27,7 @@ export default function AIFeatureShowcase({ className = '' }: { className?: stri
     const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
     const baseId = useId();
     const feature = AI_FEATURES[active];
+    const roadmapNames = AI_FEATURES.filter((f) => f.status === 'Roadmap').map((f) => f.name);
 
     useEffect(() => {
         const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -53,178 +56,215 @@ export default function AIFeatureShowcase({ className = '' }: { className?: stri
     };
 
     return (
-        <div
-            className={`grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-8 ${className}`}
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-            onFocus={() => setPaused(true)}
-            onBlur={(e) => {
-                if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setPaused(false);
-            }}
-        >
-            <div role="tablist" aria-label="AI and Autopilot features" aria-orientation="vertical" className="flex flex-col gap-1">
-                {AI_FEATURES.map((f, i) => {
-                    const selected = i === active;
-                    return (
-                        <button
-                            key={f.id}
-                            ref={(el) => {
-                                tabRefs.current[i] = el;
-                            }}
-                            id={`${baseId}-tab-${f.id}`}
-                            role="tab"
-                            type="button"
-                            aria-selected={selected}
-                            aria-controls={`${baseId}-panel`}
-                            tabIndex={selected ? 0 : -1}
-                            onClick={() => setActive(i)}
-                            onKeyDown={onKeyDown}
-                            className={`group relative overflow-hidden rounded-xl border px-4 py-2.5 text-left transition-colors duration-200 ${
-                                selected
-                                    ? 'border-border bg-background-secondary'
-                                    : 'border-transparent hover:bg-background-secondary/60'
-                            }`}
-                        >
-                            <span className="flex items-center gap-2">
-                                <KindBadge kind={f.kind} />
-                                <span className={`font-semibold ${selected ? 'text-foreground' : 'text-foreground-secondary group-hover:text-foreground'}`}>
-                                    {f.title}
-                                </span>
-                            </span>
-                            {/* Only the active feature expands — keeps six features in a small area */}
-                            <span
-                                className={`grid text-sm text-foreground-secondary transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                                    selected ? 'mt-1 grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        <div className={className}>
+            <div
+                className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-8"
+                onMouseEnter={() => setPaused(true)}
+                onMouseLeave={() => setPaused(false)}
+                onFocus={() => setPaused(true)}
+                onBlur={(e) => {
+                    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setPaused(false);
+                }}
+            >
+                <div role="tablist" aria-label="AI inside Clinizy Care" aria-orientation="vertical" className="flex flex-col gap-1">
+                    {AI_FEATURES.map((f, i) => {
+                        const selected = i === active;
+                        return (
+                            <button
+                                key={f.id}
+                                ref={(el) => {
+                                    tabRefs.current[i] = el;
+                                }}
+                                id={`${baseId}-tab-${f.id}`}
+                                role="tab"
+                                type="button"
+                                aria-selected={selected}
+                                aria-controls={`${baseId}-panel`}
+                                tabIndex={selected ? 0 : -1}
+                                onClick={() => setActive(i)}
+                                onKeyDown={onKeyDown}
+                                className={`group relative overflow-hidden rounded-xl border px-3 py-2.5 text-left transition-colors duration-200 ${
+                                    selected ? 'border-border bg-background-secondary' : 'border-transparent hover:bg-background-secondary/60'
                                 }`}
                             >
-                                <span className="overflow-hidden">{f.summary}</span>
-                            </span>
-                            {/* Progress bar — doubles as the auto-advance timer */}
-                            {selected && (
-                                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-border" aria-hidden="true">
+                                <span className="flex items-center gap-3">
                                     <span
-                                        key={`${active}-${reducedMotion}`}
-                                        className="block h-full origin-left"
-                                        style={{
-                                            backgroundColor: GREEN,
-                                            transform: reducedMotion ? 'scaleX(1)' : undefined,
-                                            animation: reducedMotion ? undefined : `bx-progress ${DWELL_MS}ms linear forwards`,
-                                            animationPlayState: paused || userPaused ? 'paused' : 'running',
-                                        }}
-                                        onAnimationEnd={next}
-                                    />
+                                        lang="hi"
+                                        aria-hidden="true"
+                                        className={`flex h-9 w-14 shrink-0 items-center justify-center rounded-lg text-[15px] font-semibold transition-colors ${
+                                            selected ? 'bg-accent-gradient text-white' : 'bg-accent/10 text-accent'
+                                        }`}
+                                    >
+                                        {f.nameHi}
+                                    </span>
+                                    <span className="min-w-0 flex-1">
+                                        <span className="flex flex-wrap items-baseline gap-x-2">
+                                            <span className={`font-semibold ${selected ? 'text-foreground' : 'text-foreground-secondary group-hover:text-foreground'}`}>
+                                                {f.name}
+                                            </span>
+                                            <span className="text-sm text-foreground-muted">{f.title}</span>
+                                        </span>
+                                        {/* Only the active capability expands — six fit in a small area */}
+                                        <span
+                                            className={`grid text-sm text-foreground-secondary transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                                                selected ? 'mt-0.5 grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                                            }`}
+                                        >
+                                            <span className="overflow-hidden">{f.summary}</span>
+                                        </span>
+                                    </span>
+                                    <StatusBadge status={f.status} compact />
                                 </span>
-                            )}
-                        </button>
-                    );
-                })}
+                                {/* Progress bar — doubles as the auto-advance timer */}
+                                {selected && (
+                                    <span className="absolute inset-x-0 bottom-0 h-0.5 bg-border" aria-hidden="true">
+                                        <span
+                                            key={`${active}-${reducedMotion}`}
+                                            className="block h-full origin-left bg-accent"
+                                            style={{
+                                                transform: reducedMotion ? 'scaleX(1)' : undefined,
+                                                animation: reducedMotion ? undefined : `bx-progress ${DWELL_MS}ms linear forwards`,
+                                                animationPlayState: paused || userPaused ? 'paused' : 'running',
+                                            }}
+                                            onAnimationEnd={next}
+                                        />
+                                    </span>
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                <div
+                    id={`${baseId}-panel`}
+                    role="tabpanel"
+                    aria-labelledby={`${baseId}-tab-${feature.id}`}
+                    className="flex flex-col rounded-2xl border border-border bg-background-secondary/50 p-5 sm:p-6"
+                >
+                    <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                        <span lang="hi" className="text-lg font-semibold text-accent">{feature.nameHi}</span>
+                        <span className="text-lg font-bold text-foreground">{feature.name}</span>
+                        <span className="text-foreground-muted" aria-hidden="true">·</span>
+                        <span className="text-foreground-secondary">{feature.title}</span>
+                        <StatusBadge status={feature.status} />
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">{feature.detail}</p>
+                    {/* Keyed so each capability's animation replays from the start */}
+                    <div key={feature.id} className="mt-4 flex min-h-[220px] flex-1 items-center justify-center rounded-xl border border-border bg-background-card p-4 sm:p-5">
+                        <FeatureVisual id={feature.id} />
+                    </div>
+                    <div className="mt-3 flex items-start justify-between gap-4">
+                        <p className="text-xs text-foreground-muted">
+                            Illustration of how it works. {CLINIZY.bol.name} is in early access; {roadmapNames.join(', ')} are on our roadmap and not yet available.
+                        </p>
+                        {!reducedMotion && (
+                            <button
+                                type="button"
+                                onClick={() => setUserPaused((p) => !p)}
+                                className="shrink-0 rounded-md border border-border px-2 py-0.5 text-xs font-semibold text-foreground-secondary transition-colors hover:text-foreground"
+                                aria-pressed={userPaused}
+                            >
+                                {userPaused ? 'Play' : 'Pause'}
+                            </button>
+                        )}
+                    </div>
+                </div>
             </div>
 
-            <div
-                id={`${baseId}-panel`}
-                role="tabpanel"
-                aria-labelledby={`${baseId}-tab-${feature.id}`}
-                className="flex flex-col rounded-2xl border border-border bg-background-secondary/50 p-5 sm:p-6"
-            >
-                <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-semibold text-foreground">{feature.title}</span>
-                    <StatusBadge status={feature.status} />
-                </div>
-                <p className="mt-2 text-sm leading-relaxed text-foreground-secondary">{feature.detail}</p>
-                {/* Keyed so each feature's animation replays from the start */}
-                <div key={feature.id} className="mt-4 flex min-h-[208px] flex-1 items-center justify-center rounded-xl border border-border bg-background-card p-4 sm:p-5">
-                    <FeatureVisual id={feature.id} />
-                </div>
-                <div className="mt-3 flex items-start justify-between gap-4">
-                    <p className="text-xs text-foreground-muted">
-                        Illustration of how the feature works. {CLINIZY.scribe.name} is in early access; Autopilot automations are live.
-                    </p>
-                    {!reducedMotion && (
-                        <button
-                            type="button"
-                            onClick={() => setUserPaused((p) => !p)}
-                            className="shrink-0 rounded-md border border-border px-2 py-0.5 text-xs font-semibold text-foreground-secondary transition-colors hover:text-foreground"
-                            aria-pressed={userPaused}
-                        >
-                            {userPaused ? 'Play' : 'Pause'}
-                        </button>
-                    )}
-                </div>
+            {/* Live today — proof beside the roadmap */}
+            <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-border px-4 py-3">
+                <span className={`inline-flex items-center gap-1.5 text-sm font-semibold ${CLINIZY_GREEN_TEXT}`}>
+                    <span className="relative flex h-2 w-2" aria-hidden="true">
+                        <span className="absolute inline-flex h-full w-full rounded-full opacity-60 motion-safe:animate-ping" style={{ backgroundColor: GREEN }} />
+                        <span className="relative inline-flex h-2 w-2 rounded-full" style={{ backgroundColor: GREEN }} />
+                    </span>
+                    Live today
+                </span>
+                <span className="text-sm font-semibold text-foreground">Autopilot: 24 automations</span>
+                <ul className="flex flex-wrap gap-1.5" aria-label="Examples of live automations">
+                    {AUTOPILOT_LIVE.map((a) => (
+                        <li key={a} className="rounded-full border border-border px-2.5 py-0.5 text-xs text-foreground-secondary">
+                            {a}
+                        </li>
+                    ))}
+                </ul>
             </div>
         </div>
     );
 }
 
-function KindBadge({ kind }: { kind: AIFeature['kind'] }) {
-    return kind === 'AI' ? (
-        <span className="rounded-md bg-accent-gradient px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">AI</span>
-    ) : (
-        <span className="rounded-md border border-border px-1.5 py-0.5 text-[10px] font-bold leading-none text-foreground-secondary">AUTO</span>
-    );
-}
-
-function StatusBadge({ status }: { status: AIFeature['status'] }) {
-    const live = status === 'Live';
+function StatusBadge({ status, compact = false }: { status: AIFeature['status']; compact?: boolean }) {
+    const early = status === 'Early access';
     return (
         <span
-            className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-semibold ${live ? CLINIZY_GREEN_TEXT : 'text-accent border-accent/30 bg-accent/10'}`}
-            style={live ? { borderColor: `${GREEN}40`, backgroundColor: `${GREEN}14` } : undefined}
+            className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 font-semibold ${compact ? 'text-[11px]' : 'text-xs'} ${
+                early ? 'border-accent/30 bg-accent/10 text-accent' : 'border-border text-foreground-muted'
+            }`}
         >
-            <span className={`h-1.5 w-1.5 rounded-full ${live ? '' : 'bg-accent'}`} style={live ? { backgroundColor: GREEN } : undefined} aria-hidden="true" />
+            <span className={`h-1.5 w-1.5 rounded-full ${early ? 'bg-accent' : 'bg-foreground-muted/60'}`} aria-hidden="true" />
             {status}
         </span>
     );
 }
 
 /* ------------------------------------------------------------------ */
-/* Per-feature illustrations. motion-safe:animate-pop-in uses fill-mode */
-/* "both", so staged items stay hidden until their delay — and are     */
-/* simply visible (no animation) for reduced-motion users.             */
+/* Per-capability illustrations. motion-safe:animate-pop-in uses fill- */
+/* mode "both", so staged items stay hidden until their delay — and    */
+/* are simply visible (no animation) for reduced-motion users.         */
+/* All names and numbers are fictional demo content.                   */
 /* ------------------------------------------------------------------ */
 
 const pop = 'motion-safe:animate-pop-in';
 const d = (s: number) => ({ animationDelay: `${s}s` });
 
-function FeatureVisual({ id }: { id: AIFeatureVisual }) {
+function FeatureVisual({ id }: { id: AIFeatureId }) {
     switch (id) {
-        case 'notes':
-            return <NotesVisual />;
-        case 'documents':
-            return <DocumentsVisual />;
-        case 'guardrail':
-            return <GuardrailVisual />;
-        case 'recall':
-            return <RecallVisual />;
-        case 'safety':
-            return <SafetyVisual />;
-        case 'stock':
-            return <StockVisual />;
+        case 'bol':
+            return <BolVisual />;
+        case 'saathi':
+            return <SaathiVisual />;
+        case 'awaz':
+            return <AwazVisual />;
+        case 'nazar':
+            return <NazarVisual />;
+        case 'buddhi':
+            return <BuddhiVisual />;
+        case 'setu':
+            return <SetuVisual />;
     }
 }
 
-function NotesVisual() {
-    const bars = [0.35, 0.8, 0.55, 1, 0.7, 0.45, 0.9, 0.6, 0.4, 0.85];
+function Wave({ bars, className = 'h-10' }: { bars: number[]; className?: string }) {
+    return (
+        <span className={`flex items-center gap-1 ${className}`}>
+            {bars.map((h, i) => (
+                <span key={i} className="w-1.5 rounded-full bg-accent motion-safe:animate-wave" style={{ height: `${h * 100}%`, animationDelay: `${i * 0.08}s` }} />
+            ))}
+        </span>
+    );
+}
+
+function BolVisual() {
     const lines = [
-        { k: 'S', t: 'Fever × 3 days, dry cough', w: '88%' },
-        { k: 'O', t: 'Temp 101°F, chest clear', w: '72%' },
-        { k: 'A', t: 'Viral URTI', w: '48%' },
-        { k: 'P', t: 'Paracetamol, fluids, review in 3 days', w: '94%' },
+        { k: 'S', t: 'Fever × 3 days, sore throat' },
+        { k: 'O', t: 'Temp 101°F, chest clear' },
+        { k: 'A', t: 'Acute pharyngitis' },
+        { k: 'P', t: 'Paracetamol SOS, review in 1 week' },
     ];
     return (
-        <div className="grid w-full items-center gap-4 sm:grid-cols-[auto_auto_1fr]" aria-hidden="true">
-            <div className="flex h-12 items-center gap-1">
-                {bars.map((h, i) => (
-                    <span key={i} className="w-1.5 rounded-full motion-safe:animate-wave" style={{ height: `${h * 100}%`, backgroundColor: GREEN, animationDelay: `${i * 0.08}s` }} />
-                ))}
+        <div className="grid w-full items-center gap-4 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1.2fr)]" aria-hidden="true">
+            <div className="space-y-3">
+                <Wave bars={[0.35, 0.8, 0.55, 1, 0.7, 0.45, 0.9, 0.6, 0.4, 0.85]} />
+                <p className="text-sm italic leading-snug text-foreground-secondary">&ldquo;Teen din se bukhar, gala kharab, chest clear&hellip;&rdquo;</p>
             </div>
             <svg className="hidden text-foreground-muted sm:block" width="28" height="16" viewBox="0 0 28 16" fill="none">
                 <path d="M2 8h22m0 0l-5-5m5 5l-5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             <div className="space-y-2 rounded-lg border border-border bg-background-secondary/60 p-3">
-                <p className="text-[11px] font-semibold text-foreground-muted">SOAP note · draft</p>
+                <p className="text-[11px] font-semibold text-foreground-muted">Draft · review before finalising</p>
                 {lines.map((l, i) => (
                     <div key={l.k} className={`flex items-baseline gap-2 text-xs ${pop}`} style={d(0.3 + i * 0.45)}>
-                        <span className={`w-3 shrink-0 font-bold ${CLINIZY_GREEN_TEXT}`}>{l.k}</span>
+                        <span className="w-3 shrink-0 font-bold text-accent">{l.k}</span>
                         <span className="text-foreground-secondary">{l.t}</span>
                     </div>
                 ))}
@@ -233,153 +273,159 @@ function NotesVisual() {
     );
 }
 
-function DocumentsVisual() {
-    const docs = ['Discharge summary', 'H&P', 'ER note'];
+function Bubble({ from, children, delay, meta }: { from: 'patient' | 'agent'; children: ReactNode; delay: number; meta?: string }) {
+    const agent = from === 'agent';
     return (
-        <div className="relative h-44 w-full max-w-sm" aria-hidden="true">
-            {docs.map((doc, i) => (
-                <div
-                    key={doc}
-                    className={`absolute inset-x-0 rounded-xl border border-border bg-background-secondary p-4 shadow-card ${pop}`}
-                    style={{ top: `${i * 22}px`, left: `${i * 18}px`, right: `${(2 - i) * 18}px`, zIndex: i, ...d(i * 0.35) }}
-                >
-                    <p className="text-xs font-semibold text-foreground">{doc}</p>
-                    <div className="mt-3 space-y-1.5">
-                        {[92, 76, 84, 58].map((w, j) => (
-                            <span key={j} className="block h-1.5 rounded-full bg-border" style={{ width: `${w}%` }}>
-                                {i === docs.length - 1 && (
-                                    <span className="block h-full origin-left rounded-full motion-safe:animate-fill-line" style={{ backgroundColor: GREEN, animationDelay: `${0.9 + j * 0.25}s` }} />
-                                )}
-                            </span>
-                        ))}
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
-}
-
-function GuardrailVisual() {
-    return (
-        <div className="w-full max-w-md space-y-3" aria-hidden="true">
-            <div className={`flex items-center justify-between gap-3 rounded-lg border border-border bg-background-secondary/60 px-3 py-2.5 ${pop}`}>
-                <span className="text-sm text-foreground-secondary">&ldquo;BP 150/95, headache since morning&hellip;&rdquo;</span>
-                <span className={`flex shrink-0 items-center gap-1 text-xs font-semibold ${pop} ${CLINIZY_GREEN_TEXT}`} style={d(0.6)}>
-                    <Check /> Clinical
-                </span>
-            </div>
-            <div className={`flex items-center justify-between gap-3 rounded-lg border border-border bg-background-secondary/60 px-3 py-2.5 ${pop}`} style={d(0.9)}>
-                <span className="text-sm text-foreground-muted line-through decoration-foreground-muted/50">&ldquo;Write a birthday poem&rdquo;</span>
-                <span className={`flex shrink-0 items-center gap-1 text-xs font-semibold text-[#B91C1C] dark:text-[#F87171] ${pop}`} style={d(1.5)}>
-                    <Cross /> Rejected
-                </span>
-            </div>
-            <div className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-foreground-secondary ${pop}`} style={{ backgroundColor: `${GREEN}14`, ...d(2.1) }}>
-                <Shield /> Anti-hallucination checks passed on the draft
+        <div className={`flex ${agent ? 'justify-end' : 'justify-start'} ${pop}`} style={d(delay)}>
+            <div
+                className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-[13px] leading-snug text-foreground ${
+                    agent ? 'rounded-tr-sm' : 'rounded-tl-sm border border-border bg-background-secondary'
+                }`}
+                style={agent ? { backgroundColor: `${GREEN}1F` } : undefined}
+            >
+                {children}
+                {meta && <span className="mt-0.5 block text-right text-[10px] text-foreground-muted">{meta}</span>}
             </div>
         </div>
     );
 }
 
-function RecallVisual() {
-    const msgs = [
-        'Namaste! Your follow-up with Dr. Mehta is due on Friday. Reply 1 to confirm.',
-        'Reminder: your Metformin refill runs out in 3 days.',
-        'We missed you today. Tap to book a new slot.',
-    ];
+function SaathiVisual() {
     return (
-        <div className="w-full max-w-sm space-y-2.5" aria-hidden="true">
-            {msgs.map((m, i) => (
-                <div key={m} className={`w-[88%] rounded-2xl rounded-tl-sm border border-border bg-background-secondary px-3.5 py-2.5 ${pop}`} style={d(0.25 + i * 0.7)}>
-                    <p className="text-[13px] leading-snug text-foreground">{m}</p>
-                    <p className={`mt-1 text-right text-[10px] font-medium ${CLINIZY_GREEN_TEXT}`}>
-                        WhatsApp · ✓✓
-                    </p>
-                </div>
-            ))}
+        <div className="w-full max-w-sm space-y-2" aria-hidden="true">
+            <Bubble from="patient" delay={0.2} meta="9:47 pm">
+                <span lang="hi">डॉक्टर साहब कल कितने बजे बैठेंगे? माँ को दिखाना है</span>
+            </Bubble>
+            <Bubble from="agent" delay={0.9} meta="Saathi · 9:47 pm">
+                Kal Dr. Sharma 10 se 1 baje tak hain. 10:40 ka slot khali hai, book kar doon?
+            </Bubble>
+            <Bubble from="patient" delay={1.6}>
+                Haan, kar do
+            </Bubble>
+            <Bubble from="agent" delay={2.3} meta="Saathi · 9:48 pm">
+                Booked ✓ Token 12, kal 10:40. Location aur reminder bhej diya hai.
+            </Bubble>
         </div>
     );
 }
 
-function SafetyVisual() {
+function AwazVisual() {
     return (
-        <div className="w-full max-w-md space-y-3" aria-hidden="true">
-            <div className="rounded-lg border border-border bg-background-secondary/60 p-3">
-                <p className="text-[11px] font-semibold text-foreground-muted">Lab result · Serum potassium</p>
-                <div className="mt-2 flex items-center justify-between">
-                    <span className="text-lg font-bold text-foreground">6.8 mmol/L</span>
-                    <span className="relative inline-flex items-center rounded-full bg-[#B91C1C] px-2.5 py-0.5 text-xs font-bold text-white">
-                        <span className="absolute inset-0 rounded-full bg-[#B91C1C] opacity-60 motion-safe:animate-ping" />
-                        <span className="relative">Critical</span>
-                    </span>
-                </div>
-            </div>
-            <div className={`flex items-center gap-3 rounded-lg border border-border bg-background-card p-3 ${pop}`} style={d(0.9)}>
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ backgroundColor: `${GREEN}1A`, color: GREEN }}>
-                    <Bell />
+        <div className="w-full max-w-sm space-y-3" aria-hidden="true">
+            <div className="flex items-center gap-3 rounded-xl border border-border bg-background-secondary/60 p-3">
+                <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
+                    <span className="absolute inset-0 rounded-full bg-accent/20 motion-safe:animate-ping" />
+                    <svg className="relative" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
+                    </svg>
                 </span>
-                <span className="text-sm text-foreground">
-                    Escalated to the doctor on duty
-                    <span className="block text-xs text-foreground-muted">Critical result alert · automatic</span>
+                <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-semibold text-foreground">Calling Kamla Devi</span>
+                    <span className="block text-xs text-foreground-muted">Refill reminder · Hindi · 0:32</span>
                 </span>
+                <Wave bars={[0.4, 0.9, 0.6, 1, 0.5]} className="h-6" />
             </div>
-        </div>
-    );
-}
-
-function StockVisual() {
-    const rows = [
-        { name: 'Amoxicillin 500', level: 82, tone: GREEN, text: CLINIZY_GREEN_TEXT, note: 'In stock', delay: 0.2 },
-        { name: 'ORS sachets', level: 18, tone: '#B45309', text: 'text-[#B45309] dark:text-[#FBBF24]', note: 'Below reorder level', delay: 0.6 },
-        { name: 'Insulin glargine', level: 55, tone: '#B91C1C', text: 'text-[#B91C1C] dark:text-[#F87171]', note: 'Expires in 30 days', delay: 1.0 },
-    ];
-    return (
-        <div className="w-full max-w-md space-y-3" aria-hidden="true">
-            {rows.map((r) => (
-                <div key={r.name} className={pop} style={d(r.delay)}>
-                    <div className="flex items-center justify-between text-xs">
-                        <span className="font-semibold text-foreground">{r.name}</span>
-                        <span className={`font-semibold ${r.text}`}>{r.note}</span>
-                    </div>
-                    <span className="mt-1.5 block h-2 rounded-full bg-border">
-                        <span className="block h-full origin-left rounded-full motion-safe:animate-fill-line" style={{ width: `${r.level}%`, backgroundColor: r.tone, animationDelay: `${r.delay}s` }} />
-                    </span>
-                </div>
-            ))}
-            <p className={`pt-1 text-xs font-medium text-foreground-secondary ${pop}`} style={d(1.6)}>
-                Reorder and near-expiry alerts sent to the pharmacist
+            <p className={`rounded-lg border border-border bg-background-card px-3 py-2 text-[13px] text-foreground-secondary ${pop}`} style={d(0.6)}>
+                <span lang="hi">&ldquo;आपकी बीपी की दवा गुरुवार को ख़त्म होगी। दोबारा मँगानी है तो &lsquo;हाँ&rsquo; कहिए।&rdquo;</span>
             </p>
+            <div className={`flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-xs font-medium ${pop}`} style={{ backgroundColor: `${GREEN}14`, ...d(1.5) }}>
+                <span className="text-foreground">Answer: &ldquo;Haan&rdquo;</span>
+                <span className={CLINIZY_GREEN_TEXT}>Refill request logged ✓</span>
+            </div>
         </div>
     );
 }
 
-function Check() {
+function NazarVisual() {
+    const items = [
+        { t: '6 lab orders not billed', v: '₹4,800' },
+        { t: '9 follow-ups missed, no message sent', v: '~₹3,600' },
+        { t: 'Amoxyclav expiring in 38 days', v: '₹7,220' },
+    ];
     return (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 6L9 17l-5-5" />
-        </svg>
+        <div className="w-full max-w-sm rounded-2xl border border-border bg-background-secondary/60 p-3.5" aria-hidden="true">
+            <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-foreground">Clinizy Nazar · daily brief</span>
+                <span className="text-[11px] text-foreground-muted">8:00 am</span>
+            </div>
+            <p className="mt-2 text-[13px] text-foreground-secondary">Kal: 47 patients · ₹62,400 collected</p>
+            <p className="mt-2 text-xs font-bold text-foreground">Aaj ke 3 kaam</p>
+            <ol className="mt-1.5 space-y-1.5">
+                {items.map((it, i) => (
+                    <li key={it.t} className={`flex items-center justify-between gap-3 rounded-lg bg-background-card px-2.5 py-1.5 text-[13px] ${pop}`} style={d(0.4 + i * 0.5)}>
+                        <span className="text-foreground-secondary">
+                            {i + 1}. {it.t}
+                        </span>
+                        <span className="shrink-0 font-bold text-accent">{it.v}</span>
+                    </li>
+                ))}
+            </ol>
+        </div>
     );
 }
-function Cross() {
+
+function BuddhiVisual() {
+    const history = [52, 60, 48, 66, 58, 72];
+    const forecast = [78, 70];
+    const max = 90;
     return (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
+        <div className="w-full max-w-md space-y-3" aria-hidden="true">
+            <div className="rounded-xl border border-border bg-background-secondary/60 p-3">
+                <div className="flex items-center justify-between gap-3 text-xs">
+                    <span className="font-semibold text-foreground">Pan 40 · strips per month</span>
+                    <span className="text-foreground-muted">From prescriptions, not sales</span>
+                </div>
+                <div className="mt-3 flex h-24 items-end gap-2">
+                    {history.map((v, i) => (
+                        <span key={`h${i}`} className={`flex-1 rounded-t bg-foreground-muted/40 ${pop}`} style={{ height: `${(v / max) * 100}%`, ...d(i * 0.08) }} />
+                    ))}
+                    {forecast.map((v, i) => (
+                        <span
+                            key={`f${i}`}
+                            className={`flex-1 rounded-t border-2 border-dashed border-accent bg-accent/15 ${pop}`}
+                            style={{ height: `${(v / max) * 100}%`, ...d(0.6 + i * 0.15) }}
+                        />
+                    ))}
+                </div>
+                <div className="mt-1.5 flex justify-between text-[10px] text-foreground-muted">
+                    <span>Apr</span>
+                    <span className="text-accent">Forecast: Oct–Nov</span>
+                </div>
+            </div>
+            <div className={`flex items-center justify-between gap-3 rounded-lg border border-border bg-background-card px-3 py-2 text-[13px] ${pop}`} style={d(1.1)}>
+                <span className="text-foreground-secondary">Expiry rescue: Amoxyclav 625, 40 strips</span>
+                <span className="shrink-0 text-xs font-semibold text-accent">Return window: 12 days</span>
+            </div>
+        </div>
     );
 }
-function Shield() {
+
+function SetuVisual() {
+    const rows = [
+        { name: 'Dr. R. Sharma', v: '₹8.42L', w: 100 },
+        { name: 'Dr. A. Kumari', v: '₹6.15L', w: 73 },
+        { name: 'Dr. M. Prasad', v: '₹3.46L', w: 41 },
+    ];
     return (
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={GREEN} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-            <path d="M9 12l2 2 4-4" />
-        </svg>
-    );
-}
-function Bell() {
-    return (
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-        </svg>
+        <div className="w-full max-w-md space-y-3" aria-hidden="true">
+            <div className={`rounded-2xl rounded-tl-sm border border-border bg-background-secondary px-3.5 py-2 text-[13px] text-foreground ${pop}`}>
+                &ldquo;Pichhle teen mahine mein sabse zyada revenue kis doctor ne banaya?&rdquo;
+            </div>
+            <div className={`rounded-xl border border-border bg-background-card p-3 ${pop}`} style={d(0.5)}>
+                <p className="text-xs font-semibold text-foreground">Revenue by doctor · Jun–Aug</p>
+                <div className="mt-2.5 space-y-2">
+                    {rows.map((r, i) => (
+                        <div key={r.name} className="grid grid-cols-[6.5rem_1fr_3.5rem] items-center gap-2 text-xs">
+                            <span className="truncate text-foreground-secondary">{r.name}</span>
+                            <span className="h-2 rounded-full bg-border">
+                                <span className="block h-full origin-left rounded-full bg-accent motion-safe:animate-fill-line" style={{ width: `${r.w}%`, animationDelay: `${0.8 + i * 0.25}s` }} />
+                            </span>
+                            <span className="text-right font-semibold text-foreground">{r.v}</span>
+                        </div>
+                    ))}
+                </div>
+                <p className="mt-2.5 text-[10px] text-foreground-muted">Answered from a pre-approved, clinic-scoped report</p>
+            </div>
+        </div>
     );
 }

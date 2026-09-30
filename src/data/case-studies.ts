@@ -101,7 +101,7 @@ export const caseStudies: CaseStudy[] = [
                     'GST billing: CGST/SGST or IGST by place of supply, exempt consultations, MRP-inclusive pharmacy pricing, day-close reconciliation, UPI QR on invoices and a Tally export.',
                     'Autopilot: 24 built-in automations, from follow-up recalls and refill reminders to critical-result escalation and discharge workflows, with per-clinic controls.',
                     'WhatsApp: direct Meta Cloud API integration with approved English and Hindi templates, queued delivery, signed webhooks, quiet hours, opt-outs and quotas.',
-                    'AI clinical documentation: Clinizy Scribe, in early access, drafts structured notes from a doctor\'s dictation behind a guardrail agent.',
+                    'AI clinical documentation: Bol, in early access, drafts structured notes from a doctor\'s dictation behind a guardrail agent. Saathi (a WhatsApp front desk), Nazar (a daily owner brief) and more are on the roadmap.',
                     'Growth engine: clinizy.in itself, with module, comparison and automation pages, a plain-language blog for clinic owners, and llms.txt for AI search.',
                 ],
             },
