@@ -74,7 +74,7 @@ export default function ProductsPage() {
                 </div>
             </SectionWrapper>
 
-            <SectionWrapper ariaLabel="Clinizy Care" className="!pt-4">
+            <SectionWrapper animate={false} ariaLabel="Clinizy Care" className="!pt-4">
                 <article className="grid overflow-hidden rounded-3xl border border-border bg-background-card shadow-card lg:grid-cols-12">
                     <div className="flex flex-col p-7 sm:p-10 lg:col-span-5 lg:p-12">
                         <div className="flex flex-wrap items-center gap-2">
@@ -133,7 +133,7 @@ export default function ProductsPage() {
                 </article>
             </SectionWrapper>
 
-            <SectionWrapper ariaLabel="AI in our products">
+            <SectionWrapper animate={false} ariaLabel="AI in our products">
                 <div className="mb-10 max-w-3xl">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">AI where it saves a clinic real time</h2>
                     <p className="mt-4 text-lg leading-relaxed text-foreground-secondary">
@@ -151,7 +151,7 @@ export default function ProductsPage() {
                 </div>
             </SectionWrapper>
 
-            <SectionWrapper ariaLabel="Why we build our own products">
+            <SectionWrapper animate={false} ariaLabel="Why we build our own products">
                 <h2 className="max-w-3xl text-3xl font-bold tracking-tight text-foreground md:text-4xl">
                     Why a software studio builds its own products
                 </h2>
@@ -165,7 +165,7 @@ export default function ProductsPage() {
                 </div>
             </SectionWrapper>
 
-            <SectionWrapper ariaLabel="Work with us">
+            <SectionWrapper animate={false} ariaLabel="Work with us">
                 <div className="rounded-[2rem] border border-border bg-background-secondary/60 px-7 py-14 text-center md:px-16">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-5xl">Want this team on your product?</h2>
                     <p className="mx-auto mt-5 max-w-2xl text-lg text-foreground-secondary">

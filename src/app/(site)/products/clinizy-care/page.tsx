@@ -196,7 +196,7 @@ export default function ClinizyCareProductPage() {
             </SectionWrapper>
 
             {/* The problem */}
-            <SectionWrapper ariaLabel="The problem">
+            <SectionWrapper animate={false} ariaLabel="The problem">
                 <div className="grid gap-10 lg:grid-cols-12">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:col-span-4">
                         The problem: paper registers and borrowed software
@@ -222,7 +222,7 @@ export default function ClinizyCareProductPage() {
             </SectionWrapper>
 
             {/* What we built */}
-            <SectionWrapper ariaLabel="What we built" className="border-y border-border bg-background-secondary/50">
+            <SectionWrapper animate={false} ariaLabel="What we built" className="border-y border-border bg-background-secondary/50">
                 <div className="grid gap-10 lg:grid-cols-12">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:col-span-4">
                         What we built: one patient record, eleven modules
@@ -265,7 +265,7 @@ export default function ClinizyCareProductPage() {
             </SectionWrapper>
 
             {/* AI inside */}
-            <SectionWrapper ariaLabel="AI inside Clinizy Care">
+            <SectionWrapper animate={false} ariaLabel="AI inside Clinizy Care">
                 <div className="mb-10 grid gap-6 lg:grid-cols-12 lg:items-end">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:col-span-5">
                         AI where the minutes are, automation everywhere else
@@ -283,7 +283,7 @@ export default function ClinizyCareProductPage() {
             </SectionWrapper>
 
             {/* Architecture */}
-            <SectionWrapper ariaLabel="Architecture highlights" className="border-y border-border bg-background-secondary/50">
+            <SectionWrapper animate={false} ariaLabel="Architecture highlights" className="border-y border-border bg-background-secondary/50">
                 <h2 className="max-w-3xl text-3xl font-bold tracking-tight text-foreground md:text-4xl">Architecture highlights</h2>
                 <p className="mt-4 max-w-3xl text-lg text-foreground-secondary">
                     The decisions that carry the most weight, and where we&apos;ve written them up in detail.
@@ -304,7 +304,7 @@ export default function ClinizyCareProductPage() {
             </SectionWrapper>
 
             {/* Lessons */}
-            <SectionWrapper ariaLabel="Lessons learned">
+            <SectionWrapper animate={false} ariaLabel="Lessons learned">
                 <div className="grid gap-10 lg:grid-cols-12">
                     <div className="lg:col-span-4">
                         <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">What running it taught us</h2>
@@ -325,7 +325,7 @@ export default function ClinizyCareProductPage() {
 
             {/* Gallery — real screens with demo data only */}
             {gallery.length > 0 && (
-                <SectionWrapper ariaLabel="Screens" className="border-y border-border bg-background-secondary/50">
+                <SectionWrapper animate={false} ariaLabel="Screens" className="border-y border-border bg-background-secondary/50">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">Inside the product</h2>
                     <p className="mt-4 max-w-3xl text-lg text-foreground-secondary">Real screens from Clinizy Care, shown with demo data.</p>
                     <div className="mt-10 grid gap-8 md:grid-cols-2">
@@ -344,7 +344,7 @@ export default function ClinizyCareProductPage() {
             )}
 
             {/* CTAs */}
-            <SectionWrapper ariaLabel="See Clinizy Care">
+            <SectionWrapper animate={false} ariaLabel="See Clinizy Care">
                 <div className="grid overflow-hidden rounded-[2rem] border border-border bg-background-card lg:grid-cols-2">
                     <div className="p-8 md:p-12" style={{ backgroundColor: `${green}12` }}>
                         <h2 className="text-3xl font-bold tracking-tight text-foreground">See Clinizy Care for yourself</h2>

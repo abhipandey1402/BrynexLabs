@@ -126,7 +126,7 @@ export default function HealthcarePage() {
             </SectionWrapper>
 
             {/* Proven capabilities */}
-            <SectionWrapper ariaLabel="Proven capabilities">
+            <SectionWrapper animate={false} ariaLabel="Proven capabilities">
                 <div className="mb-10 max-w-3xl">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">Capabilities we&apos;ve proven in production</h2>
                     <p className="mt-4 text-lg text-foreground-secondary">
@@ -144,7 +144,7 @@ export default function HealthcarePage() {
             </SectionWrapper>
 
             {/* Proof: Clinizy Care */}
-            <SectionWrapper ariaLabel="Proof: Clinizy Care" className="border-y border-border bg-background-secondary/50">
+            <SectionWrapper animate={false} ariaLabel="Proof: Clinizy Care" className="border-y border-border bg-background-secondary/50">
                 <article className="overflow-hidden rounded-3xl border border-border bg-background-card shadow-card">
                     <div className="grid lg:grid-cols-12">
                         <div className="p-7 sm:p-10 lg:col-span-5 lg:p-12">
@@ -190,7 +190,7 @@ export default function HealthcarePage() {
             </SectionWrapper>
 
             {/* What we build */}
-            <SectionWrapper ariaLabel="What we build">
+            <SectionWrapper animate={false} ariaLabel="What we build">
                 <h2 className="max-w-3xl text-3xl font-bold tracking-tight text-foreground md:text-4xl">What we can build for you</h2>
                 <div className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
                     {builds.map((b) => (
@@ -203,7 +203,7 @@ export default function HealthcarePage() {
             </SectionWrapper>
 
             {/* Engagement */}
-            <SectionWrapper ariaLabel="How engagements start" className="border-y border-border bg-background-secondary/50">
+            <SectionWrapper animate={false} ariaLabel="How engagements start" className="border-y border-border bg-background-secondary/50">
                 <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
                     <div className="lg:col-span-5">
                         <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">Fixed scope, milestone billing</h2>
@@ -225,7 +225,7 @@ export default function HealthcarePage() {
             </SectionWrapper>
 
             {/* FAQ */}
-            <SectionWrapper ariaLabel="Healthcare software FAQ">
+            <SectionWrapper animate={false} ariaLabel="Healthcare software FAQ">
                 <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">Questions healthcare teams ask us</h2>
                 <div className="mt-10 grid gap-x-12 gap-y-10 md:grid-cols-2">
                     {faqs.map((f) => (
@@ -238,7 +238,7 @@ export default function HealthcarePage() {
             </SectionWrapper>
 
             {/* CTA */}
-            <SectionWrapper ariaLabel="Start a project">
+            <SectionWrapper animate={false} ariaLabel="Start a project">
                 <div className="rounded-[2rem] border border-border bg-background-card px-7 py-14 text-center shadow-card md:px-16">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-5xl">Building healthcare software?</h2>
                     <p className="mx-auto mt-5 max-w-2xl text-lg text-foreground-secondary">

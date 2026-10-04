@@ -54,6 +54,8 @@ export interface ArchitectureLayer {
     items: string[];
     /** Draws the layer in the accent colour: use it for the AI layer. */
     highlight?: boolean;
+    /** A layer that is planned, not built yet: drawn dashed and tagged "Next". */
+    planned?: boolean;
 }
 
 /** A transferable lesson from the build, for teams planning something similar. */
@@ -640,5 +642,5 @@ const baseStudies: CaseStudy[] = [
     },
 ];
 
-/** Display order: our own product first, then the platform blueprint, then client builds. */
+/** Display order: our own product first, then the healthcare platform study, then client builds. */
 export const caseStudies: CaseStudy[] = [baseStudies[0], platformStudy, ...baseStudies.slice(1)];
