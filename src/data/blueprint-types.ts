@@ -1,10 +1,11 @@
 import type { CaseIconKey } from '@/components/case-studies/CaseIcon';
+import type { CaseStudySection } from './case-studies';
 
 /**
- * Types for the long-horizon "deep dive" of a platform blueprint: a quarterly
- * roadmap, a cross-product flow, autonomy ceilings, an evaluation loop and a
- * risk register. Everything here is a PLAN or a DESIGN, never a record of
- * work done.
+ * Types for the long-horizon "looking ahead" section of a platform case study:
+ * a quarterly roadmap, a cross-product flow, autonomy ceilings, an evaluation
+ * loop and a risk register. This is the PLAN for the next phase; what is
+ * already built lives in the rest of the study.
  */
 
 export type RoadmapStage = 'Build' | 'Harden' | 'Design' | 'Pilot' | 'Rollout' | 'Operate';
@@ -87,4 +88,6 @@ export interface BlueprintDeepDive {
     riskHeading: string;
     riskIntro: string;
     risks: RiskRow[];
+    /** Written sections that go with the diagrams: why two years, operating model, cost and scale, and so on. */
+    narrative: CaseStudySection[];
 }

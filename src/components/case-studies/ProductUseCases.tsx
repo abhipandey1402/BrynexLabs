@@ -87,7 +87,7 @@ export default function ProductUseCases({ products, heading, intro }: { products
                     {/* Keyed so the scene replays on every switch */}
                     <div key={product.id}>
                         <ProductScene product={product} />
-                        <p className="mt-2.5 text-xs text-foreground-muted">Illustration of the use case with fictional demo content. Agents marked Roadmap are proposals, not shipped features.</p>
+                        <p className="mt-2.5 text-xs text-foreground-muted">Illustration of the use case with fictional demo content. Agents marked Roadmap are planned for the next phase and are not shipped yet.</p>
                     </div>
 
                     <div className="mt-6 grid gap-6 md:grid-cols-2">

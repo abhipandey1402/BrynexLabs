@@ -330,7 +330,7 @@ export const SCENE_LABEL: Record<CaseStudy['art'], string> = {
     hiring: 'Illustration: resumes flow through screening, matching and interview agents into a ranked shortlist that a recruiter reviews.',
     exam: 'Illustration: source material flows through generation, validation and assembly into a mock exam with topic-level feedback.',
     clinic: 'Illustration: Clinizy Care at the centre of six AI agents: Bol, Saathi, Awaz, Nazar, Buddhi and Setu.',
-    suite: 'Illustration: five AI products arranged around a shared AI core.',
+    suite: 'Illustration: the five products that make up the platform.',
 };
 
 export default function CaseArt({ study, className = '' }: { study: CaseStudy; className?: string }) {

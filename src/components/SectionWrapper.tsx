@@ -41,7 +41,10 @@ export default function SectionWrapper({
                     observer.unobserve(el);
                 }
             },
-            { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+            // threshold 0: reveal as soon as any part of the section enters the view. A fractional
+            // threshold can never be met by a section taller than viewport / threshold (a long article
+            // on a phone), which left that section invisible forever.
+            { threshold: 0, rootMargin: '0px 0px -50px 0px' }
         );
 
         observer.observe(el);

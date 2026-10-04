@@ -13,16 +13,23 @@ export default function ArchitectureStack({ layers }: { layers: ArchitectureLaye
                 <li key={l.layer}>
                     <div
                         className={`relative grid gap-4 overflow-hidden rounded-2xl border p-5 md:grid-cols-[15rem_minmax(0,1fr)] md:items-center md:gap-6 md:p-6 ${
-                            l.highlight ? 'border-accent/40 bg-accent/5 shadow-card' : 'border-border bg-background-card'
+                            l.planned
+                                ? 'border-dashed border-accent/50 bg-background-card/50'
+                                : l.highlight
+                                  ? 'border-accent/40 bg-accent/5 shadow-card'
+                                  : 'border-border bg-background-card'
                         }`}
                     >
                         {l.highlight && <div className="pointer-events-none absolute -left-10 -top-10 h-32 w-32 rounded-full bg-accent/15 blur-2xl motion-safe:animate-sheen" aria-hidden="true" />}
                         <div className="relative flex items-start gap-3.5">
-                            <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${l.highlight ? 'bg-accent-gradient text-white' : 'bg-accent/10 text-accent'}`}>
+                            <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${l.highlight && !l.planned ? 'bg-accent-gradient text-white' : 'bg-accent/10 text-accent'}`}>
                                 <CaseIcon name={l.icon} className="h-5 w-5" />
                             </span>
                             <div>
-                                <h3 className="text-base font-bold tracking-tight text-foreground">{l.layer}</h3>
+                                <h3 className="flex items-center gap-2 text-base font-bold tracking-tight text-foreground">
+                                    {l.layer}
+                                    {l.planned && <span className="rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[10px] font-semibold text-accent">Next</span>}
+                                </h3>
                                 <p className="text-sm text-foreground-muted">{l.caption}</p>
                             </div>
                         </div>
@@ -31,7 +38,7 @@ export default function ArchitectureStack({ layers }: { layers: ArchitectureLaye
                                 <li
                                     key={item}
                                     className={`rounded-full border px-3 py-1.5 text-sm font-medium ${
-                                        l.highlight ? 'border-accent/30 bg-background-card text-foreground' : 'border-border bg-background-secondary/70 text-foreground-secondary'
+                                        l.highlight ? 'border-accent/30 bg-background-card text-foreground' : l.planned ? 'border-dashed border-accent/40 text-foreground-secondary' : 'border-border bg-background-secondary/70 text-foreground-secondary'
                                     }`}
                                 >
                                     {item}

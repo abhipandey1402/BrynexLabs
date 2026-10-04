@@ -116,7 +116,7 @@ export default function ProductScene({ product }: { product: CaseStudyProduct })
                     <MiniDoc key={x.title} badge={x.badge} title={x.title} delay={0.1 + i * 0.2} />
                 ))}
                 agents={product.agents.slice(0, 3).map((a, i) => (
-                    <AgentNode key={a.name} icon={a.icon} label={a.name} sub={a.status === 'Roadmap' ? `${a.role} · proposed` : a.role} delay={0.4 + i * 0.3} />
+                    <AgentNode key={a.name} icon={a.icon} label={a.name} sub={a.status === 'Roadmap' ? `${a.role} · next` : a.role} delay={0.4 + i * 0.3} />
                 ))}
                 outputLabel={scene.outputLabel}
                 output={<OutputCard output={scene.output} />}
