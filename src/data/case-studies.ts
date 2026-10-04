@@ -2,6 +2,7 @@ import type { Screenshot } from './products';
 import { AI_FEATURES, CLINIZY } from './products';
 import type { CaseIconKey } from '@/components/case-studies/CaseIcon';
 import { platformStudy } from './case-study-platform';
+import type { BlueprintDeepDive } from './blueprint-types';
 
 /** One headline metric shown in the results grid. */
 export interface CaseStudyMetric {
@@ -37,6 +38,33 @@ export interface CaseStudyAgent {
     /** 'AI agent' is model-driven; 'Pipeline stage' is deterministic engineering around the agents. */
     kind?: 'AI agent' | 'Pipeline stage';
     icon: CaseIconKey;
+}
+
+/** One labelled fact in the answer-first "key takeaways" block. */
+export interface CaseStudyTakeaway {
+    label: string;
+    text: string;
+}
+
+/** One layer of the architecture diagram, top (what users touch) to bottom (where it runs). */
+export interface ArchitectureLayer {
+    layer: string;
+    caption: string;
+    icon: CaseIconKey;
+    items: string[];
+    /** Draws the layer in the accent colour: use it for the AI layer. */
+    highlight?: boolean;
+}
+
+/** A transferable lesson from the build, for teams planning something similar. */
+export interface CaseStudyLesson {
+    title: string;
+    body: string;
+}
+
+export interface CaseStudyFaq {
+    q: string;
+    a: string;
 }
 
 /** Hero artwork scenes drawn in code (see components/case-studies/CaseArt). */
@@ -111,6 +139,18 @@ export interface CaseStudy {
     };
     /** At-a-glance rows shown in the snapshot panel (label → value). */
     snapshot: { label: string; value: string }[];
+    /** Long-horizon deep dive (roadmap, flow, autonomy, evals, risks) for platform blueprints. */
+    blueprint?: BlueprintDeepDive;
+    /** Answer-first summary: three or four labelled facts shown right under the hero. */
+    takeaways?: CaseStudyTakeaway[];
+    /** Layered diagram of how the system fits together. */
+    architectureHeading?: string;
+    architectureIntro?: string;
+    architecture?: ArchitectureLayer[];
+    /** Transferable lessons, shown after the story. */
+    lessons?: CaseStudyLesson[];
+    /** Questions a buyer would ask. Also emitted as FAQPage structured data. */
+    faqs?: CaseStudyFaq[];
     /** Heading and intro for the AI agents section. */
     agentsHeading?: string;
     agentsIntro?: string;
@@ -171,6 +211,32 @@ const baseStudies: CaseStudy[] = [
         tags: ['AI agents', 'Healthcare SaaS', 'Multi-tenant', 'WhatsApp automation'],
         kind: 'in-house',
         art: 'clinic',
+        takeaways: [
+            { label: 'What it is', text: 'AI-powered hospital management software for India\'s clinics, nursing homes and small hospitals, built and run by Brynex Labs.' },
+            { label: 'The AI', text: 'Six agents cover documentation, the front desk, outreach, the owner\'s brief, the pharmacy and analytics. Bol is in early access; the other five are on the roadmap.' },
+            { label: 'The core', text: 'Eleven modules on one patient record, 24 live automations and a fail-closed multi-tenant guard.' },
+            { label: 'For you', text: 'The same stack and playbook we use for clients, proven first on our own product.' },
+        ],
+        architectureIntro: 'One patient record sits at the centre. The agents read and propose on top of it, and everything that leaves the building goes through queues.',
+        architecture: [
+            { layer: 'Experience', caption: 'What clinics touch', icon: 'users', items: ['Clinic web app in the browser', 'Owner dashboard on a phone', 'English, Hindi and Hinglish', 'Public booking', 'Waiting-room display'] },
+            { layer: 'AI agents', caption: 'Read, draft and propose', icon: 'bot', highlight: true, items: ['Bol', 'Saathi', 'Awaz', 'Nazar', 'Buddhi', 'Setu'] },
+            { layer: 'Core services', caption: 'The deterministic heart', icon: 'layers', items: ['11 modules, one patient record', '24 automations', 'GST billing engine', 'Role-based access', 'Audit trail', 'Fail-closed tenant guard'] },
+            { layer: 'Delivery', caption: 'Everything that leaves the building', icon: 'workflow', items: ['Queues with dead-letter handling', 'WhatsApp Business API', 'Payments', 'PDF and report workers'] },
+            { layer: 'Data and cloud', caption: 'Where it runs', icon: 'database', items: ['MongoDB', 'AWS, Mumbai region', 'Encrypted in transit', 'Automated tests in CI'] },
+        ],
+        lessons: [
+            { title: 'Let the database decide', body: 'Agents choose, draft and explain. Figures and records come from queries, so a model can never invent a number.' },
+            { title: 'Fail closed, then prove it', body: 'Our first tenant guard covered reads but not every write path. We extended it, then proved isolation with tests against a real database.' },
+            { title: 'Keep a person in the loop', body: 'Every agent drafts or proposes. A doctor, pharmacist or owner confirms before anything is signed, ordered or sent.' },
+            { title: 'Say what is live', body: 'We label every agent Early access or Roadmap on our own site. Buyers trust a product that is honest about its edges.' },
+        ],
+        faqs: [
+            { q: 'Is the AI in Clinizy Care live?', a: 'Bol, the clinical-notes agent, is in early access. Saathi, Awaz, Nazar, Buddhi and Setu are on our roadmap and not yet available. The 24 workflow automations are live today.' },
+            { q: 'Who builds and runs Clinizy Care?', a: 'Brynex Labs designed it, builds it and operates it. clinizy.in is the home for the product, its features and its pricing.' },
+            { q: 'Where is patient data hosted?', a: 'Clinizy Care is hosted on AWS in Mumbai, encrypted in transit, and built to be DPDP Act 2023 aligned. Compliance remains the clinic\'s responsibility as data fiduciary.' },
+            { q: 'Can Brynex Labs build something like this for us?', a: 'Yes. The same team builds multi-tenant SaaS, AI agents and WhatsApp automation for clients, and healthcare is our proven vertical.' },
+        ],
         agentsHeading: 'Six AI agents, one clinic',
         agentsIntro:
             'Clinizy Care is AI-first by design. Six agents cover the clinic end to end: documentation, the front desk, patient outreach, the owner\'s morning brief, the pharmacy and analytics. Bol is in early access today. Saathi, Awaz, Nazar, Buddhi and Setu are on our roadmap, and we label them that way. Under all six sits a deterministic core and 24 automations that already run in production.',
@@ -280,7 +346,7 @@ const baseStudies: CaseStudy[] = [
             ? { heroShot: { ...CLINIZY.screenshots.dashboard, address: 'clinizy.in/dashboard' } }
             : {}),
         publishedAt: '2026-09-30',
-        updatedAt: '2026-09-30',
+        updatedAt: '2026-10-04',
     },
     {
         slug: 'regortalent-ai-recruitment-platform',
@@ -288,6 +354,32 @@ const baseStudies: CaseStudy[] = [
         tags: ['AI agents', 'HR tech', 'SaaS', 'Cloud'],
         kind: 'client',
         art: 'hiring',
+        takeaways: [
+            { label: 'What it is', text: 'An AI interviewing and applicant-tracking platform, built end to end by Brynex Labs for an early-stage startup.' },
+            { label: 'The AI', text: 'Three agents screen resumes, match candidates to roles on meaning and run structured first-round interviews. Recruiters review the evidence and make every decision.' },
+            { label: 'The result', text: '5× faster candidate screening, 70% lower support costs and about 20% fewer post-deployment issues.' },
+            { label: 'For you', text: 'One team owned the front end, backend, AI and cloud, so the product moved as one.' },
+        ],
+        architectureIntro: 'Recruiter and candidate apps on top, three AI agents in the middle, and a cloud built so hiring never stops.',
+        architecture: [
+            { layer: 'Experience', caption: 'What recruiters and candidates touch', icon: 'users', items: ['Recruiter web app', 'Candidate web app', 'Pipeline and kanban views', 'React, Redux, Tailwind'] },
+            { layer: 'AI agents', caption: 'Screen, match, interview', icon: 'bot', highlight: true, items: ['Screening agent', 'Matching agent', 'Interview agent', 'Guardrails and evals'] },
+            { layer: 'Services', caption: 'The product behind the screens', icon: 'layers', items: ['Backend services and APIs', 'One API layer for auth and errors', 'Interview scheduling', 'Recruiter workflows'] },
+            { layer: 'Data', caption: 'Records and meaning', icon: 'database', items: ['PostgreSQL', 'pgvector embeddings'] },
+            { layer: 'Cloud and support', caption: 'Always-on hiring', icon: 'workflow', items: ['Containers, autoscaled on AWS', 'CI/CD and observability', 'Atlassian-integrated support'] },
+        ],
+        lessons: [
+            { title: 'Keep a human in the loop', body: 'Every agent output shows its evidence and a recruiter decides. In hiring, that is not optional.' },
+            { title: 'Match on meaning, not keywords', body: 'Embeddings in a vector store reason about genuine fit and keep every ranking explainable.' },
+            { title: 'Centralise the plumbing', body: 'One API layer with shared interceptors for auth and errors is a big part of why post-deployment issues dropped about 20%.' },
+            { title: 'Reuse components to cut debt', body: 'A shared component system cut the front-end codebase roughly 25% and made weekly releases safer.' },
+        ],
+        faqs: [
+            { q: 'Does the AI make hiring decisions?', a: 'No. The agents screen, match and interview, and surface the evidence behind every call. Recruiters review that evidence and make every decision.' },
+            { q: 'What AI technology does it use?', a: 'Large language models from OpenAI and Anthropic, LangChain-based agents, and embeddings in PostgreSQL with pgvector for semantic matching.' },
+            { q: 'What did Brynex Labs own?', a: 'We were the end-to-end engineering partner: the recruiter and candidate apps, the backend and APIs, the AI agents, the cloud and the support tooling.' },
+            { q: 'Can you build an AI product like this for us?', a: 'Yes. We build AI agents, SaaS platforms and the cloud they run on, as a single senior team.' },
+        ],
         agentsHeading: 'Three AI agents that run the first mile of hiring',
         agentsIntro:
             'RegorTalent puts AI where recruiters lose the most time: reading applications, judging fit and running first-round interviews. Each agent returns the evidence behind its call, and a recruiter makes every decision.',
@@ -408,7 +500,7 @@ const baseStudies: CaseStudy[] = [
             role: 'Founder, RegorTalent',
         },
         publishedAt: '2026-02-18',
-        updatedAt: '2026-07-24',
+        updatedAt: '2026-10-04',
     },
     {
         slug: 'exampapers-ai-exam-prep-platform',
@@ -416,6 +508,32 @@ const baseStudies: CaseStudy[] = [
         tags: ['AI agents', 'EdTech', 'Generative AI', 'Scale'],
         kind: 'client',
         art: 'exam',
+        takeaways: [
+            { label: 'What it is', text: 'An end-to-end AI exam-prep platform that generates full mock exams from source material and gives learners instant, topic-level feedback.' },
+            { label: 'The AI', text: 'A question-generation agent produces exam-style items, a validation stage keeps them trustworthy, and learners get instant scoring with topic feedback.' },
+            { label: 'The result', text: '10× faster mock creation, thousands of questions per source document and 99.9% uptime at exam-season peak.' },
+            { label: 'For you', text: 'Built for demand spikes: traffic concentrates in the days before an exam, so the system was designed for peaks, not averages.' },
+        ],
+        architectureIntro: 'Source material goes in, a validated mock exam comes out, and the whole thing is built to hold up the night before an exam.',
+        architecture: [
+            { layer: 'Experience', caption: 'What learners touch', icon: 'graduation', items: ['Full mock exams', 'Instant scoring', 'Topic-level feedback', 'React'] },
+            { layer: 'AI pipeline', caption: 'Generate, validate, assemble', icon: 'bot', highlight: true, items: ['Question-generation agent', 'Quality validation', 'Mock assembly', 'Feedback engine'] },
+            { layer: 'Services', caption: 'The product behind the screens', icon: 'layers', items: ['FastAPI services', 'Scoring and feedback'] },
+            { layer: 'Data', caption: 'Records and speed', icon: 'database', items: ['PostgreSQL', 'Redis'] },
+            { layer: 'Cloud', caption: 'Built for peaks', icon: 'workflow', items: ['AWS', 'Designed for exam-season load', 'Graceful degradation'] },
+        ],
+        lessons: [
+            { title: 'Quality over volume', body: 'Generating many questions is easy. Generating questions worth practising on is the hard part, so validation is a stage of its own.' },
+            { title: 'Design for the spike', body: 'Exam-prep traffic is defined by its peaks. Build for them, and degrade gracefully instead of failing.' },
+            { title: 'Feedback beats a score', body: 'A bare number tells a learner nothing. Topic-level feedback tells them what to fix next.' },
+            { title: 'Treat trust as a requirement', body: 'In assessment, a wrong or ambiguous question is worse than none. Make quality a first-class requirement, not a final polish.' },
+        ],
+        faqs: [
+            { q: 'How are AI-generated questions kept trustworthy?', a: 'A validation stage checks generated items so they stay consistent. In assessment a wrong or ambiguous question is worse than none, so quality was a requirement from the start.' },
+            { q: 'What happens at exam-season peaks?', a: 'The system was designed for peaks, not averages: it stays responsive when load concentrates and degrades gracefully instead of failing. It ran at 99.9% uptime at exam-season peak.' },
+            { q: 'What technology does it use?', a: 'Large language models from OpenAI behind a Python and FastAPI backend, with PostgreSQL and Redis, running on AWS.' },
+            { q: 'Can you build an AI product like this for us?', a: 'Yes. We build end-to-end AI platforms, from the model pipeline to the learner experience and the cloud underneath.' },
+        ],
         agentsHeading: 'An AI pipeline that turns source material into a mock exam',
         agentsIntro:
             'ExamPapers replaces hand-authored practice papers with a pipeline: AI generates exam-style questions from source material, validation keeps them trustworthy, and learners get instant, topic-level feedback.',
@@ -518,7 +636,7 @@ const baseStudies: CaseStudy[] = [
             role: 'Founder, ExamPapers',
         },
         publishedAt: '2026-03-25',
-        updatedAt: '2026-07-24',
+        updatedAt: '2026-10-04',
     },
 ];
 

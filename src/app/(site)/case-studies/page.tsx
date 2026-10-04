@@ -11,7 +11,7 @@ import { getBreadcrumbJsonLd, getItemListJsonLd, getWebPageJsonLd } from '@/lib/
 
 const TITLE = 'Case Studies: AI Agents & SaaS Platforms | Brynex Labs';
 const DESCRIPTION =
-    'How Brynex Labs builds AI agents and SaaS platforms: a healthcare AI platform blueprint, an AI hiring ATS, an exam-prep engine, and our own Clinizy Care.';
+    'How Brynex Labs builds AI agents and SaaS platforms: a two-year healthcare AI roadmap, an AI hiring ATS, an exam-prep engine, and our own Clinizy Care.';
 
 export const metadata: Metadata = {
     title: TITLE,
@@ -26,6 +26,12 @@ const KIND_LABEL: Record<CaseStudy['kind'], string> = {
     'in-house': 'Our own product',
     platform: 'Platform blueprint',
 };
+
+const PRINCIPLES = [
+    { icon: 'layers' as const, title: 'A deterministic core, AI on top', body: 'Records, rules and figures stay in ordinary code. Agents read, draft and propose on top of them.' },
+    { icon: 'shield' as const, title: 'Guardrails and a person who decides', body: 'Every agent has a scope check, bounded tools and a review step before anything is signed, filed or sent.' },
+    { icon: 'stethoscope' as const, title: 'Run in production, not demos', body: 'We operate Clinizy Care ourselves, so every pattern here has met real use.' },
+];
 
 const jsonLd = {
     '@context': 'https://schema.org',
@@ -100,7 +106,7 @@ export default function CaseStudiesIndex() {
                     </span>
                     <h1 className="mt-6 text-4xl font-bold leading-[1.04] tracking-tight text-foreground sm:text-5xl md:text-7xl">AI products we&apos;ve built and run</h1>
                     <p className="mt-7 max-w-3xl text-lg leading-relaxed text-foreground-secondary md:text-xl">
-                        Four case studies, each built around AI agents: a multi-product healthcare AI platform, an AI hiring platform, an exam-prep engine, and Clinizy Care, the product we run ourselves. This is what working with us as your technology partner looks like.
+                        Four case studies, each built around AI agents: Clinizy Care, the product we run ourselves; a two-year AI roadmap for a five-product healthcare platform; an AI hiring platform; and an exam-prep engine. This is what working with us as your technology partner looks like.
                     </p>
                     <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
                         <StartProjectButton source="Case studies hero" />
@@ -117,6 +123,26 @@ export default function CaseStudiesIndex() {
                     {rest.map((study) => (
                         <StudyCard key={study.slug} study={study} />
                     ))}
+                </div>
+            </SectionWrapper>
+
+            <SectionWrapper ariaLabel="How we build AI agents" className="border-y border-border bg-background-secondary/50">
+                <div className="grid gap-10 lg:grid-cols-12">
+                    <div className="lg:col-span-4">
+                        <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">How we build AI agents</h2>
+                        <p className="mt-4 text-lg leading-relaxed text-foreground-secondary">Three rules show up in every study on this page.</p>
+                    </div>
+                    <ul className="grid gap-px overflow-hidden rounded-2xl border border-border bg-border md:grid-cols-3 lg:col-span-8">
+                        {PRINCIPLES.map((p) => (
+                            <li key={p.title} className="bg-background-card p-7">
+                                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                                    <CaseIcon name={p.icon} className="h-5 w-5" />
+                                </span>
+                                <h3 className="mt-4 text-lg font-bold tracking-tight text-foreground">{p.title}</h3>
+                                <p className="mt-2 leading-relaxed text-foreground-secondary">{p.body}</p>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </SectionWrapper>
 

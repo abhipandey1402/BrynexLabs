@@ -56,6 +56,19 @@ export default function CaseStudyPage({ params }: PageProps) {
         "@context": "https://schema.org",
         "@graph": [
             getCaseStudyArticleJsonLd(project),
+            ...(project.faqs && project.faqs.length > 0
+                ? [
+                      {
+                          '@type': 'FAQPage',
+                          '@id': `${getCaseStudyImageUrl(project.slug).replace('/og-image', '')}#faq`,
+                          mainEntity: project.faqs.map((f) => ({
+                              '@type': 'Question',
+                              name: f.q,
+                              acceptedAnswer: { '@type': 'Answer', text: f.a },
+                          })),
+                      },
+                  ]
+                : []),
             getBreadcrumbJsonLd([
                 { name: 'Home', href: '/' },
                 { name: 'Case Studies', href: '/case-studies' },

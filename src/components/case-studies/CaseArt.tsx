@@ -326,7 +326,7 @@ function SuiteScene({ study }: { study: CaseStudy }) {
 
 /* -------------------------------- entry -------------------------------- */
 
-const SCENE_LABEL: Record<CaseStudy['art'], string> = {
+export const SCENE_LABEL: Record<CaseStudy['art'], string> = {
     hiring: 'Illustration: resumes flow through screening, matching and interview agents into a ranked shortlist that a recruiter reviews.',
     exam: 'Illustration: source material flows through generation, validation and assembly into a mock exam with topic-level feedback.',
     clinic: 'Illustration: Clinizy Care at the centre of six AI agents: Bol, Saathi, Awaz, Nazar, Buddhi and Setu.',

@@ -1,4 +1,5 @@
 import type { CaseStudy, CaseStudyProduct } from './case-studies';
+import type { BlueprintDeepDive } from './blueprint-types';
 
 /**
  * AI agent blueprint for an anonymised five-product healthcare platform.
@@ -237,27 +238,178 @@ const liveAgents = aiAgents.filter((a) => a.status === 'Live').length;
 const proposedAgents = aiAgents.filter((a) => a.status === 'Roadmap').length;
 const engines = products.flatMap((p) => p.agents).filter((a) => a.kind === 'Pipeline stage').length;
 
+/** Quarter in which a roadmap item's Rollout begins: when a new agent counts as in production. */
+const totalAgents = liveAgents + proposedAgents;
+
+const blueprint: BlueprintDeepDive = {
+    roadmapHeading: 'The 24-month roadmap',
+    roadmapIntro:
+        'Eight quarters, five products and one shared layer. Each new agent moves through design, a pilot and a staged rollout, and the order follows how easy each one is to check, not how impressive it is. These are planning assumptions, not promises.',
+    roadmap: {
+        quarters: 8,
+        baselineAgents: liveAgents,
+        lanes: [
+            {
+                name: 'Shared agent layer',
+                icon: 'layers',
+                items: [
+                    { label: 'Guardrails, bounded tools, audit, evals, metering', segments: [{ stage: 'Build', from: 1, to: 2 }, { stage: 'Operate', from: 3, to: 8 }] },
+                    { label: 'Model portability and cost tuning', segments: [{ stage: 'Design', from: 4, to: 5 }, { stage: 'Rollout', from: 6, to: 8 }] },
+                ],
+            },
+            {
+                name: 'Note Studio',
+                icon: 'file',
+                items: [
+                    { label: 'Evals and audit around live agents', segments: [{ stage: 'Harden', from: 1, to: 2 }, { stage: 'Operate', from: 3, to: 8 }] },
+                ],
+            },
+            {
+                name: 'Voice Desk',
+                icon: 'mic',
+                items: [
+                    { label: 'Measure speech accuracy on real recordings', segments: [{ stage: 'Harden', from: 1, to: 2 }] },
+                    { label: 'Note-structuring agent', agent: true, segments: [{ stage: 'Design', from: 3, to: 4 }, { stage: 'Pilot', from: 5, to: 5 }, { stage: 'Rollout', from: 6, to: 8 }] },
+                ],
+            },
+            {
+                name: 'Handoff',
+                icon: 'network',
+                items: [
+                    { label: 'Intake agent', agent: true, segments: [{ stage: 'Design', from: 2, to: 3 }, { stage: 'Pilot', from: 4, to: 4 }, { stage: 'Rollout', from: 5, to: 8 }] },
+                    { label: 'Chase agent', agent: true, segments: [{ stage: 'Design', from: 6, to: 6 }, { stage: 'Pilot', from: 7, to: 7 }, { stage: 'Rollout', from: 8, to: 8 }] },
+                ],
+            },
+            {
+                name: 'Nudge',
+                icon: 'message',
+                items: [
+                    { label: 'Reply-understanding agent', agent: true, segments: [{ stage: 'Design', from: 3, to: 3 }, { stage: 'Pilot', from: 4, to: 5 }, { stage: 'Rollout', from: 6, to: 8 }] },
+                    { label: 'Template-drafting agent', agent: true, segments: [{ stage: 'Design', from: 6, to: 6 }, { stage: 'Pilot', from: 7, to: 7 }, { stage: 'Rollout', from: 8, to: 8 }] },
+                ],
+            },
+            {
+                name: 'Rate Lens',
+                icon: 'chart',
+                items: [
+                    { label: 'Ask-the-data agent', agent: true, segments: [{ stage: 'Design', from: 4, to: 5 }, { stage: 'Pilot', from: 6, to: 6 }, { stage: 'Rollout', from: 7, to: 8 }] },
+                    { label: 'Contract-reader agent', agent: true, segments: [{ stage: 'Design', from: 6, to: 6 }, { stage: 'Pilot', from: 7, to: 7 }, { stage: 'Rollout', from: 8, to: 8 }] },
+                ],
+            },
+            {
+                name: 'Across the suite',
+                icon: 'workflow',
+                items: [
+                    { label: 'Referral-to-visit loop', segments: [{ stage: 'Design', from: 5, to: 6 }, { stage: 'Pilot', from: 7, to: 7 }, { stage: 'Rollout', from: 8, to: 8 }] },
+                ],
+            },
+        ],
+    },
+    flowHeading: 'How one referral travels through the suite',
+    flowIntro:
+        'The suite earns its complexity when products hand work to each other. This is the journey of a single referral, and which steps are an agent, an engine or a person.',
+    flow: [
+        { title: 'A referral arrives', owner: 'Handoff', actor: 'Agent', status: 'Roadmap', icon: 'inbox', detail: 'The intake agent reads the email or document and proposes the structured fields, quoting the source text behind each one.' },
+        { title: 'A coordinator confirms', owner: 'A person', actor: 'Person', status: 'Human', icon: 'review', detail: 'Every field is checked against its quote before a referral is created. Nothing enters the queue unreviewed.' },
+        { title: 'Rules route it', owner: 'Handoff', actor: 'Engine', status: 'Live', icon: 'workflow', detail: 'Screening and priority rules the practice configures send the referral to the right queue, the same way every time.' },
+        { title: 'The patient is reached', owner: 'Nudge', actor: 'Engine', status: 'Live', icon: 'message', detail: 'The workflow engine sends an approved message and handles yes, no and stop. A reply-understanding agent (proposed) will read free-text answers and hand unsure ones to staff.' },
+        { title: 'The visit is captured', owner: 'Voice Desk', actor: 'Engine', status: 'Live', icon: 'mic', detail: 'The speech engine transcribes the visit with speaker labels. A note-structuring agent (proposed) will draft a structured note from it, citing the lines it used.' },
+        { title: 'The note is drafted and signed', owner: 'Note Studio', actor: 'Agent', status: 'Live', icon: 'file', detail: 'The drafting agent writes only what was said, the code-check agent verifies codes, and the clinician reviews and signs.' },
+        { title: 'Rates are read against the market', owner: 'Rate Lens', actor: 'Engine', status: 'Live', icon: 'chart', detail: 'Separately, leaders compare contracted rates with peer and market averages. An ask-the-data agent (proposed) will let them question the data in plain language.' },
+    ],
+    autonomyHeading: 'How much each agent may do on its own',
+    autonomyIntro:
+        'Every agent gets an explicit ceiling, agreed before it is built. The rule: nothing that touches a patient or a payer goes beyond drafting for a person to approve. Only read-only or refuse-only agents may act alone.',
+    autonomy: [
+        { agent: 'Input guardrail', product: 'Note Studio', ceiling: 3, status: 'Live', note: 'Blocks out-of-scope input on its own. It only refuses; it never acts on a record.' },
+        { agent: 'Drafting agent', product: 'Note Studio', ceiling: 2, status: 'Live', note: 'Streams a draft. The clinician reviews and signs.' },
+        { agent: 'Code-check agent', product: 'Note Studio', ceiling: 2, status: 'Live', note: 'Verifies codes against reference lookups and shows them in the draft.' },
+        { agent: 'Template builder', product: 'Note Studio', ceiling: 2, status: 'Live', note: 'Previews a template. The user confirms it.' },
+        { agent: 'Note-structuring agent', product: 'Voice Desk', ceiling: 2, status: 'Roadmap', note: 'Drafts from the transcript with line citations. Nothing is pasted until approved.' },
+        { agent: 'Intake agent', product: 'Handoff', ceiling: 2, status: 'Roadmap', note: 'Proposes fields with source quotes. A coordinator confirms.' },
+        { agent: 'Chase agent', product: 'Handoff', ceiling: 2, status: 'Roadmap', note: 'Drafts the nudge. A person sends it.' },
+        { agent: 'Reply-understanding agent', product: 'Nudge', ceiling: 2, status: 'Roadmap', note: 'Proposes the next step. Unsure or clinical replies go to staff untouched.' },
+        { agent: 'Template-drafting agent', product: 'Nudge', ceiling: 2, status: 'Roadmap', note: 'An administrator approves every template before it is used.' },
+        { agent: 'Ask-the-data agent', product: 'Rate Lens', ceiling: 3, status: 'Roadmap', note: 'Read-only. Chooses from approved queries and shows the result; it cannot change anything.' },
+        { agent: 'Contract-reader agent', product: 'Rate Lens', ceiling: 2, status: 'Roadmap', note: 'Proposes terms with clause quotes for a person to verify.' },
+    ],
+    evalHeading: 'Keeping eleven agents honest',
+    evalIntro:
+        'Shipping an agent is the start. Over two years the work is staying right while models, prompts, customers and inputs all change. One evaluation loop runs for every agent, for the life of the product.',
+    evalLoop: [
+        { title: 'Golden sets', detail: 'Curated, reviewed examples for every agent, written with the people who do the job.', icon: 'checklist' },
+        { title: 'Offline evals', detail: 'Every prompt, model or tool change is scored against the golden sets before it can ship.', icon: 'chart' },
+        { title: 'Shadow mode', detail: 'The agent runs on real work with its output hidden, so we can compare it with what people did.', icon: 'search' },
+        { title: 'Pilot', detail: 'A few willing customers use it with the review step on and the kill switch ready.', icon: 'users' },
+        { title: 'Production sampling', detail: 'A sample of live outputs is reviewed on a schedule, with permission, to catch drift early.', icon: 'radar' },
+        { title: 'Fix and re-baseline', detail: 'Failures become new golden examples, and the bar moves up for the next change.', icon: 'sparkles' },
+    ],
+    riskHeading: 'What can go wrong, and what stops it',
+    riskIntro:
+        'A long-lived agent programme fails in predictable ways. Each risk has a named control, and each control is one of three kinds: it prevents the failure, detects it early, or contains the damage.',
+    risks: [
+        { risk: 'Invented details', scenario: 'An agent writes a plausible field, code or term that was never in the source.', control: 'Quote the source for every extracted value, leave gaps visibly empty, and require a person to confirm.', kind: 'Prevent' },
+        { risk: 'Instructions hidden in documents', scenario: 'A referral email or contract contains text that tries to give the agent orders.', control: 'Treat inbound content as data, never as instructions. Agents get bounded tools and no path from document text to action.', kind: 'Prevent' },
+        { risk: 'Patient data in the wrong place', scenario: 'Identifiers leak into logs, traces or a model request that did not need them.', control: 'Minimum necessary data, redaction in logs and telemetry, and provider agreements in place before any protected data is sent.', kind: 'Prevent' },
+        { risk: 'Over-trust', scenario: 'People stop checking because the agent is usually right.', control: 'Review screens that force a decision, spot checks of approved work, and an autonomy ceiling that keeps a person in charge.', kind: 'Detect' },
+        { risk: 'Quiet quality drift', scenario: 'Accuracy slides over months as inputs, prompts or models change.', control: 'Continuous evaluation on golden sets and reviewed production samples, with alerts when scores fall.', kind: 'Detect' },
+        { risk: 'A provider change', scenario: 'A model is retired or its behaviour shifts, and an agent starts failing.', control: 'A thin model abstraction, versioned prompts and evaluation gates, so changes are tested and reversible.', kind: 'Contain' },
+        { risk: 'Runaway cost', scenario: 'Usage spikes for one customer and costs follow.', control: 'Per-customer metering and caps, with a graceful fall-back to the deterministic path.', kind: 'Contain' },
+        { risk: 'A bad day', scenario: 'An agent misbehaves in production.', control: 'A kill switch per agent and per customer, and a rehearsed incident playbook.', kind: 'Contain' },
+    ],
+};
+
 export const platformStudy: CaseStudy = {
     slug: 'healthcare-ai-platform-agent-blueprint',
-    title: 'An AI Agent Blueprint for a Five-Product Healthcare Platform',
+    title: 'A Two-Year AI Agent Roadmap for a Five-Product Healthcare Platform',
     clientName: 'Healthcare AI platform (name withheld)',
     industry: 'Healthcare AI · Multi-product platform',
     summary:
-        'A healthcare software company sells five products on one platform: clinical documentation, dictation, referral tracking, patient texting and payer-rate benchmarking. This design study maps where AI agents belong in each, one use case per product, and what a safe, human-in-the-loop agent layer looks like across all five. The company’s name is withheld.',
-    kicker: 'Design study · Healthcare AI',
-    tags: ['AI agents', 'Healthcare', 'Platform design', 'Use cases'],
+        'A healthcare software company sells five products on one platform: clinical documentation, dictation, referral tracking, patient texting and payer-rate benchmarking. This design study lays out a 24-month plan for AI agents across all five: where each belongs, how it rolls out quarter by quarter, how much it may do on its own, and the controls that keep eleven agents honest. The company’s name is withheld.',
+    kicker: 'Healthcare AI · 24-month roadmap',
+    tags: ['AI agents', 'Healthcare', 'Roadmap', 'Platform design'],
     kind: 'platform',
     art: 'suite',
     seo: {
-        title: 'AI Agent Blueprint for a Healthcare Platform | Brynex Labs',
+        title: 'AI Agent Roadmap for a Healthcare Platform | Brynex Labs',
         metaDescription:
-            'A design study: where AI agents belong across five healthcare products — documentation, dictation, referrals, patient texting and rate benchmarking.',
+            'A 24-month design study: where AI agents belong across five healthcare products, how they roll out quarter by quarter, and the controls that keep them safe.',
     },
     snapshot: [
         { label: 'Industry', value: 'Healthcare AI · name withheld' },
         { label: 'Type', value: 'Design study, not a delivery report' },
-        { label: 'Scope', value: 'Five products, one shared agent layer' },
-        { label: 'Principle', value: 'Deterministic core, AI on top, a person decides' },
+        { label: 'Horizon', value: '24 months, eight quarters' },
+        { label: 'Scope', value: 'Five products and one shared agent layer' },
+    ],
+    takeaways: [
+        { label: 'What it is', text: 'A 24-month design for AI agents across five healthcare products on one platform. The name is withheld and no results are claimed.' },
+        { label: 'The finding', text: 'One product already runs LLM agents, one runs speech models, and three run on deterministic engines with no AI at all.' },
+        { label: 'The design', text: 'One shared agent layer with guardrails, bounded tools, provenance, audit and evals, and an autonomy ceiling so a person always decides.' },
+        { label: 'The plan', text: 'Eight quarters, in order: the shared layer first, then referral intake and reply understanding, and last the strictest agents.' },
+    ],
+    architectureHeading: 'One agent layer, five products',
+    architectureIntro: 'The products stay as they are. A shared agent layer sits between them and a deterministic core, so every agent follows the same rules.',
+    architecture: [
+        { layer: 'Products', caption: 'What customers buy', icon: 'layers', items: ['Note Studio', 'Voice Desk', 'Handoff', 'Nudge', 'Rate Lens'] },
+        { layer: 'Shared agent layer', caption: 'The same rules everywhere', icon: 'bot', highlight: true, items: ['Guardrail at the door', 'Bounded toolsets', 'Provenance and quotes', 'Human review', 'Audit log', 'Evaluation sets', 'Usage metering', 'Kill switches'] },
+        { layer: 'Deterministic core', caption: 'Where the facts live', icon: 'cpu', items: ['Rules and routing', 'Queries and reports', 'Workflow engine', 'Records'] },
+        { layer: 'Platform', caption: 'What every product shares', icon: 'database', items: ['Sign-in and licensing', 'Billing', 'Tenant isolation', 'Cloud data and queues'] },
+    ],
+    blueprint,
+    lessons: [
+        { title: 'Not every product needs an agent', body: 'Three of the five run on deterministic engines, and that is the right answer. Add an agent only where it saves real time at acceptable risk.' },
+        { title: 'One layer, not five chatbots', body: 'Shared guardrails, audit and metering make each new agent cheaper to ship and safer to run than the last.' },
+        { title: 'Quote the source', body: 'Where an agent extracts or summarises, it shows the exact line it used. Checking takes seconds, and trust follows.' },
+        { title: 'Sequence by how easy it is to verify', body: 'Start where outputs are easiest to check, then widen. The strictest agents come last.' },
+        { title: 'Set the autonomy ceiling first', body: 'Agree how much each agent may do alone before it is built. Retrofitting limits onto a trusted agent is far harder than starting with them.' },
+        { title: 'Count review time as a cost', body: 'An agent that saves ten minutes but needs eight to check has saved little. Measure the whole loop, not just the model.' },
+    ],
+    faqs: [
+        { q: 'Is this a real client engagement?', a: 'No. This is a design study, not a delivery report. It describes a real healthcare platform whose name is withheld, and it makes no claim that Brynex Labs built it, delivered this plan or achieved results on it.' },
+        { q: 'Which of these agents exist today?', a: `In the platform, ${liveAgents} AI agents exist today, all in the documentation product. The other ${proposedAgents} AI agents here are proposals marked Roadmap.` },
+        { q: 'Why a two-year plan?', a: 'Each agent needs design, shadow mode, a pilot and a staged rollout, and several depend on each other. Spreading them over eight quarters earns customer trust one safe agent at a time, which lasts longer than shipping them all at once.' },
+        { q: 'How would you keep patient data safe?', a: 'Send models only the minimum necessary data, keep patient details out of logs, isolate every customer on every query, and put provider agreements in place before protected health information reaches a model. Compliance claims belong to the platform owner and its auditors.' },
+        { q: 'Can you design an agent roadmap for our platform?', a: 'Yes. We design and build AI agent layers with guardrails, audit and evaluation, and plan their rollout, for platforms of any size.' },
     ],
     productsHeading: 'Five products, five AI use cases',
     productsIntro:
@@ -265,10 +417,10 @@ export const platformStudy: CaseStudy = {
     products,
     sections: [
         {
-            heading: 'About this blueprint',
+            heading: 'About this roadmap',
             paragraphs: [
                 'This is a design study, not a delivery report. It looks at a real healthcare software platform, with its name withheld, that sells five products on one login, one bill and one audit trail: clinical documentation, dictation, referral tracking, patient texting and payer-rate benchmarking.',
-                'For each product we describe one clear job for AI, the agents that do it and the safeguards around them. Where an AI capability already exists in the platform today we mark it Live. Where we propose one that does not exist yet we mark it Roadmap. We publish no results or performance figures, because this page describes a design, not an outcome.',
+                'It lays out a 24-month plan for AI agents across all five: one clear job for AI in each product, the agents that do it, how each rolls out, and the safeguards around them. Where an AI capability already exists in the platform today we mark it Live. Where we propose one that does not exist yet we mark it Roadmap. We publish no results or performance figures, because this page describes a plan, not an outcome.',
             ],
         },
         {
@@ -282,7 +434,7 @@ export const platformStudy: CaseStudy = {
             heading: 'The Challenge',
             paragraphs: [
                 'Healthcare staff lose their days to work that is mostly reading, re-typing and chasing: charting after the visit, keying referrals in from emails and scans, calling patients who do not pick up, and trying to read payer rate files that nobody designed for humans.',
-                'That is the right territory for AI agents, and also the risky one. The data is protected health information, the decisions affect patients, and a confident wrong answer costs more than a slow right one. So the question is not whether to add agents, but where, and with what limits.',
+                'That is the right territory for AI agents, and also the risky one. The data is protected health information, the decisions affect patients, and a confident wrong answer costs more than a slow right one. So the question is not whether to add agents, but where, in what order and with what limits.',
             ],
         },
         {
@@ -298,6 +450,19 @@ export const platformStudy: CaseStudy = {
             ],
         },
         {
+            heading: 'Why Two Years',
+            paragraphs: [
+                'Each agent has to pass through design, shadow mode, a pilot with a few customers and a staged rollout. That takes a quarter or more per agent, even with a shared layer, and some depend on others: reply understanding needs the outreach engine, and the referral-to-visit loop needs intake, outreach and documentation all working.',
+                'The second reason is trust. Healthcare customers adopt agents slowly and forgive them rarely. A plan that earns trust one safe agent at a time lasts longer than one that ships eleven at once.',
+            ],
+            bullets: [
+                'Quarters 1 to 2, foundation: Build the shared layer and put evaluation and audit around the agents that already exist.',
+                'Quarters 2 to 6, the first new agents: Referral intake and reply understanding, the two with the clearest payoff and the easiest checks.',
+                'Quarters 3 to 7, widening: Note structuring for dictation, then ask-the-data for rate benchmarking.',
+                'Quarters 6 to 8, the hardest and the joined-up: Contract reading, follow-up chasing, template drafting, and the loop that links referrals, outreach and documentation.',
+            ],
+        },
+        {
             heading: 'Safety and Privacy by Design',
             paragraphs: ['The data here is protected health information, so privacy is part of the architecture, not a checklist at the end.'],
             bullets: [
@@ -306,6 +471,40 @@ export const platformStudy: CaseStudy = {
                 'Tenant isolation: Each customer’s data is scoped on every query, so one customer can never reach another’s.',
                 'Agreements before data: Provider agreements covering protected health information are in place before any such data reaches a model.',
                 'Controls, not compliance claims: We build the controls. Compliance claims belong to the platform’s owner and its auditors.',
+            ],
+        },
+        {
+            heading: 'Operating Model',
+            paragraphs: ['A plan this long needs owners. We would organise around a small standing team that owns the shared layer, plus a named owner for each agent.'],
+            bullets: [
+                'AI product owner: Decides which agent ships next, owns each autonomy ceiling and signs off every rollout stage.',
+                'Evaluation engineer: Owns the golden sets, the evaluation harness and the production-sampling process.',
+                'Platform engineers: Own the guardrails, tool gateway, audit log, metering and model abstraction.',
+                'Clinical and privacy reviewers: Review prompts, outputs and data flows before anything reaches a pilot.',
+                'Change control for prompts and models: Prompts and model versions are versioned, evaluated and rolled out behind flags like code, with a quick rollback.',
+                'A kill switch per agent and per customer: Any agent can be turned off for one customer or for all of them in minutes, without a deploy.',
+            ],
+        },
+        {
+            heading: 'Cost and Scale',
+            paragraphs: ['Agents add a new kind of running cost: model calls, speech minutes and, above all, human review time. Cost has to be designed in, per customer, from the first agent.'],
+            bullets: [
+                'Meter everything: Every model call and speech minute is attributed to a customer and a product, so cost is visible before it is a surprise.',
+                'Right-size the model: Small, fast models for classification and routing, larger ones only for drafting, and caching wherever inputs repeat.',
+                'Cap and degrade gracefully: Per-customer limits with a clear fall-back to the deterministic path, so a cap never breaks a workflow.',
+                'Count review time: An agent that saves ten minutes but needs eight to check has not saved much. Measure the whole loop.',
+                'Plan for model change: Providers change models, prices and limits. A thin abstraction and a standing evaluation set make switching an evaluation exercise, not a rewrite.',
+            ],
+        },
+        {
+            heading: 'Decisions to Make First',
+            paragraphs: ['Before the first new agent is built, five decisions shape everything after. Getting them wrong is expensive; getting them early is cheap.'],
+            bullets: [
+                'The autonomy ceiling: Agree in writing how much each agent may do alone. We propose that nothing that touches a patient or a payer goes beyond drafting for approval.',
+                'The data boundary: Decide what protected health information may reach a model, which provider terms must exist first, and what stays inside the platform.',
+                'The review experience: Design how people check agent work, because a slow or easy-to-rubber-stamp review screen quietly undoes every other control.',
+                'The definition of done: Agree the evaluation bar an agent must clear to leave pilot, before the pilot begins.',
+                'The shutdown rule: Agree in advance what level of error or complaint pauses an agent.',
             ],
         },
         {
@@ -319,6 +518,12 @@ export const platformStudy: CaseStudy = {
                 'Throughout, one shared layer: Each new agent reuses the guardrails, audit and metering, so it starts from something that already works.',
             ],
         },
+        {
+            heading: 'What This Roadmap Does Not Cover',
+            paragraphs: [
+                'It is a design. It does not include legal or regulatory advice, pricing, headcount or budget, vendor selection, or any claim about how the platform performs today. Compliance obligations belong to the platform’s owner and its advisers, and every date here is a planning assumption, not a promise.',
+            ],
+        },
     ],
     engagementHeading: 'How we would approach it',
     engagement: [
@@ -327,6 +532,7 @@ export const platformStudy: CaseStudy = {
         { title: 'Build the shared layer first', body: 'Guardrails, bounded tools, audit, metering and an evaluation harness, used by every agent that follows.' },
         { title: 'Ship one agent at a time', body: 'Each behind a flag, with an evaluation set, a human review step and a rollback.' },
         { title: 'Measure, then widen', body: 'Judge each agent on real use against its evaluation set before giving it more to do.' },
+        { title: 'Operate and keep improving', body: 'Run the evaluation loop continuously, review production samples, and retire or retrain any agent that drifts.' },
     ],
     stackHeading: 'Technology we would use',
     techStack: [
@@ -338,11 +544,14 @@ export const platformStudy: CaseStudy = {
         { name: 'TypeScript / Node.js', icon: 'TS' },
         { name: 'PostgreSQL / pgvector', icon: 'PG' },
         { name: 'Evals & tracing', icon: 'Eval' },
+        { name: 'Prompt and model versioning', icon: 'Ver' },
+        { name: 'Feature flags & kill switches', icon: 'Flag' },
+        { name: 'Audit log & observability', icon: 'Obs' },
     ],
     results: [
         { label: 'Products', value: '5', context: 'one AI use case each' },
-        { label: 'AI agents live today', value: String(liveAgents), context: 'all in the documentation product' },
-        { label: 'AI agents proposed', value: String(proposedAgents), context: 'designed here, not yet built' },
+        { label: 'AI agents by month 24', value: String(totalAgents), context: `${liveAgents} live today, ${proposedAgents} proposed` },
+        { label: 'Quarters planned', value: '8', context: 'design, pilot, rollout for each agent' },
         { label: 'Deterministic engines', value: String(engines), context: 'the core the agents sit on' },
     ],
     relatedServices: ['ai-agents-automation', 'ai-native-software-engineering'],

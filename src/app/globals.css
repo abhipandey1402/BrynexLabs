@@ -82,6 +82,10 @@ body {
   background-color: rgb(var(--background));
   color: rgb(var(--foreground));
   overflow-x: hidden;
+  /* `clip` stops horizontal overflow like `hidden` does but, unlike `hidden`, doesn't
+     turn <body> into a scroll container — which silently breaks position: sticky
+     everywhere on the site. Browsers without `clip` fall back to the line above. */
+  overflow-x: clip;
   position: relative;
   width: 100%;
 }
