@@ -18,7 +18,7 @@ const phases = [
     {
         number: '01',
         title: 'Discovery & Research',
-        description: 'We start with a deep-dive into your business goals, user needs, and technical constraints. This isn&apos;t just a meeting; it&apos;s a strategic audit of your product roadmap.',
+        description: 'We start with a deep-dive into your business goals, user needs, and technical constraints. This isn’t just a meeting; it’s a strategic audit of your product roadmap.',
         items: ['Stakeholder Interviews', 'User Persona Mapping', 'Competitive Analysis', 'Technical Debt Review'],
     },
     {
@@ -36,7 +36,7 @@ const phases = [
     {
         number: '04',
         title: 'Testing & Security QA',
-        description: 'Software is a liability until it&apos;s proven stable. We perform rigorous automated testing, security audits, and performance profiling to ensure production readiness.',
+        description: 'Software is a liability until it’s proven stable. We perform rigorous automated testing, security audits, and performance profiling to ensure production readiness.',
         items: ['End-to-End Testing', 'Security Vulnerability Scans', 'Load & Stress Testing', 'UX Edge-Case Validation'],
     },
     {

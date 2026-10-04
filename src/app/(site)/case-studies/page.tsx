@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 const KIND_LABEL: Record<CaseStudy['kind'], string> = {
     client: 'Client build',
     'in-house': 'Our own product',
-    platform: 'Platform blueprint',
+    platform: 'Platform roadmap',
 };
 
 const PRINCIPLES = [

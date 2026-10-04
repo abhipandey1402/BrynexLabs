@@ -19,7 +19,7 @@ import { services } from '@/data/services';
 const KIND_LABEL: Record<CaseStudy['kind'], string> = {
     client: 'Client build',
     'in-house': 'Our own product',
-    platform: 'Design study',
+    platform: 'Platform roadmap',
 };
 
 const slugify = (s: string) =>

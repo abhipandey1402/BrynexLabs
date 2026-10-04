@@ -62,6 +62,11 @@ export default function ArticleProse({ content }: { content: string }) {
             prose-img:shadow-card
             prose-th:text-foreground
             prose-td:text-foreground-secondary
+
+            /* Wide tables scroll sideways on phones instead of being clipped */
+            max-md:[&_table]:block
+            max-md:[&_table]:max-w-full
+            max-md:[&_table]:overflow-x-auto
         ">
             {contentBlocks.map((block, index) => (
                 <div key={index}>

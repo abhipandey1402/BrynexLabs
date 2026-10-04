@@ -360,12 +360,12 @@ const blueprint: BlueprintDeepDive = {
 };
 
 export const platformStudy: CaseStudy = {
-    slug: 'healthcare-ai-platform-agent-blueprint',
+    slug: 'healthcare-ai-platform-agent-roadmap',
     title: 'A Two-Year AI Agent Roadmap for a Five-Product Healthcare Platform',
-    clientName: 'Healthcare AI platform (name withheld)',
+    clientName: 'Healthcare AI platform',
     industry: 'Healthcare AI · Multi-product platform',
     summary:
-        'A healthcare software company sells five products on one platform: clinical documentation, dictation, referral tracking, patient texting and payer-rate benchmarking. This design study lays out a 24-month plan for AI agents across all five: where each belongs, how it rolls out quarter by quarter, how much it may do on its own, and the controls that keep eleven agents honest. The company’s name is withheld.',
+        'A healthcare software company sells five products on one platform: clinical documentation, dictation, referral tracking, patient texting and payer-rate benchmarking. This roadmap lays out a 24-month plan for AI agents across all five: where each belongs, how it rolls out quarter by quarter, how much it may do on its own, and the controls that keep eleven agents honest.',
     kicker: 'Healthcare AI · 24-month roadmap',
     tags: ['AI agents', 'Healthcare', 'Roadmap', 'Platform design'],
     kind: 'platform',
@@ -373,16 +373,16 @@ export const platformStudy: CaseStudy = {
     seo: {
         title: 'AI Agent Roadmap for a Healthcare Platform | Brynex Labs',
         metaDescription:
-            'A 24-month design study: where AI agents belong across five healthcare products, how they roll out quarter by quarter, and the controls that keep them safe.',
+            'A 24-month plan: where AI agents belong across five healthcare products, how they roll out quarter by quarter, and the controls that keep them safe.',
     },
     snapshot: [
-        { label: 'Industry', value: 'Healthcare AI · name withheld' },
-        { label: 'Type', value: 'Design study, not a delivery report' },
+        { label: 'Industry', value: 'Healthcare AI · multi-product platform' },
+        { label: 'Type', value: 'Roadmap and design, no results claimed' },
         { label: 'Horizon', value: '24 months, eight quarters' },
         { label: 'Scope', value: 'Five products and one shared agent layer' },
     ],
     takeaways: [
-        { label: 'What it is', text: 'A 24-month design for AI agents across five healthcare products on one platform. The name is withheld and no results are claimed.' },
+        { label: 'What it is', text: 'A 24-month plan for AI agents across five healthcare products on one platform. It is a plan, so no results are claimed.' },
         { label: 'The finding', text: 'One product already runs LLM agents, one runs speech models, and three run on deterministic engines with no AI at all.' },
         { label: 'The design', text: 'One shared agent layer with guardrails, bounded tools, provenance, audit and evals, and an autonomy ceiling so a person always decides.' },
         { label: 'The plan', text: 'Eight quarters, in order: the shared layer first, then referral intake and reply understanding, and last the strictest agents.' },
@@ -405,7 +405,7 @@ export const platformStudy: CaseStudy = {
         { title: 'Count review time as a cost', body: 'An agent that saves ten minutes but needs eight to check has saved little. Measure the whole loop, not just the model.' },
     ],
     faqs: [
-        { q: 'Is this a real client engagement?', a: 'No. This is a design study, not a delivery report. It describes a real healthcare platform whose name is withheld, and it makes no claim that Brynex Labs built it, delivered this plan or achieved results on it.' },
+        { q: 'Has this plan been delivered?', a: 'No. This page describes a plan, not delivered work. Where the platform already has an AI capability we mark it Live, and everything else is a proposal marked Roadmap. We claim no results and make no delivery promises.' },
         { q: 'Which of these agents exist today?', a: `In the platform, ${liveAgents} AI agents exist today, all in the documentation product. The other ${proposedAgents} AI agents here are proposals marked Roadmap.` },
         { q: 'Why a two-year plan?', a: 'Each agent needs design, shadow mode, a pilot and a staged rollout, and several depend on each other. Spreading them over eight quarters earns customer trust one safe agent at a time, which lasts longer than shipping them all at once.' },
         { q: 'How would you keep patient data safe?', a: 'Send models only the minimum necessary data, keep patient details out of logs, isolate every customer on every query, and put provider agreements in place before protected health information reaches a model. Compliance claims belong to the platform owner and its auditors.' },
@@ -419,8 +419,8 @@ export const platformStudy: CaseStudy = {
         {
             heading: 'About this roadmap',
             paragraphs: [
-                'This is a design study, not a delivery report. It looks at a real healthcare software platform, with its name withheld, that sells five products on one login, one bill and one audit trail: clinical documentation, dictation, referral tracking, patient texting and payer-rate benchmarking.',
-                'It lays out a 24-month plan for AI agents across all five: one clear job for AI in each product, the agents that do it, how each rolls out, and the safeguards around them. Where an AI capability already exists in the platform today we mark it Live. Where we propose one that does not exist yet we mark it Roadmap. We publish no results or performance figures, because this page describes a plan, not an outcome.',
+                'A healthcare software company sells five products on one login, one bill and one audit trail: clinical documentation, dictation, referral tracking, patient texting and payer-rate benchmarking. Together they give an unusually clear picture of where AI agents belong, and where they do not.',
+                'It lays out a 24-month plan for AI agents across all five: one clear job for AI in each product, the agents that do it, how each rolls out, and the safeguards around them. Where an AI capability already exists in the platform today we mark it Live. Where we propose one that does not exist yet we mark it Roadmap. We publish no results or performance figures: this page describes a plan, not an outcome.',
             ],
         },
         {
@@ -519,9 +519,9 @@ export const platformStudy: CaseStudy = {
             ],
         },
         {
-            heading: 'What This Roadmap Does Not Cover',
+            heading: 'Scope and Limits',
             paragraphs: [
-                'It is a design. It does not include legal or regulatory advice, pricing, headcount or budget, vendor selection, or any claim about how the platform performs today. Compliance obligations belong to the platform’s owner and its advisers, and every date here is a planning assumption, not a promise.',
+                'This is a plan. It does not include legal or regulatory advice, pricing, headcount or budget, vendor selection, or any claim about how the platform performs today. Compliance obligations belong to the platform’s owner and its advisers, and every date here is a planning assumption, not a promise.',
             ],
         },
     ],

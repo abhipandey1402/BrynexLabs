@@ -30,8 +30,8 @@ const LLMS_TXT = `# Brynex Labs
 
 ## Resources
 
-- [Case Studies](https://brynex.in/case-studies): Four published case studies, each built around AI agents — Clinizy Care (our own hospital management SaaS, with six AI agents), a two-year AI agent roadmap for a five-product healthcare platform (design study, name withheld), RegorTalent (AI interviewing & ATS platform), and ExamPapers (AI exam-prep platform).
-- [Two-year AI agent roadmap for a healthcare platform](https://brynex.in/case-studies/healthcare-ai-platform-agent-blueprint): A 24-month design study of where AI agents belong across a five-product healthcare platform (documentation, dictation, referrals, patient texting, rate benchmarking): quarterly roadmap, autonomy ceilings, evaluation loop and risk register. A design, not a delivery report; no results are claimed.
+- [Case Studies](https://brynex.in/case-studies): Four published case studies, each built around AI agents — Clinizy Care (our own hospital management SaaS, with six AI agents), a two-year AI agent roadmap for a five-product healthcare platform, RegorTalent (AI interviewing & ATS platform), and ExamPapers (AI exam-prep platform).
+- [Two-year AI agent roadmap for a healthcare platform](https://brynex.in/case-studies/healthcare-ai-platform-agent-roadmap): A 24-month plan for where AI agents belong across a five-product healthcare platform (documentation, dictation, referrals, patient texting, rate benchmarking): quarterly roadmap, autonomy ceilings, evaluation loop and risk register. A plan, not delivered work; no results are claimed.
 - [Clinizy Care case study](https://brynex.in/case-studies/clinizy-care): In-house case study of building and operating Clinizy Care.
 - [Healthcare software engineering](https://brynex.in/industries/healthcare): Healthcare software development services from the team that built Clinizy Care.
 - [Blog](https://brynex.in/blog): Guides on AI agents, RAG, SaaS architecture, cloud engineering, and SaaS SEO.
