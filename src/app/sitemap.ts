@@ -17,7 +17,7 @@ const STATIC_ROUTE_LASTMOD: Record<string, string> = {
   '/privacy': '2026-06-16',
   '/terms': '2026-06-16',
   '/blog': '2026-09-30',
-  '/case-studies': '2026-09-30',
+  '/case-studies': '2026-10-04',
   '/hire-ai-developers': '2026-06-16',
   '/ai-development-company-in-india': '2026-06-16',
   '/products': '2026-09-30',

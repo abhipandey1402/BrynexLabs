@@ -62,10 +62,11 @@ Pricing: Growth Retainer from ₹50,000/month, custom-scoped to stage and goals.
 
 ## Resources
 
-- Case Studies: https://brynex.in/case-studies — three published case studies:
+- Case Studies: https://brynex.in/case-studies — four published case studies, each built around AI agents:
   - RegorTalent — AI interviewing & ATS platform built end to end: https://brynex.in/case-studies/regortalent-ai-recruitment-platform
   - ExamPapers — AI exam-prep and mock-test platform: https://brynex.in/case-studies/exampapers-ai-exam-prep-platform
-  - Clinizy Care — our own hospital management SaaS (in-house): https://brynex.in/case-studies/clinizy-care
+  - Clinizy Care — our own hospital management SaaS (in-house): https://brynex.in/case-studies/clinizy-care (six AI agents: Bol in early access; Saathi, Awaz, Nazar, Buddhi and Setu on the roadmap; 24 automations live)
+  - Healthcare AI platform agent blueprint — a design study (not a delivery report; platform name withheld) of where AI agents belong across five healthcare products: https://brynex.in/case-studies/healthcare-ai-platform-agent-blueprint
 - Healthcare software engineering: https://brynex.in/industries/healthcare — healthcare software development services from the team that built Clinizy Care.
 - Blog: https://brynex.in/blog — guides on AI agents, RAG, SaaS architecture, cloud engineering, and SaaS SEO.
 - How We Work: https://brynex.in/how-we-work — 6-phase agile delivery with weekly demos.

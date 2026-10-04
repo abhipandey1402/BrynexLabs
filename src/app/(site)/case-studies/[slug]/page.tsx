@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { caseStudies } from '@/data/case-studies';
-import CaseStudyClient from '@/components/CaseStudyClient';
+import CaseStudyView from '@/components/case-studies/CaseStudyView';
 import { getBreadcrumbJsonLd, getCaseStudyArticleJsonLd, getCaseStudyImageUrl } from '@/lib/seo';
 
 interface PageProps {
@@ -70,7 +70,7 @@ export default function CaseStudyPage({ params }: PageProps) {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
-            <CaseStudyClient project={project} />
+            <CaseStudyView study={project} related={caseStudies.filter((p) => p.slug !== project.slug).slice(0, 3)} />
         </>
     );
 }

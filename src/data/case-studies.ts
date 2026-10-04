@@ -1,5 +1,7 @@
 import type { Screenshot } from './products';
-import { CLINIZY } from './products';
+import { AI_FEATURES, CLINIZY } from './products';
+import type { CaseIconKey } from '@/components/case-studies/CaseIcon';
+import { platformStudy } from './case-study-platform';
 
 /** One headline metric shown in the results grid. */
 export interface CaseStudyMetric {
@@ -19,6 +21,71 @@ export interface CaseStudySection {
     bullets?: string[];
 }
 
+/** An AI agent (or AI pipeline stage) that the case study built or runs. */
+export interface CaseStudyAgent {
+    name: string;
+    /** Devanagari name, when the agent has one (Clinizy's agents do). */
+    nameHi?: string;
+    /** Short role label, e.g. "Screening agent". */
+    role: string;
+    /** What it does, in one or two plain sentences. */
+    does: string;
+    /** The control that keeps it safe: human review, guardrails, deterministic checks. */
+    safeguard: string;
+    /** Honest availability. Omit for work that is simply delivered and live. */
+    status?: 'Live' | 'Early access' | 'Roadmap';
+    /** 'AI agent' is model-driven; 'Pipeline stage' is deterministic engineering around the agents. */
+    kind?: 'AI agent' | 'Pipeline stage';
+    icon: CaseIconKey;
+}
+
+/** Hero artwork scenes drawn in code (see components/case-studies/CaseArt). */
+export type CaseArtId = 'hiring' | 'exam' | 'clinic' | 'suite';
+
+/** One step of how the engagement ran. */
+export interface CaseStudyStep {
+    title: string;
+    body: string;
+}
+
+/**
+ * One product inside a multi-product case study. Anonymised on purpose:
+ * `name` is a neutral working name, never the real product name.
+ */
+export interface CaseStudyProduct {
+    id: string;
+    name: string;
+    slogan: string;
+    icon: CaseIconKey;
+    /** Who uses it day to day. */
+    persona: string;
+    problem: string;
+    solution: string;
+    agents: CaseStudyAgent[];
+    capabilities: string[];
+    stack: string[];
+    /** Data for the product's animated scene: what goes in, which agents act, what comes out. */
+    scene: ProductScene;
+}
+
+/** What a product scene's output panel looks like. */
+export type ProductOutputKind = 'note' | 'records' | 'chart' | 'chat' | 'brief';
+
+export interface ProductScene {
+    inputLabel: string;
+    /** Up to three input chips: a short badge and a title. */
+    inputs: { badge: string; title: string }[];
+    outputLabel: string;
+    output: {
+        kind: ProductOutputKind;
+        title: string;
+        /** `label` is a short tag (e.g. "S"), `value` a right-aligned figure or status. */
+        rows: { label?: string; text: string; value?: string }[];
+        /** A closing line shown under the rows, e.g. "Clinician reviews before anything is filed". */
+        footnote?: string;
+    };
+}
+
 export interface CaseStudy {
     slug: string;
     title: string;
@@ -26,8 +93,17 @@ export interface CaseStudy {
     /** Short descriptor shown in the snapshot, e.g. "AI recruitment platform · early-stage startup". */
     industry: string;
     summary: string;
+    /** Small label above the title, e.g. "Case study · AI hiring platform". */
+    kicker: string;
+    /** Short topical tags shown on cards and filters. */
+    tags: string[];
+    /** Whether we built it for a client, run it ourselves, or built a multi-product platform. */
+    kind: 'client' | 'in-house' | 'platform';
+    /** Hero artwork scene. */
+    art: CaseArtId;
+    /** Optional raster hero (e.g. a generated or photographic image). Overrides the scene when set. */
     heroImage?: string;
-    /** A real product screen (demo data) rendered in a browser frame instead of the placeholder visual. */
+    /** A real product screen (demo data) rendered in a browser frame under the hero scene. */
     heroShot?: Screenshot & { address: string };
     seo: {
         title: string;
@@ -35,10 +111,27 @@ export interface CaseStudy {
     };
     /** At-a-glance rows shown in the snapshot panel (label → value). */
     snapshot: { label: string; value: string }[];
+    /** Heading and intro for the AI agents section. */
+    agentsHeading?: string;
+    agentsIntro?: string;
+    /** The AI agents (or AI pipeline stages) at the heart of the build. */
+    agents?: CaseStudyAgent[];
+    /** Products inside a multi-product platform study, each with its own use case. */
+    productsHeading?: string;
+    productsIntro?: string;
+    products?: CaseStudyProduct[];
     /** Ordered narrative sections (Context → Challenge → Approach → Build → Technical → Impact). */
     sections: CaseStudySection[];
+    /** Heading for the engagement steps. Defaults to "How we worked". */
+    engagementHeading?: string;
+    /** How the engagement ran, as ordered steps. */
+    engagement: CaseStudyStep[];
+    /** Heading for the technology list. Defaults to "Technology". */
+    stackHeading?: string;
     techStack: { name: string; icon: string }[];
     results: CaseStudyMetric[];
+    /** Service pages this work backs up (slugs from data/services). */
+    relatedServices: string[];
     testimonial?: {
         quote: string;
         author: string;
@@ -50,9 +143,46 @@ export interface CaseStudy {
     updatedAt?: string;
 }
 
-export const caseStudies: CaseStudy[] = [
+/** Clinizy Care's six AI agents, from the shared product data (one source of truth for statuses). */
+const CLINIZY_AGENT_META: Record<string, { icon: CaseIconKey; safeguard: string }> = {
+    bol: { icon: 'mic', safeguard: 'Nothing is finalised: the doctor reviews every draft, and a guardrail rejects non-clinical input.' },
+    saathi: { icon: 'message', safeguard: 'A small, bounded toolset with nothing clinical. Anything that sounds like a symptom goes to a person with the chat attached.' },
+    awaz: { icon: 'phone', safeguard: 'One short script and one spoken answer. It records the reply and never tries to hold a conversation.' },
+    nazar: { icon: 'radar', safeguard: 'Every figure comes from a database query. The model only ranks and explains, so it cannot invent a number.' },
+    buddhi: { icon: 'pill', safeguard: 'It drafts the purchase order and the rescue plan. The pharmacist edits and approves.' },
+    setu: { icon: 'search', safeguard: 'It picks from pre-approved, clinic-scoped reports and fills in the parameters. It never writes its own queries.' },
+};
+
+const clinizyAgents: CaseStudyAgent[] = AI_FEATURES.map((f) => ({
+    name: f.name,
+    nameHi: f.nameHi,
+    role: f.title,
+    does: f.detail,
+    safeguard: CLINIZY_AGENT_META[f.id].safeguard,
+    status: f.status,
+    kind: 'AI agent' as const,
+    icon: CLINIZY_AGENT_META[f.id].icon,
+}));
+
+const baseStudies: CaseStudy[] = [
     {
         slug: 'clinizy-care',
+        kicker: 'Case study · In-house AI product',
+        tags: ['AI agents', 'Healthcare SaaS', 'Multi-tenant', 'WhatsApp automation'],
+        kind: 'in-house',
+        art: 'clinic',
+        agentsHeading: 'Six AI agents, one clinic',
+        agentsIntro:
+            'Clinizy Care is AI-first by design. Six agents cover the clinic end to end: documentation, the front desk, patient outreach, the owner\'s morning brief, the pharmacy and analytics. Bol is in early access today. Saathi, Awaz, Nazar, Buddhi and Setu are on our roadmap, and we label them that way. Under all six sits a deterministic core and 24 automations that already run in production.',
+        agents: clinizyAgents,
+        engagement: [
+            { title: 'Start from the front desk', body: 'We started with the people who live in the software: owners, doctors and receptionists, and where their minutes actually go.' },
+            { title: 'Build the deterministic core first', body: 'One patient record, eleven modules, correct GST and a fail-closed tenant guard. AI gets nothing to stand on until the data underneath is right.' },
+            { title: 'Add AI where the minutes are', body: 'Documentation first. Each agent gets a bounded toolset, a guardrail and a human review step before it touches a patient or a rupee.' },
+            { title: 'Run it ourselves', body: 'We operate Clinizy Care in production, so every agent is judged against real clinic days rather than a demo.' },
+            { title: 'Ship, measure, extend', body: 'Weekly releases, thousands of automated tests as a safety net, and a roadmap that says plainly what is live and what is next.' },
+        ],
+        relatedServices: ['ai-agents-automation', 'ai-native-software-engineering', 'saas-seo'],
         title: 'Building and Running Clinizy Care: An AI-Powered, Multi-Tenant Hospital SaaS for Indian Clinics',
         clientName: 'Clinizy Care (in-house product)',
         industry: 'Healthcare SaaS · Our own product',
@@ -101,7 +231,7 @@ export const caseStudies: CaseStudy[] = [
                     'GST billing: CGST/SGST or IGST by place of supply, exempt consultations, MRP-inclusive pharmacy pricing, day-close reconciliation, UPI QR on invoices and a Tally export.',
                     'Autopilot: 24 built-in automations, from follow-up recalls and refill reminders to critical-result escalation and discharge workflows, with per-clinic controls.',
                     'WhatsApp: direct Meta Cloud API integration with approved English and Hindi templates, queued delivery, signed webhooks, quiet hours, opt-outs and quotas.',
-                    'AI clinical documentation: Bol, in early access, drafts structured notes from a doctor\'s dictation behind a guardrail agent. Saathi (a WhatsApp front desk), Nazar (a daily owner brief) and more are on the roadmap.',
+                    'AI agents: six in total. Bol (clinical notes from dictation) is in early access. Saathi (a WhatsApp front desk), Awaz (reminder calls), Nazar (the 8 am owner brief), Buddhi (pharmacy forecasting) and Setu (ask your clinic in Hindi) are on the roadmap.',
                     'Growth engine: clinizy.in itself, with module, comparison and automation pages, a plain-language blog for clinic owners, and llms.txt for AI search.',
                 ],
             },
@@ -143,8 +273,8 @@ export const caseStudies: CaseStudy[] = [
         results: [
             { label: 'Modules', value: '11', context: 'on one shared patient record' },
             { label: 'Built-in automations', value: '24', context: 'running on their own, 24/7' },
+            { label: 'AI agents', value: '6', context: 'Bol in early access, five on the roadmap' },
             { label: 'Interface languages', value: '3', context: 'English, Hindi & Hinglish' },
-            { label: 'Platform', value: 'Web', context: 'runs in the browser, nothing to install' },
         ],
         ...(CLINIZY.screenshots.dashboard
             ? { heroShot: { ...CLINIZY.screenshots.dashboard, address: 'clinizy.in/dashboard' } }
@@ -154,16 +284,36 @@ export const caseStudies: CaseStudy[] = [
     },
     {
         slug: 'regortalent-ai-recruitment-platform',
+        kicker: 'Case study · AI hiring platform',
+        tags: ['AI agents', 'HR tech', 'SaaS', 'Cloud'],
+        kind: 'client',
+        art: 'hiring',
+        agentsHeading: 'Three AI agents that run the first mile of hiring',
+        agentsIntro:
+            'RegorTalent puts AI where recruiters lose the most time: reading applications, judging fit and running first-round interviews. Each agent returns the evidence behind its call, and a recruiter makes every decision.',
+        agents: [
+            { name: 'Screening agent', role: 'Resume screening', does: 'Parses each resume and reads it against the role, so a recruiter starts from a clean, structured view of every applicant.', safeguard: 'It surfaces the evidence behind every call and never decides on its own.', kind: 'AI agent', icon: 'file-search' },
+            { name: 'Matching agent', role: 'Semantic matching', does: 'Matches candidates to roles on meaning, using embeddings in a vector store, so shortlists reflect genuine fit rather than keyword luck.', safeguard: 'Every ranking is explainable and shows its evidence, not a black-box score.', kind: 'AI agent', icon: 'network' },
+            { name: 'Interview agent', role: 'First-round interviews', does: 'Runs structured first-round interviews, adapts follow-up questions to the role and returns scored, evidence-backed evaluations.', safeguard: 'Evaluation and guardrails wrap the agent, and recruiters review every scorecard.', kind: 'AI agent', icon: 'message' },
+            { name: 'Guardrails & evals', role: 'Reliability layer', does: 'Evaluation and guardrails around the agents keep their behaviour consistent and defensible, which hiring demands.', safeguard: 'Human-in-the-loop by design from day one.', kind: 'Pipeline stage', icon: 'shield' },
+        ],
+        engagement: [
+            { title: 'Embed with the founder', body: 'We joined RegorTalent as a full-stack product partner rather than a single-layer vendor, working in short cycles with real recruiter feedback.' },
+            { title: 'Ship the ATS core', body: 'Job management, candidate tracking, the pipeline view and scheduling came first, so there was a real product for the AI to work inside.' },
+            { title: 'Add the agents, human in the loop', body: 'Screening, matching and interviewing arrived with evaluation and guardrails, and every output stayed recruiter-reviewed.' },
+            { title: 'Build the cloud for always-on hiring', body: 'A containerised, autoscaled deployment with CI/CD and observability kept weekly releases routine.' },
+            { title: 'Wire support into engineering', body: 'An Atlassian-integrated support system turned ad-hoc requests into a tracked pipeline that feeds the roadmap.' },
+        ],
+        relatedServices: ['ai-agents-automation', 'ai-native-software-engineering'],
         title: 'Building an AI Interviewing & ATS Platform End to End for RegorTalent',
         clientName: 'RegorTalent',
         industry: 'AI interviewing & applicant tracking (HR tech) · Startup',
         summary:
             'RegorTalent is an AI-powered interviewing and ATS platform. Brynex Labs built it end to end — the recruiter and candidate apps, the backend and APIs, the AI agents that screen, match, and interview candidates, and the cloud it all runs on — plus an Atlassian support system that cut resolution time 30% and support costs 70%.',
-        heroImage: '/images/case-studies/regortalent-hero.jpg',
         seo: {
             title: 'RegorTalent Case Study: AI Interviewing & ATS Platform | Brynex Labs',
             metaDescription:
-                'How Brynex Labs built RegorTalent end to end — an AI interviewing and ATS platform spanning frontend, backend, AI agents, and cloud, with an Atlassian support system.',
+                'How Brynex Labs built RegorTalent end to end: an AI interviewing and ATS platform spanning frontend, backend, AI agents and cloud.',
         },
         snapshot: [
             { label: 'Industry', value: 'AI interviewing & ATS (HR tech)' },
@@ -248,6 +398,8 @@ export const caseStudies: CaseStudy[] = [
             { label: 'First-round interviews', value: 'AI-led', context: 'auto-scored, human-in-the-loop' },
             { label: 'Lower support costs', value: '70%', context: 'Atlassian-integrated support' },
             { label: 'Less front-end code', value: '25%', context: 'reusable component system' },
+            { label: 'Faster support resolution', value: '30%', context: 'Atlassian-integrated support' },
+            { label: 'Fewer post-deployment issues', value: '~20%', context: 'centralised API & error handling' },
         ],
         testimonial: {
             quote:
@@ -260,16 +412,36 @@ export const caseStudies: CaseStudy[] = [
     },
     {
         slug: 'exampapers-ai-exam-prep-platform',
+        kicker: 'Case study · AI exam-prep platform',
+        tags: ['AI agents', 'EdTech', 'Generative AI', 'Scale'],
+        kind: 'client',
+        art: 'exam',
+        agentsHeading: 'An AI pipeline that turns source material into a mock exam',
+        agentsIntro:
+            'ExamPapers replaces hand-authored practice papers with a pipeline: AI generates exam-style questions from source material, validation keeps them trustworthy, and learners get instant, topic-level feedback.',
+        agents: [
+            { name: 'Question-generation agent', role: 'Generation', does: 'Turns source material into exam-style questions, so a full mock can be assembled without hand-authoring every item.', safeguard: 'Output is validated before it reaches a learner. A wrong or ambiguous question is worse than none.', kind: 'AI agent', icon: 'sparkles' },
+            { name: 'Quality validation', role: 'Consistency', does: 'Checks generated items so they stay consistent and trustworthy across a whole paper.', safeguard: 'Built as a first-class stage, not a final polish step.', kind: 'Pipeline stage', icon: 'shield' },
+            { name: 'Mock assembly', role: 'Paper builder', does: 'Assembles complete, exam-ready mocks, so a paper that took days now takes minutes.', safeguard: 'Learners get fresh, varied practice instead of one shared static set.', kind: 'Pipeline stage', icon: 'layers' },
+            { name: 'Feedback engine', role: 'Scoring', does: 'Scores every attempt instantly and shows topic-level feedback, so learners see what to fix next, not just a number.', safeguard: 'Designed to stay responsive and degrade gracefully at exam-season peaks.', kind: 'Pipeline stage', icon: 'chart' },
+        ],
+        engagement: [
+            { title: 'Treat it as one system', body: 'AI generation, mock assembly, the learner experience and the operational backbone were designed together, not bolted on one by one.' },
+            { title: 'Make quality a requirement', body: 'Because AI-generated assessment content has to be trustworthy, validation and consistency were requirements from the start.' },
+            { title: 'Build the generation pipeline', body: 'Source material in, exam-style questions out, with a full mock assembled from them.' },
+            { title: 'Design for the exam-eve spike', body: 'Demand concentrates in the days before an exam, so the system was designed for peaks and to degrade gracefully, not fail.' },
+            { title: 'Ship the learner experience', body: 'Complete mock exams with instant scoring and topic-level feedback, so learners always know what to work on next.' },
+        ],
+        relatedServices: ['ai-agents-automation', 'ai-native-software-engineering'],
         title: 'Building an End-to-End AI Exam-Prep Platform for ExamPapers',
         clientName: 'ExamPapers',
         industry: 'EdTech · AI exam prep & mock tests',
         summary:
             'ExamPapers set out to replace slow, manual test creation with AI. Brynex Labs helped build an end-to-end platform that generates full mock exams from source material and gives learners instant, topic-level feedback — designed to hold up when demand spikes at exam time.',
-        heroImage: '/images/case-studies/exampapers-hero.jpg',
         seo: {
             title: 'ExamPapers Case Study: End-to-End AI Exam-Prep Platform | Brynex Labs',
             metaDescription:
-                'How Brynex Labs built ExamPapers — an end-to-end AI platform that generates full mock exams and instant, topic-level feedback, designed for exam-season demand.',
+                'How Brynex Labs built ExamPapers, an end-to-end AI platform that generates full mock exams with instant, topic-level feedback.',
         },
         snapshot: [
             { label: 'Industry', value: 'EdTech · exam preparation' },
@@ -349,3 +521,6 @@ export const caseStudies: CaseStudy[] = [
         updatedAt: '2026-07-24',
     },
 ];
+
+/** Display order: our own product first, then the platform blueprint, then client builds. */
+export const caseStudies: CaseStudy[] = [baseStudies[0], platformStudy, ...baseStudies.slice(1)];

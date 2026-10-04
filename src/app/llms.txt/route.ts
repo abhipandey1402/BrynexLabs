@@ -30,7 +30,8 @@ const LLMS_TXT = `# Brynex Labs
 
 ## Resources
 
-- [Case Studies](https://brynex.in/case-studies): Three published case studies — RegorTalent (AI interviewing & ATS platform), ExamPapers (AI exam-prep platform), and Clinizy Care (our own hospital management SaaS).
+- [Case Studies](https://brynex.in/case-studies): Four published case studies, each built around AI agents — Clinizy Care (our own hospital management SaaS, with six AI agents), a healthcare AI platform agent blueprint (design study, name withheld), RegorTalent (AI interviewing & ATS platform), and ExamPapers (AI exam-prep platform).
+- [Healthcare AI platform agent blueprint](https://brynex.in/case-studies/healthcare-ai-platform-agent-blueprint): A design study of where AI agents belong across a five-product healthcare platform (documentation, dictation, referrals, patient texting, rate benchmarking). A blueprint, not a delivery report; no results are claimed.
 - [Clinizy Care case study](https://brynex.in/case-studies/clinizy-care): In-house case study of building and operating Clinizy Care.
 - [Healthcare software engineering](https://brynex.in/industries/healthcare): Healthcare software development services from the team that built Clinizy Care.
 - [Blog](https://brynex.in/blog): Guides on AI agents, RAG, SaaS architecture, cloud engineering, and SaaS SEO.

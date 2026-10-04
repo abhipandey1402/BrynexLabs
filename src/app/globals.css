@@ -319,3 +319,14 @@ body {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
 }
+
+/* ===== Case-study artwork ===== */
+/* Dashed connector lines in the hub scenes drift toward the agents. */
+@keyframes bx-dash {
+  to { stroke-dashoffset: -20; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .bx-dash {
+    animation: bx-dash 1.4s linear infinite;
+  }
+}

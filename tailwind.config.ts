@@ -78,6 +78,10 @@ const config: Config = {
         'fill-line': 'fillLine 3.6s ease-out infinite',
         'float': 'float 6s ease-in-out infinite',
         'pop-in': 'popIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'flow-y': 'flowY 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite',
+        'orbit': 'orbit 60s linear infinite',
+        'orbit-reverse': 'orbit 60s linear infinite reverse',
+        'sheen': 'sheen 5s ease-in-out infinite',
       },
       keyframes: {
         marquee: {
@@ -118,6 +122,20 @@ const config: Config = {
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-6px)' },
+        },
+        flowY: {
+          '0%': { top: '0%', opacity: '0' },
+          '15%': { opacity: '1' },
+          '85%': { opacity: '1' },
+          '100%': { top: '100%', opacity: '0' },
+        },
+        orbit: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        sheen: {
+          '0%, 100%': { opacity: '0.35' },
+          '50%': { opacity: '0.9' },
         },
         popIn: {
           '0%': { opacity: '0', transform: 'translateY(8px) scale(0.98)' },
