@@ -16,15 +16,33 @@ export interface Author {
     tagline: string;
     /** Only real external profiles belong here (Person.sameAs). Empty until provided. */
     sameAs?: string[];
+    /** Visible profile links on the author page (label + href). Mirrors sameAs. */
+    profileLinks?: { label: string; href: string }[];
+    /** Other organizations this person works for, by @id (Person.worksFor). */
+    alsoWorksFor?: { '@id': string; name: string; url: string }[];
 }
 
 export const authors: Author[] = [
     {
         slug: 'abhi-pandey',
         name: 'Abhi Pandey',
-        jobTitle: 'Senior Software Engineer',
-        tagline: 'Senior Software Engineer at Brynex Labs',
-        bio: 'Abhi Pandey is a Senior Software Engineer at Brynex Labs, where he builds production-grade AI agents, RAG pipelines, and full-stack SaaS platforms with LangChain, LangGraph, Python, and Next.js. He writes about applied AI engineering, software architecture, and shipping reliable systems to production.',
+        // Must match clinizy.in/about character-for-character.
+        jobTitle: 'Founder & CTO',
+        tagline: 'Founder & CTO at Brynex Labs',
+        bio: 'Abhi Pandey is the Founder & CTO of Brynex Labs. He leads product and engineering for Clinizy Care, the hospital management software Brynex Labs builds and runs for India\'s clinics and nursing homes, and for the AI agents and SaaS platforms the studio builds for clients. He writes about multi-tenant SaaS architecture, applied AI engineering, and shipping reliable systems to production.',
+        sameAs: [
+            'https://www.linkedin.com/in/abhipandey1402',
+            'https://github.com/abhipandey1402',
+            'https://clinizy.in/about',
+        ],
+        profileLinks: [
+            { label: 'LinkedIn', href: 'https://www.linkedin.com/in/abhipandey1402' },
+            { label: 'GitHub', href: 'https://github.com/abhipandey1402' },
+            { label: 'Founder profile on Clinizy Care', href: 'https://clinizy.in/about' },
+        ],
+        alsoWorksFor: [
+            { '@id': 'https://clinizy.in/#organization', name: 'Clinizy Care', url: 'https://clinizy.in' },
+        ],
     },
     {
         slug: 'shashi-tiwari',
@@ -50,8 +68,8 @@ export function getAllAuthorSlugs(): string[] {
 
 /**
  * Topic → author. SEO/marketing content is attributed to the Head of SEO;
- * everything else (AI, SaaS, Cloud, DevOps, Engineering) to the Senior
- * Software Engineer. Kept as a pure function so it works for both static and
+ * everything else (AI, SaaS, Cloud, DevOps, Engineering) to the Founder &
+ * CTO. Kept as a pure function so it works for both static and
  * CMS posts regardless of the free-text author stored on the record.
  */
 export function getAuthorForCategory(category?: BlogCategory | string): Author {

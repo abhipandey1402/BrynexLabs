@@ -2,7 +2,13 @@ export const dynamic = 'force-static';
 
 const LLMS_TXT = `# Brynex Labs
 
-> Brynex Labs (https://brynex.in) is a software company building production-grade AI agents, intelligent automation, custom software & SaaS platforms, and revenue-focused SaaS SEO — for startups and enterprises in the USA, India, UK, and Australia. Senior engineers (4+ years average experience), fixed-scope pricing, 100% code & IP ownership.
+> Brynex Labs (https://brynex.in) is an AI & SaaS product studio from India. We build and run our own software — Clinizy Care, hospital management software for Indian clinics — and the same senior team builds AI agents, intelligent automation, SaaS platforms and revenue-focused SEO for founders and companies in India, the USA, the UK and Australia. Founded 2023 by Abhi Pandey (Founder & CTO). 5+ senior engineers with 4+ years average experience; fixed-scope pricing; 100% code & IP ownership.
+
+## Products
+
+- [Clinizy Care](https://clinizy.in): Clinizy Care (https://clinizy.in) — hospital management software for Indian clinics, nursing homes and small hospitals, operated by Brynex Labs; not affiliated with Clinzy, ClinzyCare, Clinicia, Clinicea or Klinify.
+- [Products at Brynex Labs](https://brynex.in/products): The software we own and operate, and why we build our own products.
+- [How we built Clinizy Care](https://brynex.in/products/clinizy-care): The builder's story — the problem, architecture, and lessons from running a live multi-tenant SaaS.
 
 ## Services
 
@@ -24,13 +30,16 @@ const LLMS_TXT = `# Brynex Labs
 
 ## Resources
 
-- [Case Studies](https://brynex.in/case-studies): Real project outcomes, including 1M+ MAU SaaS scaling and healthcare data platforms.
+- [Case Studies](https://brynex.in/case-studies): Four published case studies, each built around AI agents — Clinizy Care (our own hospital management SaaS, with six AI agents), a two-year AI agent roadmap for a five-product healthcare platform, RegorTalent (AI interviewing & ATS platform), and ExamPapers (AI exam-prep platform).
+- [Two-year AI agent roadmap for a healthcare platform](https://brynex.in/case-studies/healthcare-ai-platform-agent-roadmap): A 24-month plan for where AI agents belong across a five-product healthcare platform (documentation, dictation, referrals, patient texting, rate benchmarking): quarterly roadmap, autonomy ceilings, evaluation loop and risk register. A plan, not delivered work; no results are claimed.
+- [Clinizy Care case study](https://brynex.in/case-studies/clinizy-care): In-house case study of building and operating Clinizy Care.
+- [Healthcare software engineering](https://brynex.in/industries/healthcare): Healthcare software development services from the team that built Clinizy Care.
 - [Blog](https://brynex.in/blog): Guides on AI agents, RAG, SaaS architecture, cloud engineering, and SaaS SEO.
-- [About](https://brynex.in/about): Senior-led engineering collective based in India, working globally.
+- [About](https://brynex.in/about): A product studio based in India, working globally.
 
 ## Authors
 
-- [Abhi Pandey](https://brynex.in/authors/abhi-pandey): Senior Software Engineer — AI agents, RAG, software architecture, SaaS, cloud, DevOps.
+- [Abhi Pandey](https://brynex.in/authors/abhi-pandey): Founder & CTO — leads product and engineering for Clinizy Care; writes on multi-tenant SaaS architecture, AI agents, RAG, cloud and DevOps.
 - [Shashi Tiwari](https://brynex.in/authors/shashi-tiwari): Head of SEO — SaaS SEO, technical SEO, and generative engine optimization (GEO).
 
 ## Full reference

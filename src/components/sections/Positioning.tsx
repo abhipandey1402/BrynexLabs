@@ -1,11 +1,6 @@
 import Link from 'next/link';
 import SectionWrapper from '../SectionWrapper';
-
-const stats = [
-    { label: 'Avg. Experience', value: '4+ Years' },
-    { label: 'Project Success', value: '100%' },
-    { label: 'Senior Engineers', value: '10+' },
-];
+import StudioFacts from '../StudioFacts';
 
 export default function Positioning() {
     return (
@@ -19,13 +14,16 @@ export default function Positioning() {
                             <span className="text-foreground-muted text-xs font-medium uppercase tracking-wider">Who we are</span>
                         </div>
                         <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-foreground tracking-tighter mb-8 leading-[0.95]">
-                            Not just another agency.<br />
-                            <span className="text-foreground-secondary">Your engineering partners.</span>
+                            A product studio.<br />
+                            <span className="text-foreground-secondary">Two halves, one team.</span>
                         </h2>
 
                         <div className="space-y-6 text-lg text-foreground-secondary leading-relaxed mb-10">
                             <p>
-                                We built Brynex Labs to be the antidote to bloated contracts and junior-heavy teams. We are a senior-only collective focused on building software that scales and drives revenue.
+                                <strong className="text-foreground">Products:</strong> software we own and run ourselves. <Link href="/products/clinizy-care" className="text-foreground font-semibold hover:text-accent transition-colors">Clinizy Care</Link> is the first.
+                            </p>
+                            <p>
+                                <strong className="text-foreground">Studio:</strong> the same senior engineers build AI agents, SaaS platforms and SEO for clients. Built in India, to the standard we hold our own product to.
                             </p>
                         </div>
 
@@ -49,22 +47,8 @@ export default function Positioning() {
                                     <path d="M5 12h14M12 5l7 7-7 7" />
                                 </svg>
                             </Link>
-
-                            <div className="hidden sm:block w-px h-8 bg-border" />
-
-                            <div className="flex gap-8">
-                                {stats.map((stat) => (
-                                    <div key={stat.label}>
-                                        <div className="text-xl font-bold text-foreground">
-                                            {stat.value}
-                                        </div>
-                                        <div className="text-[10px] uppercase tracking-widest text-foreground-muted font-bold">
-                                            {stat.label}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
+                        <StudioFacts className="mt-10 border-t border-border pt-8" />
                     </div>
 
                     {/* Right Column: Philosophy Card (Simplified) */}
@@ -84,7 +68,7 @@ export default function Positioning() {
                                     "Code is a liability, functionality is an asset.",
                                     "Ship fast, but never break production.",
                                     "Direct access to engineers, no middlemen.",
-                                    "Outcome-driven over hours-billed."
+                                    "We run a live product, so we build like owners, not hour-billers."
                                 ].map((item, i) => (
                                     <li key={i} className="flex items-start gap-3">
                                         <span className="mt-2 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />

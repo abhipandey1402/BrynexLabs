@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Button from '../Button';
 import ContactModal from '../ContactModal';
 import { trackConversion_StartProjectClick } from '@/lib/tracking';
@@ -13,7 +14,7 @@ export default function Hero() {
         <section
             id="hero"
             aria-label="Hero"
-            className="relative min-h-[90vh] flex items-center justify-center px-6 md:px-8 pt-24 pb-16 overflow-hidden"
+            className="relative min-h-[82vh] flex items-center justify-center px-6 md:px-8 pt-28 pb-16 overflow-hidden"
         >
             <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
@@ -37,23 +38,43 @@ export default function Hero() {
             </div>
 
             <div className="relative z-10 mx-auto max-w-container text-center">
+                {/* AI-first lead-in */}
+                <div className="mb-7 flex justify-center animate-fade-in-up">
+                    <Link
+                        href="/products"
+                        className="group inline-flex items-center gap-2.5 rounded-full border border-accent/30 bg-background-card/70 py-1.5 pl-2 pr-4 text-sm font-medium text-foreground-secondary backdrop-blur transition-colors hover:border-accent/60 hover:text-foreground"
+                    >
+                        <span className="rounded-full bg-accent-gradient px-2.5 py-0.5 text-xs font-bold text-white">AI</span>
+                        AI-native product studio · Makers of Clinizy Care
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true" className="text-accent transition-transform group-hover:translate-x-0.5">
+                            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </Link>
+                </div>
+
                 {/* H1 — only h1 on the page */}
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-tight leading-[1.1] mb-6 max-w-4xl mx-auto animate-fade-in-up">
-                    AI-Powered Engineering. <span className="text-accent">Real Business Results.</span>
+                <h1 className="text-[2.1rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground tracking-tight leading-[1.05] mb-7 max-w-5xl mx-auto animate-fade-in-up">
+                    We build our own products.
+                    <br className="hidden sm:block" />{' '}
+                    Then we build yours.
                 </h1>
 
                 {/* Subtitle */}
-                <p className="text-foreground-secondary text-base md:text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed mb-10 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
-                    Helping startups and enterprises ship production-grade SaaS, AI solutions, and cloud-native platforms — on time, every time.
+                <p className="text-foreground-secondary text-base md:text-lg lg:text-xl max-w-[46rem] mx-auto leading-relaxed mb-10 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
+                    Brynex Labs is the team behind{' '}
+                    <Link href="/products/clinizy-care" className="text-foreground font-semibold underline decoration-accent/40 underline-offset-4 hover:decoration-accent transition-colors">
+                        Clinizy Care
+                    </Link>
+                    , hospital management software built for India&apos;s clinics and nursing homes. The same senior engineers ship AI agents, SaaS platforms and SEO for founders worldwide.
                 </p>
 
                 {/* CTAs */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                    <Button 
+                    <Button
                         onClick={() => {
                             trackConversion_StartProjectClick('Hero Primary Button');
                             setIsModalOpen(true);
-                        }} 
+                        }}
                         variant="primary" size="lg"
                     >
                         Start a project
@@ -61,35 +82,17 @@ export default function Hero() {
                             <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </Button>
-                    <Button href="#services" variant="secondary" size="lg">
-                        View Services
-                    </Button>
-                </div>
-                
-                {/* Embedded Trust Badges */}
-                <div className="mb-16">
-                    <TrustBadges />
+                    <Link
+                        href="/products/clinizy-care"
+                        className="inline-flex items-center justify-center gap-2 px-8 py-4 text-lg rounded-button bg-transparent text-foreground font-medium border border-border hover:border-border-hover hover:bg-background-tertiary transition-all duration-200 whitespace-nowrap"
+                    >
+                        See Clinizy Care <span aria-hidden="true">&rarr;</span>
+                    </Link>
                 </div>
 
-                {/* Trust Indicators */}
-                <div className="relative max-w-3xl mx-auto pt-8 animate-fade-in" style={{ animationDelay: '0.45s' }}>
-                    {/* Enhanced divider line */}
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[1px] bg-gradient-to-r from-transparent via-border to-transparent opacity-60" />
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-12">
-                        <div className="flex flex-col items-center">
-                            <span className="text-xl md:text-2xl font-bold text-foreground">10+</span>
-                            <span className="text-[13px] text-foreground-secondary mt-1 tracking-tight">Projects Delivered</span>
-                        </div>
-                        <div className="flex flex-col items-center border-t sm:border-t-0 sm:border-x border-border/30 py-6 sm:py-0">
-                            <span className="text-xl md:text-2xl font-bold text-foreground">95%</span>
-                            <span className="text-[13px] text-foreground-secondary mt-1 tracking-tight">Client Retention</span>
-                        </div>
-                        <div className="flex flex-col items-center">
-                            <span className="text-xl md:text-2xl font-bold text-foreground">2x Faster</span>
-                            <span className="text-[13px] text-foreground-secondary mt-1 tracking-tight">Avg. Delivery Speed</span>
-                        </div>
-                    </div>
+                {/* Embedded Trust Badges */}
+                <div>
+                    <TrustBadges />
                 </div>
             </div>
 

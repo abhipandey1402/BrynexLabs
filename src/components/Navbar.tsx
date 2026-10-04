@@ -123,6 +123,14 @@ export default function Navbar() {
                                     </NavigationMenu.Item>
 
                                     <NavigationMenu.Item>
+                                        <Link href="/products" legacyBehavior passHref>
+                                            <NavigationMenu.Link className="px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-background-secondary/80">
+                                                Products
+                                            </NavigationMenu.Link>
+                                        </Link>
+                                    </NavigationMenu.Item>
+
+                                    <NavigationMenu.Item>
                                         <Link href="/case-studies" legacyBehavior passHref>
                                             <NavigationMenu.Link className="px-4 py-2 text-sm text-foreground-secondary hover:text-foreground transition-colors duration-200 rounded-lg hover:bg-background-secondary/80">
                                                 Case Studies
@@ -242,6 +250,9 @@ export default function Navbar() {
                                 )}
                             </div>
 
+                            <Link href="/products" onClick={() => setIsMobileOpen(false)} className="block px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-background-secondary/80 rounded-lg transition-colors duration-200">
+                                Products
+                            </Link>
                             <Link href="/case-studies" onClick={() => setIsMobileOpen(false)} className="block px-4 py-3 text-lg text-foreground-secondary hover:text-foreground hover:bg-background-secondary/80 rounded-lg transition-colors duration-200">
                                 Case Studies
                             </Link>

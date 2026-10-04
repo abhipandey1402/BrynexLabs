@@ -1,22 +1,23 @@
 import { Metadata } from 'next';
 import SectionWrapper from '@/components/SectionWrapper';
+import StudioFacts from '@/components/StudioFacts';
 import Link from 'next/link';
 import { authors } from '@/data/authors';
 import { absoluteUrl, getBreadcrumbJsonLd, getPersonJsonLd, getWebPageJsonLd, organizationRef } from '@/lib/seo';
 
 export const metadata: Metadata = {
-    title: 'About Brynex Labs | AI & Software Development Company in India',
-    description: 'Meet Brynex Labs — a senior-led AI & software development company in India, serving startups and enterprises across the USA, UK & worldwide.',
+    title: 'About Brynex Labs | AI & SaaS Product Studio from India',
+    description: 'Brynex Labs is a product studio from India. We build and run Clinizy Care, and the same senior team builds AI agents, SaaS and SEO for clients.',
     alternates: { canonical: '/about' },
     openGraph: {
-        title: 'About Brynex Labs | AI & Software Development Company in India',
-        description: 'A senior-led AI and software development company based in India, serving startups and enterprises in the USA and worldwide.',
+        title: 'About Brynex Labs | AI & SaaS Product Studio from India',
+        description: 'A product studio from India: we build and run Clinizy Care, and build AI agents, SaaS platforms and SEO for clients worldwide.',
         url: '/about'
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'About Brynex Labs | AI & Software Development Company in India',
-        description: 'Learn how Brynex Labs builds AI agents, custom software, and SaaS growth systems for USA and India clients.',
+        title: 'About Brynex Labs | AI & SaaS Product Studio from India',
+        description: 'A product studio from India: we build and run Clinizy Care, and build AI agents, SaaS platforms and SEO for clients worldwide.',
     },
 };
 
@@ -59,13 +60,6 @@ const values = [
     }
 ];
 
-const stats = [
-    { label: 'Avg. Experience', value: '4+ Years' },
-    { label: 'On-Time Delivery', value: '95%' },
-    { label: 'Senior Engineers', value: '5+' },
-    { label: 'Clients Worldwide', value: '5+' },
-];
-
 const aboutJsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -73,7 +67,7 @@ const aboutJsonLd = {
             type: 'AboutPage',
             name: 'About Brynex Labs',
             description:
-                'Brynex Labs is a senior-led AI and software development company based in India, serving startups and enterprises across the USA, UK, Australia, and India.',
+                'Brynex Labs is an AI & SaaS product studio based in India. It builds and operates Clinizy Care, hospital management software for Indian clinics, and builds AI agents, SaaS platforms and SEO for clients in India, the USA, the UK and Australia.',
             path: '/about',
         }),
         {
@@ -104,10 +98,12 @@ export default function AboutPage() {
                         <div className="absolute -top-24 -left-24 w-96 h-96 bg-accent/10 rounded-full blur-[120px]" />
                         <div className="relative z-10 max-w-4xl">
                             <h1 className="text-5xl md:text-8xl font-bold text-foreground mb-8 tracking-tighter leading-[0.9]">
-                                We build software that <span className="text-accent">moves mountains.</span>
+                                A product studio that ships its own software first.
                             </h1>
                             <p className="text-xl md:text-3xl text-foreground-secondary leading-relaxed max-w-3xl">
-                                Brynex Labs is a high-performance engineering collective. We bridge the gap between complex technical hurdles and massive business outcomes.
+                                Brynex Labs is a senior engineering team from India. We build and run{' '}
+                                <Link href="/products/clinizy-care" className="text-foreground font-semibold hover:text-accent transition-colors">Clinizy Care</Link>
+                                , our hospital management software, and we build AI agents, SaaS platforms and SEO for founders worldwide.
                             </p>
                         </div>
                     </div>
@@ -117,7 +113,7 @@ export default function AboutPage() {
                         <div className="sticky top-32">
                             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-background-secondary/50 mb-6">
                                 <span className="w-1.5 h-1.5 rounded-full bg-accent" aria-hidden="true" />
-                                <span className="text-foreground-muted text-xs font-medium uppercase tracking-wider">The Genesis</span>
+                                <span className="text-foreground-muted text-xs font-medium uppercase tracking-wider">Our story</span>
                             </div>
                             <h2 className="text-4xl font-bold text-foreground mb-8 tracking-tight">The Brynex Story</h2>
                             <div className="space-y-6 text-lg text-foreground-secondary leading-relaxed">
@@ -131,7 +127,12 @@ export default function AboutPage() {
                                     &quot;We wanted to build the antidote. A lean, senior-only collective where engineering excellence and product strategy live in the same room.&quot;
                                 </p>
                                 <p>
-                                    Today, Brynex exists for the ambitious founder and the forward-thinking CTO. We treat your product like our own, ensuring that every architectural decision drives your bottom line.
+                                    Then we did the thing most agencies never do: we built and launched a product of our own.{' '}
+                                    <Link href="/products/clinizy-care" className="text-foreground font-semibold hover:text-accent transition-colors">Clinizy Care</Link>{' '}
+                                    is hospital management software for India&apos;s clinics and nursing homes, a live multi-tenant SaaS with AI, WhatsApp automation and an SEO engine we run ourselves.
+                                </p>
+                                <p>
+                                    That changes how we work for clients. We don&apos;t just sell engineering hours. Every service we sell, we&apos;ve already shipped for ourselves, and we treat your product with the same care we give our own.
                                 </p>
                             </div>
                         </div>
@@ -148,17 +149,10 @@ export default function AboutPage() {
                                     <div>
                                         <h3 className="text-2xl font-bold text-foreground mb-4">Our Vision</h3>
                                         <p className="text-foreground-secondary leading-relaxed">
-                                            To be the world&apos;s most trusted partner for intelligent software, known for setting the global standard in AI-driven automation and scalable system design.
+                                            A small portfolio of software products that Indian businesses rely on every day, and the same engineering, applied to every client we take on.
                                         </p>
                                     </div>
-                                    <div className="pt-8 border-t border-border grid grid-cols-2 gap-8">
-                                        {stats.map((stat) => (
-                                            <div key={stat.label}>
-                                                <div className="text-3xl font-bold text-foreground mb-1">{stat.value}</div>
-                                                <div className="text-xs uppercase tracking-widest text-foreground-muted font-bold">{stat.label}</div>
-                                            </div>
-                                        ))}
-                                    </div>
+                                    <StudioFacts className="pt-8 border-t border-border" />
                                 </div>
                             </div>
                         </div>
@@ -231,7 +225,7 @@ export default function AboutPage() {
                     <div className="mb-32">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl font-bold text-foreground mb-4 tracking-tight">The People Behind Brynex</h2>
-                            <p className="text-foreground-secondary text-lg max-w-2xl mx-auto">A senior-led collective — the people who scope your project are the ones who ship it.</p>
+                            <p className="text-foreground-secondary text-lg max-w-2xl mx-auto">The people who scope your project are the ones who ship it, and who run our own product.</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                             {authors.map((person) => (

@@ -3,7 +3,7 @@ import SectionWrapper from '../SectionWrapper';
 
 const features = [
     {
-        title: 'Elite Engineering Talent',
+        title: 'Senior Engineers Only',
         description: 'We don\'t outsource quality. Your project is architected and built by senior engineers who understand complex systems.',
         icon: (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -33,7 +33,7 @@ const features = [
     },
     {
         title: 'Scalable by Design',
-        description: 'We build software that grows with you. Robust architecture that handles millions of users without rewriting.',
+        description: 'Multi-tenant, observable and easy to extend — the architecture we rely on to run our own product, applied to yours.',
         icon: (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />

@@ -24,6 +24,10 @@ const STATIC_SLUGS = [
     'cloud-vs-on-premise-decision',
     'ai-agents-in-business-practical-guide',
     'choose-right-tech-stack-saas',
+    'how-we-built-multi-tenant-hms-indian-clinics',
+    'whatsapp-business-api-clinic-scale',
+    'dpdp-act-health-tech-builders',
+    'gst-billing-engine-lessons-clinics',
 ];
 
 // Mirrors sanitizeContent() in src/lib/blogStore.ts.

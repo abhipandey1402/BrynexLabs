@@ -23,7 +23,7 @@ const audiences = [
     },
     {
         title: 'Scale-Ups',
-        description: 'Handle hyper-growth. We build robust architecture that scales to millions of users without crashing.',
+        description: 'Grow without rewrites. We build on the same multi-tenant patterns we run in production for our own SaaS.',
         icon: (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
@@ -72,7 +72,7 @@ export default function WhoWeWorkWith() {
 
             {/* Footer line */}
             <p className="text-center text-foreground-muted text-sm mt-12 md:mt-16 italic opacity-80">
-                From pre-seed startups to Fortune 500 enterprises.
+                From first-time founders to established businesses, in India and worldwide.
             </p>
         </SectionWrapper>
     );
