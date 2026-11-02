@@ -3,7 +3,7 @@ import type { BlogPost } from '../blog';
 const post: BlogPost = {
     slug: 'how-we-built-multi-tenant-hms-indian-clinics',
     title: 'How We Built a Multi-Tenant HMS for Indian Clinics',
-    excerpt: 'We run Clinizy Care on one shared MongoDB database with shared collections: every tenant-owned document carries a tenantId, and a Mongoose plugin injects that filter into every read, write, count and aggregation, failing closed when no tenant is in context. At ₹1,999 a month for a solo clinic, a database per tenant would cost and operate out of proportion; a strict, tested guard with tenant-first indexes fits the economics.',
+    excerpt: 'We run Clinizy Care on one shared MongoDB database with shared collections: every tenant-owned document carries a tenantId, and a Mongoose plugin injects that filter into every read, write, count and aggregation, failing closed when no tenant is in context. At ₹1,499 a month for a solo clinic, a database per tenant would cost and operate out of proportion; a strict, tested guard with tenant-first indexes fits the economics.',
     author: 'Abhi Pandey',
     date: 'Sep 30, 2026',
     readTime: '11 min read',
@@ -18,7 +18,7 @@ const post: BlogPost = {
 
 <h2>Key takeaways</h2>
 <ul>
-<li><strong>Match the tenancy model to the price point.</strong> At &#8377;1,999 a month for a solo clinic, a database or schema per tenant would cost and operate out of proportion.</li>
+<li><strong>Match the tenancy model to the price point.</strong> At &#8377;1,499 a month for a solo clinic, a database or schema per tenant would cost and operate out of proportion.</li>
 <li><strong>Make scoping the default, not a habit.</strong> A base plugin applied through a schema factory scopes 70 of our 98 data models automatically; cross-tenant work has to opt out with an explicit flag.</li>
 <li><strong>Fail closed.</strong> With no tenant in context, the injected filter only matches documents that have no <code>tenantId</code>, so tenant-owned data can't come back by accident.</li>
 <li><strong>Cover every operation, not just reads.</strong> Our first guard only scoped find queries, until an internal audit flagged that updates and deletes weren't covered.</li>
@@ -28,14 +28,14 @@ const post: BlogPost = {
 
 <h2>What does multi-tenancy mean for a clinic HMS?</h2>
 <p>In a multi-tenant HMS, every clinic is a tenant. It runs on the same application and infrastructure as every other clinic, but it must only ever see its own patients, visits, bills and prescriptions. That boundary has a lot of surface area to hold across. <a href="https://clinizy.in/features">The 11 modules of Clinizy Care</a> &mdash; OPD queue management, GST billing, pharmacy and inventory, IPD and bed management, digital prescriptions, lab and diagnostics, appointment scheduling, patient records, reports and analytics, AI clinical documentation (in early access) and WhatsApp for clinics &mdash; all read and write <a href="https://clinizy.in/patient-records-software">a single shared patient record</a>. Reception, the doctor, the pharmacy, the lab and the IPD ward all work on the same data, inside the same tenant line.</p>
-<p>The customers shape the architecture as much as the data does. Clinizy Care is built for practices up to roughly 50 beds, with plans starting at &#8377;1,999 a month (excluding GST). It runs in the browser with nothing to install, the owner's dashboard works on a phone, and the interface is available in English, Hindi and Hinglish. Many small tenants, a low price and zero installation decided the tenancy model. The wider product story is in <a href="/products/clinizy-care">how we built Clinizy Care</a>; this post stays on the data layer.</p>
+<p>The customers shape the architecture as much as the data does. Clinizy Care is built for practices up to roughly 50 beds, with plans starting at &#8377;1,499 a month (excluding GST). It runs in the browser with nothing to install, the owner's dashboard works on a phone, and the interface is available in English, Hindi and Hinglish. Many small tenants, a low price and zero installation decided the tenancy model. The wider product story is in <a href="/products/clinizy-care">how we built Clinizy Care</a>; this post stays on the data layer.</p>
 
 <h2>Why did we choose shared collections over a database per tenant?</h2>
 <p>Because at our price point, isolation has to come from code and tests rather than from infrastructure. The <a href="https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/silo-pool-and-bridge-models.html">AWS Well-Architected SaaS Lens</a> describes three broad patterns: a <strong>silo</strong> model, where tenants get dedicated resources such as a separate database; a <strong>pool</strong> model, where tenants share infrastructure to achieve economies of scale; and a <strong>bridge</strong> model that mixes the two.</p>
-<p>For a solo clinic paying &#8377;1,999 a month, a database or schema per tenant would cost and operate out of proportion: every signup becomes a provisioning job, and every migration and index build runs once per tenant. So we chose the pool model: one database, shared collections, a <code>tenantId</code> on every tenant-owned document, and indexes that lead with <code>tenantId</code>.</p>
+<p>For a solo clinic paying &#8377;1,499 a month, a database or schema per tenant would cost and operate out of proportion: every signup becomes a provisioning job, and every migration and index build runs once per tenant. So we chose the pool model: one database, shared collections, a <code>tenantId</code> on every tenant-owned document, and indexes that lead with <code>tenantId</code>.</p>
 <table>
 <thead>
-<tr><th>Model</th><th>How tenants are separated</th><th>Where isolation lives</th><th>Cost and operations per tenant</th><th>Fit for a &#8377;1,999/month clinic</th></tr>
+<tr><th>Model</th><th>How tenants are separated</th><th>Where isolation lives</th><th>Cost and operations per tenant</th><th>Fit for a &#8377;1,499/month clinic</th></tr>
 </thead>
 <tbody>
 <tr><td>Database per tenant (silo)</td><td>A separate database for each clinic</td><td>Infrastructure</td><td>Highest: provisioning, migrations and monitoring per database</td><td>Out of proportion</td></tr>

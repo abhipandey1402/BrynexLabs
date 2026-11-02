@@ -33,7 +33,7 @@ const reasons = [
     },
     {
         title: 'We pay the cloud bill',
-        body: 'A plan that starts at ₹1,999 a month only works on lean, well-designed infrastructure. We design for running cost from day one, because our own margins depend on it.',
+        body: 'A plan that starts at ₹1,499 a month only works on lean, well-designed infrastructure. We design for running cost from day one, because our own margins depend on it.',
     },
 ];
 

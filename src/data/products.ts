@@ -45,9 +45,9 @@ export const CLINIZY = {
     /** clinizy.in's own schema nodes. We reference these by @id; never redefine them. */
     organizationId: `${CLINIZY_ORIGIN}/#organization`,
     softwareId: `${CLINIZY_ORIGIN}/#software`,
-    /** Card copy (brief-approved). Price matches clinizy.in/pricing: from ₹1,999/mo, excl. GST. */
+    /** Card copy (brief-approved). Price matches clinizy.in/pricing: from ₹1,499/mo, excl. GST (Clinic ₹1,499, Nursing Home ₹4,999, Hospital ₹9,999 founding prices). */
     summary:
-        "Hospital software for Bharat's clinics: OPD queue, GST billing, e-prescriptions, pharmacy, IPD, lab and WhatsApp, in English & Hindi. From ₹1,999/month + GST.",
+        "Hospital software for Bharat's clinics: OPD queue, GST billing, e-prescriptions, pharmacy, IPD, lab and WhatsApp, in English & Hindi. Plans from ₹1,499/month + GST.",
     /** Proof chips. 11 modules + 24 automations: clinizy.in/features, /automations. Languages: clinizy.in/about. */
     proofChips: ['11 modules', '24 automations', 'English, Hindi & Hinglish'],
     /** Brand colour — used only inside Clinizy's own card/sections. clinizy.in theme-color. */

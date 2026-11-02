@@ -244,8 +244,9 @@ export default function ClinizyCareProductPage() {
                                 patient on the app they already use. You can see{' '}
                                 <a href={CLINIZY.links.features} className={inlineLink}>every Clinizy Care module and feature</a>{' '}
                                 on clinizy.in, and{' '}
-                                <a href={CLINIZY.links.pricing} className={inlineLink}>plans start at ₹1,999 a month</a>{' '}
-                                (excluding GST).
+                                <a href={CLINIZY.links.pricing} className={inlineLink}>plans start at ₹1,499 a month</a>{' '}
+                                (excluding GST): Clinic at ₹1,499, Nursing Home at ₹4,999 and Hospital at ₹9,999 a month,
+                                founding prices for the first 50 customers.
                             </p>
                         </div>
                         <ul className="mt-10 grid grid-cols-1 gap-x-8 sm:grid-cols-2" aria-label="The 11 modules">

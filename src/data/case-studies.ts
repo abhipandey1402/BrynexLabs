@@ -279,7 +279,7 @@ const baseStudies: CaseStudy[] = [
                 heading: 'The Challenge',
                 paragraphs: [
                     'Most small clinics in India still run on paper registers, handwritten prescriptions and a pharmacy counter that bills separately. The software on the market was largely built for big hospitals or for other countries: priced out of reach, English-only, and unaware of GST or the way an Indian front desk actually works.',
-                    'Building for this market meant hard constraints at once: a price a single-doctor clinic can start at (plans begin at ₹1,999 a month, excluding GST), an interface the front desk can use in Hindi or Hinglish, correct GST on every bill, and the reliability of one shared system that every clinic on it depends on at the same moment.',
+                    'Building for this market meant hard constraints at once: a price a single-doctor clinic can start at (plans begin at ₹1,499 a month, excluding GST), an interface the front desk can use in Hindi or Hinglish, correct GST on every bill, and the reliability of one shared system that every clinic on it depends on at the same moment.',
                 ],
             },
             {
