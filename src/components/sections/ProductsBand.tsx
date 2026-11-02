@@ -90,7 +90,7 @@ export default function ProductsBand() {
                         {dashboard ? (
                             <div className="relative w-full">
                                 <BrowserFrame shot={dashboard} address="clinizy.in/dashboard" sizes="(min-width: 1024px) 52vw, 100vw" className="w-full" />
-                                {/* Floating AI badge — labelled with Bol's real status */}
+                                {/* Floating AI badge — labelled with SayRx's real status */}
                                 <div className="absolute -bottom-3 left-3 flex items-center gap-3 rounded-2xl border border-border bg-background-card/95 px-4 py-3 shadow-card-hover backdrop-blur motion-safe:animate-float sm:-bottom-4 sm:left-6">
                                     <span className="flex h-6 items-center gap-[3px]" aria-hidden="true">
                                         {[0.5, 1, 0.7, 0.9, 0.4].map((h, i) => (
@@ -99,9 +99,9 @@ export default function ProductsBand() {
                                     </span>
                                     <span className="text-left">
                                         <span className="block text-sm font-semibold text-foreground">
-                                            <span lang="hi" className="text-accent">{CLINIZY.bol.nameHi}</span> {CLINIZY.bol.name} · AI clinical notes
+                                            <span className="text-accent">{CLINIZY.sayrx.name}</span> · AI voice prescriptions
                                         </span>
-                                        <span className="block text-xs text-foreground-muted">{CLINIZY.bol.status}</span>
+                                        <span className="block text-xs text-foreground-muted">{CLINIZY.sayrx.status} add-on</span>
                                     </span>
                                 </div>
                             </div>
@@ -120,7 +120,7 @@ export default function ProductsBand() {
                     <div className="border-t border-border p-6 sm:p-8 lg:col-span-12 lg:p-10">
                         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
                             <h4 className="text-xl font-bold tracking-tight text-foreground md:text-2xl">The AI inside Clinizy Care</h4>
-                            <p className="text-sm text-foreground-muted">Bol is in early access. Five more are on the roadmap, and 24 automations run today.</p>
+                            <p className="text-sm text-foreground-muted">SayRx is live as an add-on. Five more are on the roadmap, and 24 automations run today.</p>
                         </div>
                         <AIFeatureShowcase />
                     </div>

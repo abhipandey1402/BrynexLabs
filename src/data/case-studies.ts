@@ -187,7 +187,7 @@ export interface CaseStudy {
 
 /** Clinizy Care's six AI agents, from the shared product data (one source of truth for statuses). */
 const CLINIZY_AGENT_META: Record<string, { icon: CaseIconKey; safeguard: string }> = {
-    bol: { icon: 'mic', safeguard: 'Nothing is finalised: the doctor reviews every draft, and a guardrail rejects non-clinical input.' },
+    sayrx: { icon: 'mic', safeguard: 'Nothing is saved until the doctor reviews, edits and finalizes the draft.' },
     saathi: { icon: 'message', safeguard: 'A small, bounded toolset with nothing clinical. Anything that sounds like a symptom goes to a person with the chat attached.' },
     awaz: { icon: 'phone', safeguard: 'One short script and one spoken answer. It records the reply and never tries to hold a conversation.' },
     nazar: { icon: 'radar', safeguard: 'Every figure comes from a database query. The model only ranks and explains, so it cannot invent a number.' },
@@ -215,14 +215,14 @@ const baseStudies: CaseStudy[] = [
         art: 'clinic',
         takeaways: [
             { label: 'What it is', text: 'AI-powered hospital management software for India\'s clinics, nursing homes and small hospitals, built and run by Brynex Labs.' },
-            { label: 'The AI', text: 'Six agents cover documentation, the front desk, outreach, the owner\'s brief, the pharmacy and analytics. Bol is in early access; the other five are on the roadmap.' },
+            { label: 'The AI', text: 'Six agents cover prescriptions, the front desk, outreach, the owner\'s brief, the pharmacy and analytics. SayRx is live as an add-on; the other five are on the roadmap.' },
             { label: 'The core', text: 'Eleven modules on one patient record, 24 live automations and a fail-closed multi-tenant guard.' },
             { label: 'For you', text: 'The same stack and playbook we use for clients, proven first on our own product.' },
         ],
         architectureIntro: 'One patient record sits at the centre. The agents read and propose on top of it, and everything that leaves the building goes through queues.',
         architecture: [
             { layer: 'Experience', caption: 'What clinics touch', icon: 'users', items: ['Clinic web app in the browser', 'Owner dashboard on a phone', 'English, Hindi and Hinglish', 'Public booking', 'Waiting-room display'] },
-            { layer: 'AI agents', caption: 'Read, draft and propose', icon: 'bot', highlight: true, items: ['Bol', 'Saathi', 'Awaz', 'Nazar', 'Buddhi', 'Setu'] },
+            { layer: 'AI agents', caption: 'Read, draft and propose', icon: 'bot', highlight: true, items: ['SayRx', 'Saathi', 'Awaz', 'Nazar', 'Buddhi', 'Setu'] },
             { layer: 'Core services', caption: 'The deterministic heart', icon: 'layers', items: ['11 modules, one patient record', '24 automations', 'GST billing engine', 'Role-based access', 'Audit trail', 'Fail-closed tenant guard'] },
             { layer: 'Delivery', caption: 'Everything that leaves the building', icon: 'workflow', items: ['Queues with dead-letter handling', 'WhatsApp Business API', 'Payments', 'PDF and report workers'] },
             { layer: 'Data and cloud', caption: 'Where it runs', icon: 'database', items: ['MongoDB', 'AWS, Mumbai region', 'Encrypted in transit', 'Automated tests in CI'] },
@@ -231,17 +231,17 @@ const baseStudies: CaseStudy[] = [
             { title: 'Let the database decide', body: 'Agents choose, draft and explain. Figures and records come from queries, so a model can never invent a number.' },
             { title: 'Fail closed, then prove it', body: 'Our first tenant guard covered reads but not every write path. We extended it, then proved isolation with tests against a real database.' },
             { title: 'Keep a person in the loop', body: 'Every agent drafts or proposes. A doctor, pharmacist or owner confirms before anything is signed, ordered or sent.' },
-            { title: 'Say what is live', body: 'We label every agent Early access or Roadmap on our own site. Buyers trust a product that is honest about its edges.' },
+            { title: 'Say what is live', body: 'We label every agent Live, Early access or Roadmap on our own site. Buyers trust a product that is honest about its edges.' },
         ],
         faqs: [
-            { q: 'Is the AI in Clinizy Care live?', a: 'Bol, the clinical-notes agent, is in early access. Saathi, Awaz, Nazar, Buddhi and Setu are on our roadmap and not yet available. The 24 workflow automations are live today.' },
+            { q: 'Is the AI in Clinizy Care live?', a: 'SayRx, the voice-prescription agent, is live as a per-doctor add-on. Saathi, Awaz, Nazar, Buddhi and Setu are on our roadmap and not yet available. The 24 workflow automations are live today.' },
             { q: 'Who builds and runs Clinizy Care?', a: 'Brynex Labs designed it, builds it and operates it. clinizy.in is the home for the product, its features and its pricing.' },
             { q: 'Where is patient data hosted?', a: 'Clinizy Care is hosted on AWS in Mumbai, encrypted in transit, and built to be DPDP Act 2023 aligned. Compliance remains the clinic\'s responsibility as data fiduciary.' },
             { q: 'Can Brynex Labs build something like this for us?', a: 'Yes. The same team builds multi-tenant SaaS, AI agents and WhatsApp automation for clients, and healthcare is our proven vertical.' },
         ],
         agentsHeading: 'Six AI agents, one clinic',
         agentsIntro:
-            'Clinizy Care is AI-first by design. Six agents cover the clinic end to end: documentation, the front desk, patient outreach, the owner\'s morning brief, the pharmacy and analytics. Bol is in early access today. Saathi, Awaz, Nazar, Buddhi and Setu are on our roadmap, and we label them that way. Under all six sits a deterministic core and 24 automations that already run in production.',
+            'Clinizy Care is AI-first by design. Six agents cover the clinic end to end: prescriptions, the front desk, patient outreach, the owner\'s morning brief, the pharmacy and analytics. SayRx is live today as an add-on. Saathi, Awaz, Nazar, Buddhi and Setu are on our roadmap, and we label them that way. Under all six sits a deterministic core and 24 automations that already run in production.',
         agents: clinizyAgents,
         engagement: [
             { title: 'Start from the front desk', body: 'We started with the people who live in the software: owners, doctors and receptionists, and where their minutes actually go.' },
@@ -279,7 +279,7 @@ const baseStudies: CaseStudy[] = [
                 heading: 'The Challenge',
                 paragraphs: [
                     'Most small clinics in India still run on paper registers, handwritten prescriptions and a pharmacy counter that bills separately. The software on the market was largely built for big hospitals or for other countries: priced out of reach, English-only, and unaware of GST or the way an Indian front desk actually works.',
-                    'Building for this market meant hard constraints at once: a price a single-doctor clinic can start at (plans begin at ₹1,999 a month, excluding GST), an interface the front desk can use in Hindi or Hinglish, correct GST on every bill, and the reliability of one shared system that every clinic on it depends on at the same moment.',
+                    'Building for this market meant hard constraints at once: a price a single-doctor clinic can start at (plans begin at ₹1,499 a month, excluding GST), an interface the front desk can use in Hindi or Hinglish, correct GST on every bill, and the reliability of one shared system that every clinic on it depends on at the same moment.',
                 ],
             },
             {
@@ -299,7 +299,7 @@ const baseStudies: CaseStudy[] = [
                     'GST billing: CGST/SGST or IGST by place of supply, exempt consultations, MRP-inclusive pharmacy pricing, day-close reconciliation, UPI QR on invoices and a Tally export.',
                     'Autopilot: 24 built-in automations, from follow-up recalls and refill reminders to critical-result escalation and discharge workflows, with per-clinic controls.',
                     'WhatsApp: direct Meta Cloud API integration with approved English and Hindi templates, queued delivery, signed webhooks, quiet hours, opt-outs and quotas.',
-                    'AI agents: six in total. Bol (clinical notes from dictation) is in early access. Saathi (a WhatsApp front desk), Awaz (reminder calls), Nazar (the 8 am owner brief), Buddhi (pharmacy forecasting) and Setu (ask your clinic in Hindi) are on the roadmap.',
+                    'AI agents: six in total. SayRx (voice prescriptions from dictation) is live as an add-on. Saathi (a WhatsApp front desk), Awaz (reminder calls), Nazar (the 8 am owner brief), Buddhi (pharmacy forecasting) and Setu (ask your clinic in Hindi) are on the roadmap.',
                     'Growth engine: clinizy.in itself, with module, comparison and automation pages, a plain-language blog for clinic owners, and llms.txt for AI search.',
                 ],
             },
@@ -341,7 +341,7 @@ const baseStudies: CaseStudy[] = [
         results: [
             { label: 'Modules', value: '11', context: 'on one shared patient record' },
             { label: 'Built-in automations', value: '24', context: 'running on their own, 24/7' },
-            { label: 'AI agents', value: '6', context: 'Bol in early access, five on the roadmap' },
+            { label: 'AI agents', value: '6', context: 'SayRx live as an add-on, five on the roadmap' },
             { label: 'Interface languages', value: '3', context: 'English, Hindi & Hinglish' },
         ],
         ...(CLINIZY.screenshots.dashboard

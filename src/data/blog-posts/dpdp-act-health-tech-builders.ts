@@ -114,7 +114,7 @@ function auditFields(entity, changes) {
 <tr><td>Individual rights requests (sections 11&ndash;13; Rule 14)</td><td>Workflow for one patient&rsquo;s access, correction and erasure requests</td><td>In progress</td></tr>
 </tbody>
 </table>
-<p>On clinizy.in, role-based access is part of the Care Plus plan and above. The tenant guard has its own write-up in <a href="/blog/how-we-built-multi-tenant-hms-indian-clinics">how we built a multi-tenant HMS for Indian clinics</a>, and messaging in <a href="/blog/whatsapp-business-api-clinic-scale">running the WhatsApp Business API at clinic scale</a>.</p>
+<p>On clinizy.in, role-based access is included in every plan. The tenant guard has its own write-up in <a href="/blog/how-we-built-multi-tenant-hms-indian-clinics">how we built a multi-tenant HMS for Indian clinics</a>, and messaging in <a href="/blog/whatsapp-business-api-clinic-scale">running the WhatsApp Business API at clinic scale</a>.</p>
 <h3>What we&rsquo;re building next</h3>
 <p>Each &ldquo;In progress&rdquo; row maps to an obligation that commences in May 2027:</p>
 <ol>

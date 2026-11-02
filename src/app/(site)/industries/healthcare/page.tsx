@@ -28,7 +28,7 @@ const builds = [
     { title: 'Patient-facing apps & portals', body: 'Online booking, patient portals with OTP sign-in, reports and prescriptions delivered where patients already are.' },
     { title: 'Billing, GST & collections', body: 'Correct CGST/SGST/IGST, exempt and taxable lines, MRP-inclusive pharmacy pricing, day-close and accounting exports.' },
     { title: 'WhatsApp patient communication', body: 'Reminders, recalls, receipts and reports over the WhatsApp Business API, with templates, quotas and opt-outs handled.' },
-    { title: 'AI clinical workflows', body: 'Documentation assistants and agents with guardrails and a clinician in the loop, the pattern behind Bol.' },
+    { title: 'AI clinical workflows', body: 'Documentation assistants and agents with guardrails and a clinician in the loop, the pattern behind SayRx.' },
     { title: 'Automation & alerts', body: 'Scheduled and event-driven workflows for recalls, critical results, stock and discharge, with per-site controls.' },
 ];
 
