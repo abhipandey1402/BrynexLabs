@@ -95,19 +95,17 @@ export const CLINIZY = {
         'Appointment Scheduling',
         'Patient Records',
         'Reports & Analytics',
-        'AI Clinical Documentation',
+        'SayRx Voice Prescriptions',
         'WhatsApp for Clinics',
     ],
     /**
-     * Bol (बोल) — AI clinical documentation, renamed from "Clinizy Scribe".
-     * Status mirrors clinizy.in/ai-clinical-documentation ("Early access").
-     * NOTE: clinizy.in still says "Clinizy Scribe" until the rename ships there.
+     * SayRx — AI voice prescriptions, a separate per-doctor add-on to Clinizy Care.
+     * Status mirrors clinizy.in/ai-clinical-documentation ("Live"); the add-on price is
+     * quoted on request, so never state one here.
      */
-    bol: {
-        name: 'Bol',
-        nameHi: 'बोल',
-        status: 'Early access',
-        documentTypes: ['SOAP note', 'H&P', 'Discharge summary', 'ER note'],
+    sayrx: {
+        name: 'SayRx',
+        status: 'Live',
     },
     /** Real screens from the running app with fictional demo data. Filled in once captured. */
     // Captured 2026-09-30 from Clinizy Care v1.20.0 running locally with a
@@ -164,22 +162,22 @@ export const CLINIZY = {
     } as Partial<Record<'dashboard' | 'opd' | 'billing' | 'prescription' | 'pharmacy' | 'ipd' | 'lab' | 'automations' | 'hindi' | 'mobile', Screenshot>>,
 };
 
-export type AIFeatureId = 'bol' | 'saathi' | 'awaz' | 'nazar' | 'buddhi' | 'setu';
+export type AIFeatureId = 'sayrx' | 'saathi' | 'awaz' | 'nazar' | 'buddhi' | 'setu';
 
 export interface AIFeature {
     id: AIFeatureId;
-    /** Latin-script name, e.g. "Bol". */
+    /** Latin-script name, e.g. "SayRx". */
     name: string;
-    /** Devanagari name, e.g. "बोल". */
-    nameHi: string;
+    /** Devanagari name, e.g. "साथी". Optional: SayRx keeps its Latin name in every language. */
+    nameHi?: string;
     /** What it is, in three or four words. */
     title: string;
     /**
-     * Honest availability. 'Early access' mirrors clinizy.in. 'Roadmap' means
+     * Honest availability. 'Live' and 'Early access' mirror clinizy.in. 'Roadmap' means
      * planned in the Clinizy AI Blueprint (Sep 2026) with no shipped code yet —
      * never promote an item past 'Roadmap' until it is live on clinizy.in.
      */
-    status: 'Early access' | 'Roadmap';
+    status: 'Live' | 'Early access' | 'Roadmap';
     /** One line, shown in the list. */
     summary: string;
     /** One or two sentences, shown with the animated illustration. */
@@ -188,18 +186,17 @@ export interface AIFeature {
 
 /**
  * The AI line-up for Clinizy Care, shown in the compact animated showcase.
- * Bol is in early access; the other five come from the Clinizy AI Blueprint
+ * SayRx is live as an add-on; the other five come from the Clinizy AI Blueprint
  * (internal, 5 Sep 2026) and are labelled Roadmap until they ship.
  */
 export const AI_FEATURES: AIFeature[] = [
     {
-        id: 'bol',
-        name: 'Bol',
-        nameHi: 'बोल',
-        title: 'AI clinical notes',
-        status: 'Early access',
-        summary: 'Speak the consult in Hinglish; get a structured draft.',
-        detail: 'The doctor dictates the way they actually talk, and Bol drafts a structured clinical note to review, with a guardrail that rejects non-clinical input. Consult time goes to the patient, not the keyboard.',
+        id: 'sayrx',
+        name: 'SayRx',
+        title: 'AI voice prescriptions',
+        status: 'Live',
+        summary: 'Speak the visit in Hindi, English or Hinglish; get a prescription draft.',
+        detail: 'The doctor taps Speak and describes the visit the way they normally would, and SayRx drafts the diagnosis, medicines, tests, advice and follow-up to review and edit before anything is saved. A separate per-doctor add-on to Clinizy Care.',
     },
     {
         id: 'saathi',
@@ -256,9 +253,9 @@ export const SHIPPED_FOR_OURSELVES: ShippedProof[] = [
     {
         service: 'AI agents',
         serviceHref: '/services/ai-agents-automation',
-        proof: 'Bol, AI clinical notes',
-        status: 'Early access',
-        detail: 'Bol turns a doctor’s Hinglish dictation into a structured clinical note, with a guardrail agent that checks the input before anything is drafted. Five more AI capabilities are on the roadmap.',
+        proof: 'SayRx, AI voice prescriptions',
+        status: 'Live',
+        detail: 'SayRx turns a doctor’s Hindi, English or Hinglish dictation into a prescription draft that the doctor reviews and finalizes. Five more AI capabilities are on the roadmap.',
     },
     {
         service: 'SaaS engineering',

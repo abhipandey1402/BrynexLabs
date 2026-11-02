@@ -13,7 +13,7 @@ const LLMS_FULL_TXT = `# Brynex Labs — Full Reference
 - How we built Clinizy Care (builder's story, architecture, lessons learned): https://brynex.in/products/clinizy-care
 - Clinizy Care case study: https://brynex.in/case-studies/clinizy-care
 - Product details, features and pricing are maintained on clinizy.in, which is the canonical source for the product.
-- AI in Clinizy Care: Bol (AI clinical notes from dictation) is in early access. Saathi (WhatsApp front desk), Awaz (reminder calls), Nazar (daily owner brief), Buddhi (pharmacy forecasting) and Setu (ask-your-clinic analytics in Hindi) are on the roadmap and not yet available. 24 workflow automations (Autopilot) are live.
+- AI in Clinizy Care: SayRx (AI voice prescriptions from dictation) is live as a per-doctor add-on. Saathi (WhatsApp front desk), Awaz (reminder calls), Nazar (daily owner brief), Buddhi (pharmacy forecasting) and Setu (ask-your-clinic analytics in Hindi) are on the roadmap and not yet available. 24 workflow automations (Autopilot) are live.
 
 ## Company
 
@@ -65,7 +65,7 @@ Pricing: Growth Retainer from ₹50,000/month, custom-scoped to stage and goals.
 - Case Studies: https://brynex.in/case-studies — four published case studies, each built around AI agents:
   - RegorTalent — AI interviewing & ATS platform built end to end: https://brynex.in/case-studies/regortalent-ai-recruitment-platform
   - ExamPapers — AI exam-prep and mock-test platform: https://brynex.in/case-studies/exampapers-ai-exam-prep-platform
-  - Clinizy Care — our own hospital management SaaS (in-house): https://brynex.in/case-studies/clinizy-care (six AI agents: Bol in early access; Saathi, Awaz, Nazar, Buddhi and Setu on the roadmap; 24 automations live)
+  - Clinizy Care — our own hospital management SaaS (in-house): https://brynex.in/case-studies/clinizy-care (six AI agents: SayRx live as an add-on; Saathi, Awaz, Nazar, Buddhi and Setu on the roadmap; 24 automations live)
   - Five-product healthcare AI platform — engineering a platform of clinical documentation, dictation, referral tracking, patient texting and payer-rate benchmarking, with LLM agents in the documentation product and deterministic engines elsewhere, plus the 24-month AI agent roadmap ahead: https://brynex.in/case-studies/healthcare-ai-platform-agent-roadmap
 - Healthcare software engineering: https://brynex.in/industries/healthcare — healthcare software development services from the team that built Clinizy Care.
 - Blog: https://brynex.in/blog — guides on AI agents, RAG, SaaS architecture, cloud engineering, and SaaS SEO.

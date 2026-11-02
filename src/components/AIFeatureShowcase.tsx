@@ -10,7 +10,7 @@ const GREEN = CLINIZY.brandGreen;
 
 /**
  * Compact, auto-advancing showcase of the AI inside Clinizy Care
- * (Bol, Saathi, Awaz, Nazar, Buddhi, Setu) plus the live Autopilot strip.
+ * (SayRx, Saathi, Awaz, Nazar, Buddhi, Setu) plus the live Autopilot strip.
  * - The active tab's progress bar *is* the timer: its animationend advances
  *   the carousel, so pausing the animation (hover/focus/Pause) pauses it.
  * - Reduced motion: no progress animation, so no auto-advance; users click.
@@ -95,7 +95,7 @@ export default function AIFeatureShowcase({ className = '' }: { className?: stri
                                             selected ? 'bg-accent-gradient text-white' : 'bg-accent/10 text-accent'
                                         }`}
                                     >
-                                        {f.nameHi}
+                                        {f.nameHi ?? 'Rx'}
                                     </span>
                                     <span className="min-w-0 flex-1">
                                         <span className="flex flex-wrap items-baseline gap-x-2">
@@ -142,7 +142,7 @@ export default function AIFeatureShowcase({ className = '' }: { className?: stri
                     className="flex flex-col rounded-2xl border border-border bg-background-secondary/50 p-5 sm:p-6"
                 >
                     <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                        <span lang="hi" className="text-lg font-semibold text-accent">{feature.nameHi}</span>
+                        {feature.nameHi && <span lang="hi" className="text-lg font-semibold text-accent">{feature.nameHi}</span>}
                         <span className="text-lg font-bold text-foreground">{feature.name}</span>
                         <span className="text-foreground-muted" aria-hidden="true">·</span>
                         <span className="text-foreground-secondary">{feature.title}</span>
@@ -155,7 +155,7 @@ export default function AIFeatureShowcase({ className = '' }: { className?: stri
                     </div>
                     <div className="mt-3 flex items-start justify-between gap-4">
                         <p className="text-xs text-foreground-muted">
-                            Illustration of how it works. {CLINIZY.bol.name} is in early access; {roadmapNames.join(', ')} are on our roadmap and not yet available.
+                            Illustration of how it works. {CLINIZY.sayrx.name} is live as an add-on; {roadmapNames.join(', ')} are on our roadmap and not yet available.
                         </p>
                         {!reducedMotion && (
                             <button
@@ -194,7 +194,7 @@ export default function AIFeatureShowcase({ className = '' }: { className?: stri
 }
 
 function StatusBadge({ status, compact = false }: { status: AIFeature['status']; compact?: boolean }) {
-    const early = status === 'Early access';
+    const early = status !== 'Roadmap';
     return (
         <span
             className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 font-semibold ${compact ? 'text-[11px]' : 'text-xs'} ${
@@ -219,8 +219,8 @@ const d = (s: number) => ({ animationDelay: `${s}s` });
 
 function FeatureVisual({ id }: { id: AIFeatureId }) {
     switch (id) {
-        case 'bol':
-            return <BolVisual />;
+        case 'sayrx':
+            return <SayRxVisual />;
         case 'saathi':
             return <SaathiVisual />;
         case 'awaz':
@@ -244,12 +244,12 @@ function Wave({ bars, className = 'h-10' }: { bars: number[]; className?: string
     );
 }
 
-function BolVisual() {
+function SayRxVisual() {
     const lines = [
-        { k: 'S', t: 'Fever × 3 days, sore throat' },
-        { k: 'O', t: 'Temp 101°F, chest clear' },
-        { k: 'A', t: 'Acute pharyngitis' },
-        { k: 'P', t: 'Paracetamol SOS, review in 1 week' },
+        { k: 'Dx', t: 'Acute pharyngitis' },
+        { k: 'Rx', t: 'Paracetamol 650 mg, 3 times a day, 3 days' },
+        { k: 'Adv', t: 'Warm saline gargles, plenty of fluids' },
+        { k: 'F/U', t: 'Review in 2 days' },
     ];
     return (
         <div className="grid w-full items-center gap-4 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1.2fr)]" aria-hidden="true">
@@ -264,7 +264,7 @@ function BolVisual() {
                 <p className="text-[11px] font-semibold text-foreground-muted">Draft · review before finalising</p>
                 {lines.map((l, i) => (
                     <div key={l.k} className={`flex items-baseline gap-2 text-xs ${pop}`} style={d(0.3 + i * 0.45)}>
-                        <span className="w-3 shrink-0 font-bold text-accent">{l.k}</span>
+                        <span className="w-7 shrink-0 font-bold text-accent">{l.k}</span>
                         <span className="text-foreground-secondary">{l.t}</span>
                     </div>
                 ))}

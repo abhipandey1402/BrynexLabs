@@ -137,8 +137,8 @@ export default function ProductsPage() {
                 <div className="mb-10 max-w-3xl">
                     <h2 className="text-3xl font-bold tracking-tight text-foreground md:text-4xl">AI where it saves a clinic real time</h2>
                     <p className="mt-4 text-lg leading-relaxed text-foreground-secondary">
-                        Bol, in early access today, drafts clinical notes from a doctor&apos;s dictation, with a guardrail agent
-                        that refuses non-clinical input. Saathi, Awaz, Nazar, Buddhi and Setu are next on our roadmap. Each one
+                        SayRx, live today as an add-on, drafts a prescription from a doctor&apos;s dictation in Hindi, English or
+                        Hinglish, for the doctor to review and finalize. Saathi, Awaz, Nazar, Buddhi and Setu are next on our roadmap. Each one
                         uses the same agent-plus-guardrails pattern we build for{' '}
                         <Link href="/services/ai-agents-automation" className="font-semibold text-foreground underline decoration-accent/40 underline-offset-4 hover:decoration-accent">
                             clients who need AI agents in production

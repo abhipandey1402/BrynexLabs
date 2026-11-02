@@ -253,9 +253,9 @@ export default function ClinizyCareProductPage() {
                             {CLINIZY.modules.map((module) => (
                                 <li key={module} className="flex items-center justify-between border-b border-border py-3 font-medium text-foreground">
                                     {module}
-                                    {module === 'AI Clinical Documentation' && (
+                                    {module === 'SayRx Voice Prescriptions' && (
                                         <span className="rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-xs font-semibold text-accent">
-                                            Early access
+                                            Add-on
                                         </span>
                                     )}
                                 </li>
@@ -272,8 +272,8 @@ export default function ClinizyCareProductPage() {
                         AI where the minutes are, automation everywhere else
                     </h2>
                     <p className="text-lg leading-relaxed text-foreground-secondary lg:col-span-7">
-                        Documentation is where a doctor&apos;s day disappears, so that&apos;s where we started: Bol drafts
-                        structured notes from dictation and is in early access. Saathi, Awaz, Nazar, Buddhi and Setu are next on
+                        Documentation is where a doctor&apos;s day disappears, so that&apos;s where we started: SayRx drafts
+                        prescriptions from dictation and is live as an add-on. Saathi, Awaz, Nazar, Buddhi and Setu are next on
                         the roadmap. Around them, 24 automations already handle the repetitive work, from follow-up recalls to
                         critical-result alerts.
                     </p>
